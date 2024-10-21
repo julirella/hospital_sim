@@ -1,5 +1,7 @@
 from enum import IntEnum
 import math
+import heapq
+from sortedcontainers import SortedDict
 
 MOVEMENT_TIME = 10
 TIME_WITH_PATIENT = 20
@@ -30,9 +32,10 @@ class Request(Event):
         
         if len(free_nurses) == 0:
             min_busy_end = math.inf
-            for nurse in busy_nurses:
-                if nurse.busy_end_time < min_busy_end:
-                    min_busy_end = nurse.busy_end_time
+            for busy_nurse_id in busy_nurses: #could just iterate over nurses at this point
+                busy_nurse = nurses[busy_nurse_id] 
+                if busy_nurse.busy_end_time < min_busy_end:
+                    min_busy_end = busy_nurse.busy_end_time
             print(self.time, "all nurses busy, request pushed back to {}".format(min_busy_end))
             return Request(min_busy_end, self.patient)
         else:
@@ -57,9 +60,10 @@ class NursePhase(Event):
             nurse_id = self.nurse.id
             busy_nurses.remove(nurse_id)
             free_nurses.add(nurse_id)
-            return NursePhase(self.nurse.nextPhaseStart, self.nurse)
-        else:
             return None
+        else:
+            return NursePhase(self.nurse.nextPhaseStart, self.nurse)
+
 
 class Patient:
     def __init__(self, id, nurse_id):
@@ -90,19 +94,22 @@ class Nurse:
                 self.nextPhaseStart = time + MOVEMENT_TIME
                 print(time, "nurse {} departing to patient {}".format(self.id, self.patient_id))
             elif self.move_phase == NurseMovement.FROM_PATIENT:
-                self.move_time = time + MOVEMENT_TIME
+                self.nextPhaseStart = time + MOVEMENT_TIME
                 print(time, "nurse {} dealt with request from patient {}".format(self.id, self.patient_id))
             else:
-                self.move_time = time + TIME_WITH_PATIENT
+                self.nextPhaseStart = time + TIME_WITH_PATIENT
                 print(time, "nurse {} arrived at patient {}".format(self.id, self.patient_id))
         
 class EventQueue:
-    def __init__(self, requests, patients):
-        self.events = {}
-        for req in requests:
-            # print(req[0], patients[req[1]])
-            # print("\n")
-            self.insert((req[0], patients[req[1]]))
+    def __init__(self, request_tuples, patients):
+        #for now, constructs Request objects from tuples
+        #later maybe accept list of requests instead
+        self.events = SortedDict()
+        for req_tuple in request_tuples:
+            time = req_tuple[0] 
+            patient_id = req_tuple[1]
+            req = Request(time, patients[patient_id])
+            self.insert(req)
 
     def first_time(self):
         return next(iter(self.events.items())) #returns first (time, events)
@@ -110,15 +117,14 @@ class EventQueue:
         time, events = self.first_time()
         return time, events[0]
 
-    def insert(self, item):
-        if item is not None:
-            time = item[0]
-            patient = item[1]
+    def insert(self, event):
+        #insert a constructed Event object if event is not None
+        if event is not None:
+            time = event.time
             if time in self.events:
-                self.events[time].append(Request(time, patient))
+                self.events[time].append(event)
             else:
-                self.events[time] = [Request(time, patient)]
-
+                self.events[time] = [event]
     def empty(self):
         return len(self.events) == 0
 
@@ -210,7 +216,7 @@ requests = [(1, 0), (25, 2)] #time, patient id
 sim = Simulator(requests, nurses, patients)
 sim.simulate()
 
-print("Test 9") #no nurses free when a request comes - currently doesn't work
+print("Test 9") #no nurses free when a request comes
 requests = [(1, 0), (25, 2), (26, 1)] #time, patient id
 sim = Simulator(requests, nurses, patients)
 sim.simulate()
