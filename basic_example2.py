@@ -2,6 +2,7 @@ from enum import IntEnum
 import math
 import heapq
 from sortedcontainers import SortedDict
+import numpy as np
 
 MOVEMENT_TIME = 10
 TIME_WITH_PATIENT = 20
@@ -155,68 +156,93 @@ class Simulator:
             self.events.insert(newEvent)
 
 
-print("Test 1") #one patient, one nurse
-nurses = []
-for i in range(1):
-    nurses.append(Nurse(i))
-patients = []
-for i in range(1):
-    patients.append(Patient(i, i % len(nurses)))
-requests = [(1, 0)]
-# requests = [(1, 0), (2, 1), (1, 1)]
-sim = Simulator(requests, nurses, patients)
-sim.simulate()
+def generate_requests(patientAmount: int) -> list[float, int]:
+    requests = []
+    for patient_id in range(patientAmount):
+        request_amount = np.random.randint(30, 70)
+        for _ in range(request_amount):
+            req_time = np.random.uniform(0, 3600)
+            requests.append((req_time, patient_id))
+    
+    requests.sort()
+    print(requests)
+    print(len(requests))
+    return requests
 
-print("Test 2")
-requests = [(1, 0), (50, 0)] #time, patient id
-sim = Simulator(requests, nurses, patients)
-sim.simulate()
+def main():
+    # print("Test 1") #one patient, one nurse
+    # nurses = []
+    # for i in range(1):
+    #     nurses.append(Nurse(i))
+    # patients = []
+    # for i in range(1):
+    #     patients.append(Patient(i, i % len(nurses)))
+    # requests = [(1, 0)]
+    # # requests = [(1, 0), (2, 1), (1, 1)]
 
-print("Test 3")
-requests = [(1, 0), (42, 0)] #time, patient id
-sim = Simulator(requests, nurses, patients)
-sim.simulate()
+    # generate_requests(2)
+    # sim = Simulator(requests, nurses, patients)
+    # sim.simulate()
 
-print("Test 4") #multiple patients
-nurses = []
-for i in range(1):
-    nurses.append(Nurse(i))
-patients = []
-for i in range(3):
-    patients.append(Patient(i, i % len(nurses)))
+    # print("Test 2")
+    # requests = [(1, 0), (50, 0)] #time, patient id
+    # sim = Simulator(requests, nurses, patients)
+    # sim.simulate()
 
-requests = [(1, 0), (50, 1)] #time, patient id
-sim = Simulator(requests, nurses, patients)
-sim.simulate()
+    # print("Test 3")
+    # requests = [(1, 0), (42, 0)] #time, patient id
+    # sim = Simulator(requests, nurses, patients)
+    # sim.simulate()
 
-print("Test 5")
-requests = [(1, 0), (42, 1)] #time, patient id
-sim = Simulator(requests, nurses, patients)
-sim.simulate()
+    # print("Test 4") #multiple patients
+    # nurses = []
+    # for i in range(1):
+    #     nurses.append(Nurse(i))
+    # patients = []
+    # for i in range(3):
+    #     patients.append(Patient(i, i % len(nurses)))
 
-print("Test 6") #multiple nurses
-nurses = []
-for i in range(2):
-    nurses.append(Nurse(i))
-patients = []
-for i in range(3):
-    patients.append(Patient(i, i % len(nurses)))
+    # requests = [(1, 0), (50, 1)] #time, patient id
+    # sim = Simulator(requests, nurses, patients)
+    # sim.simulate()
 
-requests = [(1, 0), (50, 1)] #time, patient id
-sim = Simulator(requests, nurses, patients)
-sim.simulate()
+    # print("Test 5")
+    # requests = [(1, 0), (42, 1)] #time, patient id
+    # sim = Simulator(requests, nurses, patients)
+    # sim.simulate()
 
-print("Test 7") #overlapping request times
-requests = [(1, 0), (25, 1)] #time, patient id
-sim = Simulator(requests, nurses, patients)
-sim.simulate()
+    # print("Test 6") #multiple nurses
+    nurses = []
+    for i in range(2):
+        nurses.append(Nurse(i))
+    patients = []
+    for i in range(3):
+        patients.append(Patient(i, i % len(nurses)))
 
-print("Test 8") #nurse reassignment
-requests = [(1, 0), (25, 2)] #time, patient id
-sim = Simulator(requests, nurses, patients)
-sim.simulate()
+    # requests = [(1, 0), (50, 1)] #time, patient id
+    # sim = Simulator(requests, nurses, patients)
+    # sim.simulate()
 
-print("Test 9") #no nurses free when a request comes
-requests = [(1, 0), (25, 2), (26, 1)] #time, patient id
-sim = Simulator(requests, nurses, patients)
-sim.simulate()
+    # print("Test 7") #overlapping request times
+    # requests = [(1, 0), (25, 1)] #time, patient id
+    # sim = Simulator(requests, nurses, patients)
+    # sim.simulate()
+
+    # print("Test 8") #nurse reassignment
+    # requests = [(1, 0), (25, 2)] #time, patient id
+    # sim = Simulator(requests, nurses, patients)
+    # sim.simulate()
+
+    # print("Test 9") #no nurses free when a request comes
+    # requests = [(1, 0), (25, 2), (26, 1)] #time, patient id
+    # sim = Simulator(requests, nurses, patients)
+    # sim.simulate()
+
+    print("Test 10") #no nurses free when a request comes
+    requests = generate_requests(len(patients))
+    sim = Simulator(requests, nurses, patients)
+    sim.simulate()
+
+
+if __name__ == "__main__":
+    main()
