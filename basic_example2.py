@@ -3,6 +3,7 @@ import math
 import heapq
 from sortedcontainers import SortedDict
 import numpy as np
+import pandas as pd
 
 MOVEMENT_TIME = 10
 TIME_WITH_PATIENT = 20
@@ -17,6 +18,7 @@ class NurseMovement(IntEnum):
 class Event:
     def __init__(self, time):
         self.time = time
+        self.log = {}
     
     def handle_event(self, nurses, free_nurses, busy_nurses):
         raise NotImplementedError()
@@ -38,15 +40,18 @@ class Request(Event):
                 if busy_nurse.busy_end_time < min_busy_end:
                     min_busy_end = busy_nurse.busy_end_time
             print(self.time, "all nurses busy, request pushed back to {}".format(min_busy_end))
+            self.log = {'time' : self.time, 'type' : "request", 'patient_id' : self.patient.id, 'requested_nurse_id' : self.patient.nurse_id, 'pushed_back' : True, 'pushed_back_time' : min_busy_end}
             return Request(min_busy_end, self.patient)
         else:
             if not assigned_nurse.is_free:
                 nurse_id = free_nurses.pop() 
                 assigned_nurse = nurses[nurse_id]
                 print(self.time, "nurse {} chosen for patient {} because nurse {} is busy".format(nurse_id, self.patient.id, self.patient.nurse_id))
+                self.log = {'time' : self.time, 'type' : "request", 'patient_id' : self.patient.id, 'requested_nurse_id' : self.patient.nurse_id, 'chosen_nurse_id' : nurse_id, 'pushed_back' : False}
             else:
                 free_nurses.remove(nurse_id)
                 print(self.time, "nurse {} chosen for patient {}".format(nurse_id, self.patient.id))
+                self.log = {'time' : self.time, 'type' : "request", 'patient_id' : self.patient.id, 'requested_nurse_id' : nurse_id, 'chosen_nurse_id' : nurse_id, 'pushed_back' : False}
             nextPhaseStart = assigned_nurse.start_request(self.patient.id, self.time)
             busy_nurses.add(nurse_id)
             return NursePhase(nextPhaseStart, assigned_nurse)
@@ -56,7 +61,7 @@ class NursePhase(Event):
         super().__init__(time)
         self.nurse = nurse
     def handle_event(self, nurses, free_nurses, busy_nurses):
-        self.nurse.next_phase(self.time)
+        self.log = self.nurse.next_phase(self.time)
         if self.nurse.is_free:
             nurse_id = self.nurse.id
             busy_nurses.remove(nurse_id)
@@ -89,17 +94,21 @@ class Nurse:
         if self.move_phase == NurseMovement.FROM_PATIENT:
             self.is_free = True
             print(time, "nurse {} returned from patient {}".format(self.id, self.patient_id))
+            return {'time' : time, 'type' : "nurse_phase", 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'nurse_phase' : "returned"}
         else:
             self.move_phase += 1
             if self.move_phase == NurseMovement.TO_PATIENT:
                 self.nextPhaseStart = time + MOVEMENT_TIME
                 print(time, "nurse {} departing to patient {}".format(self.id, self.patient_id))
+                return {'time' : time, 'type' : "nurse_phase", 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'nurse_phase' : "departing"}
             elif self.move_phase == NurseMovement.FROM_PATIENT:
                 self.nextPhaseStart = time + MOVEMENT_TIME
                 print(time, "nurse {} dealt with request from patient {}".format(self.id, self.patient_id))
+                return {'time' : time, 'type' : "nurse_phase", 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'nurse_phase' : "dealt with request"}
             else:
                 self.nextPhaseStart = time + TIME_WITH_PATIENT
                 print(time, "nurse {} arrived at patient {}".format(self.id, self.patient_id))
+                return {'time' : time, 'type' : "nurse_phase", 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'nurse_phase' : "arrived"}
         
 class EventQueue:
     def __init__(self, request_tuples, patients):
@@ -148,13 +157,17 @@ class Simulator:
         self.free_nurses = set()
         for nurse in nurses:
             self.free_nurses.add(nurse.id)
-    
+
+        self.log = []
     def simulate(self):
         while not self.events.empty():
             _, event = self.events.popFirst()
             newEvent = event.handle_event(self.nurses, self.free_nurses, self.busy_nurses)
             self.events.insert(newEvent)
-
+            self.log.append(event.log)
+        
+        return self.log
+        # df.to_csv('out.csv')
 
 def generate_requests(patientAmount: int) -> list[float, int]:
     requests = []
@@ -233,15 +246,15 @@ def main():
     # sim = Simulator(requests, nurses, patients)
     # sim.simulate()
 
-    # print("Test 9") #no nurses free when a request comes
-    # requests = [(1, 0), (25, 2), (26, 1)] #time, patient id
-    # sim = Simulator(requests, nurses, patients)
-    # sim.simulate()
-
-    print("Test 10") #no nurses free when a request comes
-    requests = generate_requests(len(patients))
+    print("Test 9") #no nurses free when a request comes
+    requests = [(1, 0), (25, 2), (26, 1)] #time, patient id
     sim = Simulator(requests, nurses, patients)
     sim.simulate()
+
+    # print("Test 10") #no nurses free when a request comes
+    # requests = generate_requests(len(patients))
+    # sim = Simulator(requests, nurses, patients)
+    # sim.simulate()
 
 
 if __name__ == "__main__":
