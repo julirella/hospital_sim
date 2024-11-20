@@ -41,18 +41,18 @@ class Request(Event):
                 if busy_nurse.busy_end_time < min_busy_end:
                     min_busy_end = busy_nurse.busy_end_time
             print(self.time, "all nurses busy, request pushed back to {}".format(min_busy_end))
-            self.log = {'time' : self.time, 'type' : "request", "request_id" : self.id, 'patient_id' : self.patient.id, 'patient_dst:' : self.patient.office_dst, 'requested_nurse_id' : self.patient.nurse_id, 'pushed_back' : True, 'pushed_back_time' : min_busy_end}
+            self.log = {'time' : self.time, 'type' : "request", "request_id" : self.id, 'patient_id' : self.patient.id, 'patient_dst' : self.patient.office_dst, 'requested_nurse_id' : self.patient.nurse_id, 'pushed_back' : True, 'pushed_back_time' : min_busy_end}
             return Request(min_busy_end, self.patient, self.id)
         else:
             if not assigned_nurse.is_free:
                 nurse_id = free_nurses.pop() 
                 assigned_nurse = nurses[nurse_id]
                 print(self.time, "nurse {} chosen for patient {} because nurse {} is busy".format(nurse_id, self.patient.id, self.patient.nurse_id))
-                self.log = {'time' : self.time, 'type' : "request", "request_id" : self.id, 'patient_id' : self.patient.id, 'patient_dst:' : self.patient.office_dst, 'requested_nurse_id' : self.patient.nurse_id, 'chosen_nurse_id' : nurse_id, 'pushed_back' : False}
+                self.log = {'time' : self.time, 'type' : "request", "request_id" : self.id, 'patient_id' : self.patient.id, 'patient_dst' : self.patient.office_dst, 'requested_nurse_id' : self.patient.nurse_id, 'chosen_nurse_id' : nurse_id, 'pushed_back' : False}
             else:
                 free_nurses.remove(nurse_id)
                 print(self.time, "nurse {} chosen for patient {}".format(nurse_id, self.patient.id))
-                self.log = {'time' : self.time, 'type' : "request", "request_id" : self.id, 'patient_id' : self.patient.id, 'patient_dst:' : self.patient.office_dst, 'requested_nurse_id' : nurse_id, 'chosen_nurse_id' : nurse_id, 'pushed_back' : False}
+                self.log = {'time' : self.time, 'type' : "request", "request_id" : self.id, 'patient_id' : self.patient.id, 'patient_dst' : self.patient.office_dst, 'requested_nurse_id' : nurse_id, 'chosen_nurse_id' : nurse_id, 'pushed_back' : False}
             nextPhaseStart = assigned_nurse.start_request(self.patient, self.time, self)
             busy_nurses.add(nurse_id)
             return NursePhase(nextPhaseStart, assigned_nurse)
@@ -98,21 +98,21 @@ class Nurse:
         if self.move_phase == NurseMovement.FROM_PATIENT:
             self.is_free = True
             print(time, "nurse {} returned from patient {}".format(self.id, self.patient_id))
-            return {'time' : time, 'type' : "nurse_phase", "request_id" : self.assigned_req.id, 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'patient_dst:' : self.patient_dst, 'nurse_phase' : "returned"}
+            return {'time' : time, 'type' : "nurse_phase", "request_id" : self.assigned_req.id, 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'patient_dst' : self.patient_dst, 'nurse_phase' : "returned"}
         else:
             self.move_phase += 1
             if self.move_phase == NurseMovement.TO_PATIENT:
                 self.nextPhaseStart = time + self.patient_dst
                 print(time, "nurse {} departing to patient {}".format(self.id, self.patient_id))
-                return {'time' : time, 'type' : "nurse_phase", "request_id" : self.assigned_req.id, 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'patient_dst:' : self.patient_dst, 'nurse_phase' : "departing"}
+                return {'time' : time, 'type' : "nurse_phase", "request_id" : self.assigned_req.id, 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'patient_dst' : self.patient_dst, 'nurse_phase' : "departing"}
             elif self.move_phase == NurseMovement.FROM_PATIENT:
                 self.nextPhaseStart = time + self.patient_dst
                 print(time, "nurse {} dealt with request from patient {}".format(self.id, self.patient_id))
-                return {'time' : time, 'type' : "nurse_phase", "request_id" : self.assigned_req.id, 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'patient_dst:' : self.patient_dst, 'nurse_phase' : "dealt with request"}
+                return {'time' : time, 'type' : "nurse_phase", "request_id" : self.assigned_req.id, 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'patient_dst' : self.patient_dst, 'nurse_phase' : "dealt with request"}
             else:
                 self.nextPhaseStart = time + TIME_WITH_PATIENT
                 print(time, "nurse {} arrived at patient {}".format(self.id, self.patient_id))
-                return {'time' : time, 'type' : "nurse_phase", "request_id" : self.assigned_req.id, 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'patient_dst:' : self.patient_dst, 'nurse_phase' : "arrived"}
+                return {'time' : time, 'type' : "nurse_phase", "request_id" : self.assigned_req.id, 'nurse_id' : self.id, 'patient_id' : self.patient_id, 'patient_dst' : self.patient_dst, 'nurse_phase' : "arrived"}
         
 class EventQueue:
     def __init__(self, request_tuples, patients):
@@ -163,7 +163,7 @@ class Simulator:
             self.free_nurses.add(nurse.id)
 
         self.log = []
-    def simulate(self):
+    def simulate(self) -> list[dict]:
         while not self.events.empty():
             _, event = self.events.popFirst()
             newEvent = event.handle_event(self.nurses, self.free_nurses, self.busy_nurses)
@@ -186,7 +186,7 @@ def generate_requests(patientAmount: int) -> list[float, int]:
     print(len(requests))
     return requests
 
-def create_nurses_and_patients(nurseAmount: int, patientAmount: int, randomNurses=False):
+def create_nurses_and_patients(nurseAmount: int, patientAmount: int, randomNurses: bool=False) -> tuple[list[Nurse], list[Patient]]:
     nurses = []
     for i in range(nurseAmount):
         nurses.append(Nurse(i))

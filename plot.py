@@ -1,6 +1,10 @@
 import pygame
 from pygame.locals import *
 import sys
+import basic_example2 as be
+import pandas as pd
+import math
+from time import sleep
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 1000
@@ -23,11 +27,18 @@ class Event:
         self.request_id = event_from_table['request_id']
         self.patient_id = event_from_table['patient_id']
         self.patient_dst = event_from_table['patient_dst']
-        self.requested_nurse_id	 = event_from_table['requested_nurse_id']
-        self.chosen_nurse_id = event_from_table['chosen_nurse_id']
-        self.nurse_id = event_from_table['nurse_id']
+        self.requested_nurse_id	 = self.to_int(event_from_table['requested_nurse_id'])
+        self.chosen_nurse_id = self.to_int(event_from_table['chosen_nurse_id'])
+        self.nurse_id = self.to_int(event_from_table['nurse_id'])
         self.pushed_back = event_from_table['pushed_back']
         self.nurse_phase = event_from_table['nurse_phase']
+
+    def to_int(self, num):
+        #TODO some less hacky solution
+        if math.isnan(num):
+            return -1
+        else:
+            return int(num)
 
 class NursePos:
     def __init__(self):
@@ -80,33 +91,32 @@ class State:
                 nurse_pos.dir = 0
 
     
-    def display(self):
+    def display(self, screen: pygame.Surface):
         #nurse dots
         for nurse_pos in self.nurse_positions:
             patient = nurse_pos.patient
             if patient != None:
                 pos = nurse_pos.pos
-                pygame.draw.circle(self.screen, WHITE, (IMG_LEFT + OFFICE_WIDTH + DST_OFFSET*pos, patient * PATIENT_OFFSET + IMG_TOP), 5)
+                pygame.draw.circle(screen, BLUE, (IMG_LEFT + OFFICE_WIDTH + DST_OFFSET*pos, patient * PATIENT_OFFSET + IMG_TOP), 5)
 
         #TODO: display something to show patient waiting for request fulfilment
 
 
 
 class Plot:
-    def __init__(self, events: list[dict] = None):
+    def __init__(self, events: list[dict], nurse_amount: int, patient_amount: int, patient_dsts: list[int]):
         self.events = []
-        if events != None:
-            for event in events:
-                self.events.append(Event(event))
+        for event in events:
+            self.events.append(Event(event))
 
         #create states or accept them as arguments
-        self.nurse_amount = 3
-        self.patient_amount = 4
-        self.patient_dsts = [10, 15, 20, 25]
+        self.nurse_amount = nurse_amount
+        self.patient_amount = patient_amount
+        self.patient_dsts = patient_dsts
         
         nurse_positions = []
         for _ in range(self.nurse_amount):
-            nurse_positions.append(NursePos)
+            nurse_positions.append(NursePos())
         patient_infos = []
         for _ in range(self.patient_amount):
             patient_infos.append(PatientInfo())
@@ -118,28 +128,33 @@ class Plot:
     def display_init(self):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_HEIGHT, SCREEN_WIDTH))
+        self.info_surf = pygame.Surface((200, 100))
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
         self.clock = pygame.time.Clock()
         self.display_static()
         pygame.display.flip()
 
     def display_static(self):
-        # self.screen.fill(WHITE)
+        self.screen.fill(BLACK)
         pygame.draw.rect(surface=self.screen, color=WHITE, rect=self.nurse_rect)
         for i, dst in enumerate(self.patient_dsts):
             pygame.draw.circle(self.screen, RED, (IMG_LEFT + OFFICE_WIDTH + DST_OFFSET*dst, i * PATIENT_OFFSET + IMG_TOP), 15)
 
             for j in range(1, dst + 1):
                 pygame.draw.circle(self.screen, WHITE, (IMG_LEFT + OFFICE_WIDTH + DST_OFFSET*j, i * PATIENT_OFFSET + IMG_TOP), 5)
-                  
 
-
-    def display_state(self, state: State):
-        ...
+    def display_info(self, time: int):
+        self.info_surf.fill(WHITE)
+        text = self.font.render("time: " + str(time), True, BLACK)
+        self.info_surf.blit(text, (5, 5))  # Position: (50, 50)
+        self.screen.blit(self.info_surf, (SCREEN_WIDTH - 200, 0))
 
     def run(self):
         time = 0
         event_num = 0
         self.display_init()
+        sleep(2)
+        print("here")
         while True:
             for event in pygame.event.get():              
                 if event.type == QUIT:
@@ -151,14 +166,30 @@ class Plot:
                 self.state.handle_event(self.events[event_num])
                 event_num += 1 #will probably go out of range after last event
             self.state.tick_clock()
-            self.state.display()
+            self.display_static() #maybe only overwrite the parts that need to be
+            self.display_info(time)
+
+            self.state.display(self.screen)
+            pygame.display.flip()
             time += 1
             self.clock.tick(1)
 
 
 
 def main():
-    plot = Plot()
+    #TODO sort out how to run this from jupyter
+    nurse_amount = 3
+    patient_amount = 3
+    nurses, patients = be.create_nurses_and_patients(nurseAmount=nurse_amount, patientAmount=patient_amount)
+    requests = [(1, 0), (25, 2), (26, 1), (50, 0)] #time, patient id
+    patient_dsts = []
+    for patient in patients:
+        patient_dsts.append(patient.office_dst)
+    sim = be.Simulator(requests, nurses, patients)
+    out = sim.simulate()
+    df2 = pd.DataFrame(out) #TODO design some structure to not have to go through df to keep NaNs
+    outDict = df2.to_dict(orient='records') 
+    plot = Plot(outDict, nurse_amount, patient_amount, patient_dsts)
     plot.run()
 
 if __name__ == "__main__":
