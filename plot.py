@@ -146,8 +146,8 @@ class Plot:
     def display_init(self):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.info_surf = pygame.Surface((200, 100))
-        self.image_surf = pygame.Surface((SCREEN_WIDTH - 300, SCREEN_HEIGHT))
+        self.info_surf = pygame.Surface((200, 50))
+        self.image_surf = pygame.Surface((SCREEN_WIDTH - 100, SCREEN_HEIGHT))
         self.font = pygame.font.Font('freesansbold.ttf', 32)
         self.clock = pygame.time.Clock()
         self.display_static()
@@ -187,7 +187,7 @@ class Plot:
             self.state.tick_clock() #should this be after handle events? Currently only works before
 
             #handle all events in last second
-            while self.events[event_num].time <= time:
+            while event_num < len(self.events) and self.events[event_num].time <= time:
                 self.state.handle_event(self.events[event_num])
                 event_num += 1 #will probably go out of range after last event
             self.display_static() #maybe only overwrite the parts that need to be
@@ -207,6 +207,7 @@ def main():
     patient_amount = 3
     nurses, patients = be.create_nurses_and_patients(nurseAmount=nurse_amount, patientAmount=patient_amount)
     requests = [(1, 0), (25, 2), (26, 1), (50, 0)] #time, patient id
+    # requests = [(1, 0)]
     patient_dsts = []
     patient_nurses = []
     for patient in patients:
