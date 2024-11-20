@@ -89,15 +89,20 @@ class State:
                 nurse_pos.phase_time_left = event.patient_dst
             elif event.nurse_phase == 'returned':
                 nurse_pos.dir = 0
+                nurse_pos.patient = None
 
     
     def display(self, surf: pygame.Surface):
         #nurse dots
+        free_nurses = 0
         for nurse_pos in self.nurse_positions:
             patient = nurse_pos.patient
             if patient != None:
                 pos = nurse_pos.pos
                 pygame.draw.circle(surf, BLUE, (OFFICE_WIDTH + DST_OFFSET*pos, patient * PATIENT_OFFSET + PATIENT_OFFSET // 2), 5)
+            else:
+                pygame.draw.circle(surf, BLUE, (30, 30 + free_nurses * 30), 10)
+                free_nurses += 1
 
         #TODO: display something to show patient waiting for request fulfilment
 
