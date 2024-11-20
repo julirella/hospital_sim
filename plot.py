@@ -41,20 +41,23 @@ class Event:
             return int(num)
 
 class NursePos:
-    def __init__(self):
+    def __init__(self, colour: pygame.Color):
         self.pos = 0
         self.patient = None
         self.dir = 0 #1 forward, -1 back, 0 nothing
         self.at_patient = False
         self.phase_time_left = 0 #maybe useless
+        self.colour = colour
     def move(self):
         if self.patient != None and self.at_patient == False:
             self.pos += self.dir
             self.phase_time_left -= 1
 
 class PatientInfo:
-    def __init__(self):
+    def __init__(self, colour: pygame.Color, office_dst: int):
         self.req_cnt = 0
+        self.colour = colour
+        self.office_dst = office_dst
 
 class State:
     def __init__(self, nurse_positions: list[NursePos], patient_infos: list[PatientInfo]):
@@ -99,9 +102,9 @@ class State:
             patient = nurse_pos.patient
             if patient != None:
                 pos = nurse_pos.pos
-                pygame.draw.circle(surf, BLUE, (OFFICE_WIDTH + DST_OFFSET*pos, patient * PATIENT_OFFSET + PATIENT_OFFSET // 2), 5)
+                pygame.draw.circle(surf, nurse_pos.colour, (OFFICE_WIDTH + DST_OFFSET*pos, patient * PATIENT_OFFSET + PATIENT_OFFSET // 2), 5)
             else:
-                pygame.draw.circle(surf, BLUE, (30, 30 + free_nurses * 30), 10)
+                pygame.draw.circle(surf, nurse_pos.colour, (30, 30 + free_nurses * 30), 10)
                 free_nurses += 1
 
         #TODO: display something to show patient waiting for request fulfilment
@@ -109,7 +112,7 @@ class State:
 
 
 class Plot:
-    def __init__(self, events: list[dict], nurse_amount: int, patient_amount: int, patient_dsts: list[int]):
+    def __init__(self, events: list[dict], nurse_amount: int, patient_amount: int, patient_dsts: list[int], patient_nurses: list[int]):
         self.events = []
         for event in events:
             self.events.append(Event(event))
@@ -120,15 +123,23 @@ class Plot:
         self.patient_dsts = patient_dsts
         
         nurse_positions = []
-        for _ in range(self.nurse_amount):
-            nurse_positions.append(NursePos())
+        for i in range(self.nurse_amount):
+            colour = self.int_to_colour(i, nurse_amount)
+            nurse_positions.append(NursePos(colour))
         patient_infos = []
-        for _ in range(self.patient_amount):
-            patient_infos.append(PatientInfo())
+        for i in range(self.patient_amount):
+            colour = self.int_to_colour(patient_nurses[i], nurse_amount)
+            patient_infos.append(PatientInfo(colour, patient_dsts[i]))
         self.state = State(nurse_positions, patient_infos)
 
         self.rect_height = max(self.nurse_amount, self.patient_amount) * PATIENT_OFFSET
         self.nurse_rect = pygame.Rect(0, 0, OFFICE_WIDTH, self.rect_height)
+
+    def int_to_colour(self, num: int, total_colours: int) -> pygame.Color:
+        step = 360 // total_colours
+        colour = pygame.Color(0, 0, 0, 0)
+        colour.hsva = (step * num, 100, 100, 50)
+        return colour
 
     def display_init(self):
         pygame.init()
@@ -143,10 +154,10 @@ class Plot:
     def display_static(self):
         self.image_surf.fill(BLACK)
         pygame.draw.rect(surface=self.image_surf, color=WHITE, rect=self.nurse_rect)
-        for i, dst in enumerate(self.patient_dsts):
-            pygame.draw.circle(self.image_surf, RED, (OFFICE_WIDTH + DST_OFFSET*dst, i * PATIENT_OFFSET + PATIENT_OFFSET // 2), 15)
+        for i, patient_info in enumerate(self.state.patient_infos):
+            pygame.draw.circle(self.image_surf, patient_info.colour, (OFFICE_WIDTH + DST_OFFSET*patient_info.office_dst, i * PATIENT_OFFSET + PATIENT_OFFSET // 2), 15)
 
-            for j in range(1, dst + 1):
+            for j in range(1, patient_info.office_dst + 1):
                 pygame.draw.circle(self.image_surf, WHITE, (OFFICE_WIDTH + DST_OFFSET*j, i * PATIENT_OFFSET + PATIENT_OFFSET // 2), 5)
         
         self.screen.blit(self.image_surf, (50, 50))
@@ -189,18 +200,20 @@ class Plot:
 
 def main():
     #TODO sort out how to run this from jupyter
-    nurse_amount = 3
-    patient_amount = 4
+    nurse_amount = 5
+    patient_amount = 8
     nurses, patients = be.create_nurses_and_patients(nurseAmount=nurse_amount, patientAmount=patient_amount)
     requests = [(1, 0), (25, 2), (26, 1), (50, 0)] #time, patient id
     patient_dsts = []
+    patient_nurses = []
     for patient in patients:
         patient_dsts.append(patient.office_dst)
+        patient_nurses.append(patient.nurse_id)
     sim = be.Simulator(requests, nurses, patients)
     out = sim.simulate()
     df2 = pd.DataFrame(out) #TODO design some structure to not have to go through df to keep NaNs
     outDict = df2.to_dict(orient='records') 
-    plot = Plot(outDict, nurse_amount, patient_amount, patient_dsts)
+    plot = Plot(outDict, nurse_amount, patient_amount, patient_dsts, patient_nurses)
     plot.run()
 
 if __name__ == "__main__":
