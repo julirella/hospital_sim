@@ -108,8 +108,10 @@ class State:
                 free_nurses += 1
 
         #TODO: display something to show patient waiting for request fulfilment
-
-
+        wait_font = pygame.font.Font('freesansbold.ttf', 20)
+        for i, patient_info in enumerate(self.patient_infos):
+            text = wait_font.render(str(patient_info.req_cnt), True, WHITE)
+            surf.blit(text, (OFFICE_WIDTH + DST_OFFSET*patient_info.office_dst + 20, i * PATIENT_OFFSET + PATIENT_OFFSET // 2 - 10))
 
 class Plot:
     def __init__(self, events: list[dict], nurse_amount: int, patient_amount: int, patient_dsts: list[int], patient_nurses: list[int]):
@@ -182,11 +184,12 @@ class Plot:
                     pygame.quit()
                     sys.exit()
 
+            self.state.tick_clock() #should this be after handle events? Currently only works before
+
             #handle all events in last second
             while self.events[event_num].time <= time:
                 self.state.handle_event(self.events[event_num])
                 event_num += 1 #will probably go out of range after last event
-            self.state.tick_clock()
             self.display_static() #maybe only overwrite the parts that need to be
             self.display_info(time)
 
@@ -200,8 +203,8 @@ class Plot:
 
 def main():
     #TODO sort out how to run this from jupyter
-    nurse_amount = 5
-    patient_amount = 8
+    nurse_amount = 3
+    patient_amount = 3
     nurses, patients = be.create_nurses_and_patients(nurseAmount=nurse_amount, patientAmount=patient_amount)
     requests = [(1, 0), (25, 2), (26, 1), (50, 0)] #time, patient id
     patient_dsts = []
