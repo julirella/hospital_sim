@@ -91,13 +91,13 @@ class State:
                 nurse_pos.dir = 0
 
     
-    def display(self, screen: pygame.Surface):
+    def display(self, surf: pygame.Surface):
         #nurse dots
         for nurse_pos in self.nurse_positions:
             patient = nurse_pos.patient
             if patient != None:
                 pos = nurse_pos.pos
-                pygame.draw.circle(screen, BLUE, (IMG_LEFT + OFFICE_WIDTH + DST_OFFSET*pos, patient * PATIENT_OFFSET + IMG_TOP), 5)
+                pygame.draw.circle(surf, BLUE, (OFFICE_WIDTH + DST_OFFSET*pos, patient * PATIENT_OFFSET + PATIENT_OFFSET // 2), 5)
 
         #TODO: display something to show patient waiting for request fulfilment
 
@@ -123,25 +123,30 @@ class Plot:
         self.state = State(nurse_positions, patient_infos)
 
         self.rect_height = max(self.nurse_amount, self.patient_amount) * PATIENT_OFFSET
-        self.nurse_rect = pygame.Rect(IMG_LEFT, IMG_TOP, OFFICE_WIDTH, self.rect_height)
+        self.nurse_rect = pygame.Rect(0, 0, OFFICE_WIDTH, self.rect_height)
 
     def display_init(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((SCREEN_HEIGHT, SCREEN_WIDTH))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.info_surf = pygame.Surface((200, 100))
+        self.image_surf = pygame.Surface((SCREEN_WIDTH - 300, SCREEN_HEIGHT))
         self.font = pygame.font.Font('freesansbold.ttf', 32)
         self.clock = pygame.time.Clock()
         self.display_static()
         pygame.display.flip()
 
     def display_static(self):
-        self.screen.fill(BLACK)
-        pygame.draw.rect(surface=self.screen, color=WHITE, rect=self.nurse_rect)
+        self.image_surf.fill(BLACK)
+        pygame.draw.rect(surface=self.image_surf, color=WHITE, rect=self.nurse_rect)
         for i, dst in enumerate(self.patient_dsts):
-            pygame.draw.circle(self.screen, RED, (IMG_LEFT + OFFICE_WIDTH + DST_OFFSET*dst, i * PATIENT_OFFSET + IMG_TOP), 15)
+            pygame.draw.circle(self.image_surf, RED, (OFFICE_WIDTH + DST_OFFSET*dst, i * PATIENT_OFFSET + PATIENT_OFFSET // 2), 15)
 
             for j in range(1, dst + 1):
-                pygame.draw.circle(self.screen, WHITE, (IMG_LEFT + OFFICE_WIDTH + DST_OFFSET*j, i * PATIENT_OFFSET + IMG_TOP), 5)
+                pygame.draw.circle(self.image_surf, WHITE, (OFFICE_WIDTH + DST_OFFSET*j, i * PATIENT_OFFSET + PATIENT_OFFSET // 2), 5)
+        
+        self.screen.blit(self.image_surf, (50, 50))
+        # pygame.display.flip() #fixes dots staying on office edge. Probably eventually put static stuff on a different surface and just blit it
+        
 
     def display_info(self, time: int):
         self.info_surf.fill(WHITE)
@@ -169,7 +174,8 @@ class Plot:
             self.display_static() #maybe only overwrite the parts that need to be
             self.display_info(time)
 
-            self.state.display(self.screen)
+            self.state.display(self.image_surf)
+            self.screen.blit(self.image_surf, (50, 50)) #this is being blitted in 2 different places!!
             pygame.display.flip()
             time += 1
             self.clock.tick(1)
@@ -179,7 +185,7 @@ class Plot:
 def main():
     #TODO sort out how to run this from jupyter
     nurse_amount = 3
-    patient_amount = 3
+    patient_amount = 4
     nurses, patients = be.create_nurses_and_patients(nurseAmount=nurse_amount, patientAmount=patient_amount)
     requests = [(1, 0), (25, 2), (26, 1), (50, 0)] #time, patient id
     patient_dsts = []
