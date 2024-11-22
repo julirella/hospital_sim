@@ -187,8 +187,6 @@ class Plot:
         time = 0
         event_num = 0
         self.display_init()
-        sleep(2)
-        print("here")
         while True:
             for event in pygame.event.get():              
                 if event.type == QUIT:
@@ -208,43 +206,43 @@ class Plot:
             self.screen.blit(self.image_surf, (50, 50)) #this is being blitted in 2 different places!!
             pygame.display.flip()
             time += 1
-            self.clock.tick(1)
+            self.clock.tick(60)
 
 
 
 def main():
     #TODO sort out how to run this from jupyter
-    # nurse_amount = 3
-    # patient_amount = 3
-    # nurses, patients = be.create_nurses_and_patients(nurseAmount=nurse_amount, patientAmount=patient_amount)
-    # # requests = [(1, 0), (25, 2), (26, 1), (50, 0)] #time, patient id
-    # requests = [(1, 0), (2, 1), (3, 1), (4, 0)] #time, patient id
-    # patient_dsts = []
-    # patient_nurses = []
-    # for patient in patients:
-    #     patient_dsts.append(patient.office_dst)
-    #     patient_nurses.append(patient.nurse_id)
-    # sim = be.Simulator(requests, nurses, patients)
-    # out = sim.simulate()
-    # df2 = pd.DataFrame(out) #TODO design some structure to not have to go through df to keep NaNs
-    # outDict = df2.to_dict(orient='records') 
-    # plot = Plot(outDict, nurse_amount, patient_amount, patient_dsts, patient_nurses)
-    # plot.run()
-
     nurse_amount = 3
-    patient_amount = 5
+    patient_amount = 3
     nurses, patients = be.create_nurses_and_patients(nurseAmount=nurse_amount, patientAmount=patient_amount)
-    requests = be.generate_requests(len(patients))
+    # requests = [(1, 0), (25, 2), (26, 1), (50, 0)] #time, patient id
+    requests = [(1, 0), (2, 1), (3, 1), (4, 0)] #time, patient id
     patient_dsts = []
     patient_nurses = []
     for patient in patients:
         patient_dsts.append(patient.office_dst)
         patient_nurses.append(patient.nurse_id)
     sim = be.Simulator(requests, nurses, patients)
-    df = pd.DataFrame(sim.simulate())
-    outDict = df.to_dict(orient='records') 
+    out = sim.simulate()
+    df2 = pd.DataFrame(out) #TODO design some structure to not have to go through df to keep NaNs
+    outDict = df2.to_dict(orient='records') 
     plot = Plot(outDict, nurse_amount, patient_amount, patient_dsts, patient_nurses)
     plot.run()
+
+    # nurse_amount = 3
+    # patient_amount = 5
+    # nurses, patients = be.create_nurses_and_patients(nurseAmount=nurse_amount, patientAmount=patient_amount)
+    # requests = be.generate_requests(len(patients))
+    # patient_dsts = []
+    # patient_nurses = []
+    # for patient in patients:
+    #     patient_dsts.append(patient.office_dst)
+    #     patient_nurses.append(patient.nurse_id)
+    # sim = be.Simulator(requests, nurses, patients)
+    # df = pd.DataFrame(sim.simulate())
+    # outDict = df.to_dict(orient='records') 
+    # plot = Plot(outDict, nurse_amount, patient_amount, patient_dsts, patient_nurses)
+    # plot.run()
 
 if __name__ == "__main__":
     main()
