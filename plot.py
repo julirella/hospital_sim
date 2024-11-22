@@ -206,7 +206,7 @@ class Plot:
             self.screen.blit(self.image_surf, (50, 50)) #this is being blitted in 2 different places!!
             pygame.display.flip()
             time += 1
-            self.clock.tick(60)
+            self.clock.tick(2)
 
 
 
