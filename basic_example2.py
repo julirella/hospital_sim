@@ -5,8 +5,7 @@ from sortedcontainers import SortedDict
 import numpy as np
 import pandas as pd
 
-MOVEMENT_TIME = 10
-TIME_WITH_PATIENT = 20
+TIME_WITH_PATIENT = 10
 REACTION_TIME = 1
 
 class NurseMovement(IntEnum):

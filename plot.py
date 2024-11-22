@@ -5,6 +5,7 @@ import basic_example2 as be
 import pandas as pd
 import math
 from time import sleep
+from sortedcontainers import SortedList
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 1000
@@ -32,6 +33,8 @@ class Event:
         self.nurse_id = self.to_int(event_from_table['nurse_id'])
         self.pushed_back = event_from_table['pushed_back']
         self.nurse_phase = event_from_table['nurse_phase']
+
+        self.first_occurence = True
 
     def to_int(self, num):
         #TODO some less hacky solution
@@ -63,17 +66,25 @@ class State:
     def __init__(self, nurse_positions: list[NursePos], patient_infos: list[PatientInfo]):
         self.nurse_positions = nurse_positions
         self.patient_infos = patient_infos
+        self.requests_waiting = SortedList()
     
     def tick_clock(self):
         for nurse_pos in self.nurse_positions:
                 nurse_pos.move()
     
     def handle_event(self, event: Event):
-        if event.type == 'request': #patient assigned but not moving yet
-            nurse_id = event.chosen_nurse_id
-            nurse_pos = self.nurse_positions[nurse_id]
-            nurse_pos.patient = event.patient_id
-            self.patient_infos[event.patient_id].req_cnt += 1
+        if event.type == 'request': #patient assigned but not moving 
+            waiting = self.requests_waiting.__contains__(event.request_id)
+            if not waiting:
+                self.patient_infos[event.patient_id].req_cnt += 1
+                self.requests_waiting.add(event.request_id)
+            if event.pushed_back == False:
+                nurse_id = event.chosen_nurse_id
+                nurse_pos = self.nurse_positions[nurse_id]
+                nurse_pos.patient = event.patient_id
+                if waiting:
+                    self.requests_waiting.remove(event.request_id)
+
         elif event.type == 'nurse_phase':
             nurse_id = event.nurse_id
             nurse_pos = self.nurse_positions[nurse_id]
@@ -203,20 +214,35 @@ class Plot:
 
 def main():
     #TODO sort out how to run this from jupyter
+    # nurse_amount = 3
+    # patient_amount = 3
+    # nurses, patients = be.create_nurses_and_patients(nurseAmount=nurse_amount, patientAmount=patient_amount)
+    # # requests = [(1, 0), (25, 2), (26, 1), (50, 0)] #time, patient id
+    # requests = [(1, 0), (2, 1), (3, 1), (4, 0)] #time, patient id
+    # patient_dsts = []
+    # patient_nurses = []
+    # for patient in patients:
+    #     patient_dsts.append(patient.office_dst)
+    #     patient_nurses.append(patient.nurse_id)
+    # sim = be.Simulator(requests, nurses, patients)
+    # out = sim.simulate()
+    # df2 = pd.DataFrame(out) #TODO design some structure to not have to go through df to keep NaNs
+    # outDict = df2.to_dict(orient='records') 
+    # plot = Plot(outDict, nurse_amount, patient_amount, patient_dsts, patient_nurses)
+    # plot.run()
+
     nurse_amount = 3
-    patient_amount = 3
+    patient_amount = 5
     nurses, patients = be.create_nurses_and_patients(nurseAmount=nurse_amount, patientAmount=patient_amount)
-    requests = [(1, 0), (25, 2), (26, 1), (50, 0)] #time, patient id
-    # requests = [(1, 0)]
+    requests = be.generate_requests(len(patients))
     patient_dsts = []
     patient_nurses = []
     for patient in patients:
         patient_dsts.append(patient.office_dst)
         patient_nurses.append(patient.nurse_id)
     sim = be.Simulator(requests, nurses, patients)
-    out = sim.simulate()
-    df2 = pd.DataFrame(out) #TODO design some structure to not have to go through df to keep NaNs
-    outDict = df2.to_dict(orient='records') 
+    df = pd.DataFrame(sim.simulate())
+    outDict = df.to_dict(orient='records') 
     plot = Plot(outDict, nurse_amount, patient_amount, patient_dsts, patient_nurses)
     plot.run()
 
