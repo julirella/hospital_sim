@@ -19,8 +19,8 @@ class Graph:
     
     def find_path(self, start: Node, end: Node) -> list[Node]:
         #dijkstra, source: https://courses.fit.cvut.cz/BI-AG1/lectures/media/bi-ag1-p12-handout.pdf
-        start_id = start.id
-        end_id = end.id
+        start_id = start.node_id
+        end_id = end.node_id
         node_cnt = len(self.nodes)
         
         open_nodes = set()
@@ -38,7 +38,7 @@ class Graph:
         while len(open_nodes) > 0:
             current_id = open_dist.popitem(0)[0]
             for neighbour, weight in self.edges[current_id]:
-                neighbour_id = neighbour.id
+                neighbour_id = neighbour.node_id
                 new_dist = dist[current_id] + weight
                 if dist[neighbour_id] > new_dist: #what if neighbour is predecessor of current
                     dist[neighbour_id] = new_dist
