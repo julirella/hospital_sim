@@ -1,12 +1,27 @@
-from .node import Node
+from src.node import Node
 from sortedcontainers import SortedDict
+from math import sqrt
 
 class Graph:
-    def __init__(self, nodes: list[Node], edges: list[list[tuple[Node, int]]]) -> None:
+    def __init__(self, nodes: list[Node]) -> None:
         self.nodes = nodes
-        self.edges = edges
+        self.edges: list[list[tuple[int, float]]] = [] * len(nodes)
         pass
-    
+
+    def edge_weight(self, src_node_id: int, dst_node_id: int) -> float:
+        src_x, src_y = self.nodes[src_node_id].x, self.nodes[src_node_id].y
+        dst_x, dst_y = self.nodes[dst_node_id].x, self.nodes[dst_node_id].y
+        weight = sqrt((src_x - dst_x)**2 + (src_y - dst_y)**2)
+        return weight
+
+    def add_edge(self, src_node_id: int, dst_node_id: int) -> None:
+        #TODO: somehow scale weight properly based on units
+        weight = self.edge_weight(src_node_id, dst_node_id)
+
+        #TODO: maybe check for duplicate edges
+        self.edges[src_node_id].append((dst_node_id, weight))
+        self.edges[dst_node_id].append((src_node_id, weight))
+
     def __retrace_path(self, start_id: int, end_id: int, prev: list[int]) -> list[Node]:
         path = []
         current_id = end_id
@@ -37,8 +52,7 @@ class Graph:
 
         while len(open_nodes) > 0:
             current_id = open_dist.popitem(0)[0]
-            for neighbour, weight in self.edges[current_id]:
-                neighbour_id = neighbour.node_id
+            for neighbour_id, weight in self.edges[current_id]:
                 new_dist = dist[current_id] + weight
                 if dist[neighbour_id] > new_dist: #what if neighbour is predecessor of current
                     dist[neighbour_id] = new_dist

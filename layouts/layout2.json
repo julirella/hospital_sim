@@ -1,0 +1,56 @@
+{
+  "edges": {
+    "d9fe3b49-138c-474f-a45a-2fe33e4e7ab8": {
+      "id": "d9fe3b49-138c-474f-a45a-2fe33e4e7ab8",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "516c21ae-eb70-4cb5-9348-5b6e3d6f1b80",
+          "to": "8bb427a8-a60b-4831-8136-9ccc4894c910"
+        },
+        "selected": false
+      }
+    }
+  },
+  "metadata": {
+    "algorithm": "Dijkstra",
+    "createdAt": "2025-01-16T09:59:48.444Z",
+    "id": "",
+    "name": "test"
+  },
+  "nodes": {
+    "516c21ae-eb70-4cb5-9348-5b6e3d6f1b80": {
+      "id": "516c21ae-eb70-4cb5-9348-5b6e3d6f1b80",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "P"
+      },
+      "ui": {
+        "pos": {
+          "x": 210,
+          "y": 70
+        },
+        "selected": false
+      }
+    },
+    "8bb427a8-a60b-4831-8136-9ccc4894c910": {
+      "id": "8bb427a8-a60b-4831-8136-9ccc4894c910",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "J"
+      },
+      "ui": {
+        "pos": {
+          "x": 455,
+          "y": 140
+        },
+        "selected": false
+      }
+    }
+  }
+}
