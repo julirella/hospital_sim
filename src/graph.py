@@ -1,10 +1,13 @@
+from src import NurseOffice, PatientRoom
 from src.node import Node
 from sortedcontainers import SortedDict
 from math import sqrt
 
 class Graph:
-    def __init__(self, nodes: list[Node]) -> None:
+    def __init__(self, nodes: list[Node], nurse_office: NurseOffice, patient_rooms: list[PatientRoom]) -> None:
         self.nodes = nodes
+        self.nurse_office = nurse_office
+        self.patient_rooms = patient_rooms
         self.edges: list[list[tuple[int, float]]] = [] * len(nodes)
         pass
 

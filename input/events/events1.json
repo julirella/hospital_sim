@@ -1,0 +1,19 @@
+{
+  "requests": [
+    {
+      "time": 0.0,
+      "patient": 0,
+      "level": "basic",
+      "duration": 10.0
+    },
+    {}
+  ],
+  "plans": [
+    {
+      "time": 0.0,
+      "patient": 0,
+      "nurse": 0,
+      "duration": 10.0
+    }
+  ]
+}
