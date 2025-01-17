@@ -3,7 +3,7 @@
     {
       "time": 0.0,
       "patient": 0,
-      "level": "basic",
+      "level": 1,
       "duration": 10.0
     },
     {}
