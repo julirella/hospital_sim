@@ -1,0 +1,75 @@
+import json
+
+from src import Graph
+from src.event import Request
+from src.nurse import Nurse
+from src.patient import Patient
+from src.queue.event_queue import EventQueue
+from src.queue.nurse_queue import NurseQueue
+from src.simulator import Simulator
+from .importer import Importer
+
+class SimImporter(Importer):
+    def __init__(self, graph_file_name: str, entity_file_name: str, event_file_name: str ) -> None:
+        super().__init__(graph_file_name)
+        self.entity_file_name = entity_file_name
+        self.event_file_name = event_file_name
+
+    def import_entities(self, graph: Graph) -> tuple[list[Nurse], list[Patient]]:
+        file = open(self.entity_file_name)
+        entities_json = json.load(file)
+
+        nurse_cnt = entities_json["nurses"]
+        nurses: list[Nurse] = []
+        for i in nurse_cnt:
+            nurses.append(Nurse(i, graph.nurse_office))
+
+        patient_lst = entities_json["patients"]
+        patients: list[Patient] = []
+        for patient_info in patient_lst:
+            nurse = nurses[patient_info["nurse_id"]]
+            room = graph.patient_rooms[patient_info["room"]]
+            patient = Patient(nurse, room)
+            patients.append(patient)
+
+        return nurses, patients
+
+    def import_events(self, graph, nurses, patients) -> tuple[EventQueue, list[NurseQueue]]:
+        file = open(self.event_file_name)
+        events_json = json.load(file)
+        request_lst = events_json["requests"]
+        plan_lst = events_json["plans"]
+        event_id = 0
+
+        request_queue = EventQueue()
+        for request_dict in request_lst:
+            time = request_dict["time"]
+            patient = patients[request_dict["patient"]]
+            level = request_dict["level"]
+            duration = request_dict["duration"]
+            request = Request(event_id, time, level, patient, duration)
+            request_queue.add(request)
+            event_id += 1
+
+        nurse_queues: [NurseQueue] = []
+        for nurse in nurses:
+            nurse_queues.append(NurseQueue(nurse))
+
+        for plan_dict in plan_lst:
+            time = plan_dict["time"]
+            patient = patients[plan_dict["patient"]]
+            duration = plan_dict["duration"]
+            nurse_id = plan_dict["nurse"]
+            nurse = nurses[nurse_id]
+            plan = Plan(event_id, time, patient, duration, nurse)
+            nurse_queues[nurse_id].add(plan)
+
+        return request_queue, nurse_queues
+
+
+    def import_data(self) -> Simulator:
+        graph = self._import_graph()
+        nurses, patients = self.import_entities(graph)
+        req_queue, nurse_queues = self.import_events(graph, nurses, patients)
+        simulator = Simulator(graph, nurses, patients, req_queue, nurse_queues)
+        return simulator
