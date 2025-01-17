@@ -1,4 +1,4 @@
-from nurse import Nurse
+from src.nurse import Nurse
 from src.graph import Graph
 from src.patient import Patient
 from src.queue.event_queue import EventQueue

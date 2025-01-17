@@ -1,0 +1,114 @@
+{
+  "edges": {
+    "030648ac-ac59-4c67-978f-827f73240251": {
+      "id": "030648ac-ac59-4c67-978f-827f73240251",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "162c295b-d096-4dfc-baf3-537c8d3e973c",
+          "to": "b49585c7-649f-469f-876e-adf54fce69f2"
+        },
+        "selected": false
+      }
+    },
+    "38a5947d-e31a-4ab8-ae85-d1f6061f96cf": {
+      "id": "38a5947d-e31a-4ab8-ae85-d1f6061f96cf",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "b49585c7-649f-469f-876e-adf54fce69f2",
+          "to": "114c4fc2-06a2-4951-90b1-f047171596a2"
+        },
+        "selected": false
+      }
+    },
+    "5b12c3f7-b143-455f-88c8-92003c785c6d": {
+      "id": "5b12c3f7-b143-455f-88c8-92003c785c6d",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "1446ed8d-1382-4b0b-a8bb-cacc89c6a24c",
+          "to": "b49585c7-649f-469f-876e-adf54fce69f2"
+        },
+        "selected": false
+      }
+    }
+  },
+  "metadata": {
+    "algorithm": "Dijkstra",
+    "createdAt": "2025-01-16T13:51:47.632Z",
+    "id": "",
+    "name": "test4"
+  },
+  "nodes": {
+    "162c295b-d096-4dfc-baf3-537c8d3e973c": {
+      "id": "162c295b-d096-4dfc-baf3-537c8d3e973c",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "N"
+      },
+      "ui": {
+        "pos": {
+          "x": 210,
+          "y": 70
+        },
+        "selected": false
+      }
+    },
+    "b49585c7-649f-469f-876e-adf54fce69f2": {
+      "id": "b49585c7-649f-469f-876e-adf54fce69f2",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "J"
+      },
+      "ui": {
+        "pos": {
+          "x": 420,
+          "y": 70
+        },
+        "selected": false
+      }
+    },
+    "114c4fc2-06a2-4951-90b1-f047171596a2": {
+      "id": "114c4fc2-06a2-4951-90b1-f047171596a2",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "P"
+      },
+      "ui": {
+        "pos": {
+          "x": 210,
+          "y": 210
+        },
+        "selected": false
+      }
+    },
+    "1446ed8d-1382-4b0b-a8bb-cacc89c6a24c": {
+      "id": "1446ed8d-1382-4b0b-a8bb-cacc89c6a24c",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "P"
+      },
+      "ui": {
+        "pos": {
+          "x": 440.909090909091,
+          "y": 198.18181818181822
+        },
+        "selected": false
+      }
+    }
+  }
+}

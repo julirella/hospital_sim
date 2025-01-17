@@ -17,7 +17,8 @@ class Importer:
         nurse_office: NurseOffice | None = None
         patient_rooms: list[PatientRoom] = []
 
-        for node_id, key, val in enumerate(nodes_dict.items()):
+        for node_id, item in enumerate(nodes_dict.items()):
+            key, val = item
             node_ids[key] = node_id
             x = val["ui"]["pos"]["x"]
             y = val["ui"]["pos"]["y"]
@@ -30,7 +31,7 @@ class Importer:
                 room_number += 1
             elif node_type == "N":
                 node = NurseOffice(node_id, x, y)
-                if nurse_office is None:
+                if nurse_office is not None:
                     raise Exception("can't have two nurse offices")
                 nurse_office = node
             else:

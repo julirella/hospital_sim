@@ -1,15 +1,15 @@
-from src import NurseOffice, PatientRoom
-from src.node import Node
 from sortedcontainers import SortedDict
 from math import sqrt
+
+from src.node import NurseOffice, PatientRoom
+from src.node import Node
 
 class Graph:
     def __init__(self, nodes: list[Node], nurse_office: NurseOffice, patient_rooms: list[PatientRoom]) -> None:
         self.nodes = nodes
         self.nurse_office = nurse_office
         self.patient_rooms = patient_rooms
-        self.edges: list[list[tuple[int, float]]] = [] * len(nodes)
-        pass
+        self.edges: list[list[tuple[int, float]]] = [[] for _ in range(len(nodes))] #prepare empty lists
 
     def edge_weight(self, src_node_id: int, dst_node_id: int) -> float:
         src_x, src_y = self.nodes[src_node_id].x, self.nodes[src_node_id].y
