@@ -21,7 +21,7 @@ class SimImporter(Importer):
 
         nurse_cnt = entities_json["nurses"]
         nurses: list[Nurse] = []
-        for i in nurse_cnt:
+        for i in range(nurse_cnt):
             nurses.append(Nurse(i, graph.nurse_office))
 
         patient_lst = entities_json["patients"]
@@ -63,6 +63,7 @@ class SimImporter(Importer):
             nurse: Nurse = nurses[nurse_id]
             plan = Plan(event_id, time, duration, patient, nurse)
             nurse_queues[nurse_id].add(plan)
+            event_id += 1
 
         return request_queue, nurse_queues
 
