@@ -1,7 +1,8 @@
-from .event import Event
+from . import TimedOccurrence
 from ..nurse import Nurse
 
 
-class Step(Event):
-    def __init__(self, event_id: int, nurse: Nurse):
-        super().__init__(event_id, nurse)
+class Step(TimedOccurrence):
+    def __init__(self, time: float, nurse: Nurse):
+        super().__init__(time)
+        self.nurse = nurse
