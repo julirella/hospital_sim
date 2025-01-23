@@ -23,7 +23,7 @@ class Event(TimedOccurrence):
         self.assigned_nurse = assigned_nurse
         self.graph = graph #is this dependency injection?
         self.status = EventStatus.NOT_STARTED
-        self.steps = []
+        self.steps: list[Step] = []
 
     def create_steps(self) -> None:
         #nurse has to be assigned at this point
@@ -44,13 +44,25 @@ class Event(TimedOccurrence):
         self.steps.append(TimeAtPatient(prev_step_time + self.duration, self.assigned_nurse, self.duration))
 
         #getting back? Is it a separate plan? Is it gonna be sorted out in simulator?
-    def pop_next_step(self) -> tuple[Step, bool]:
+    def pop_next_step(self) -> Step:
         step: Step = self.steps.pop(0)
+        return step
+
+    def is_finished(self) -> bool:
         if len(self.steps) == 0:
-            last_step = True
+            return True
         else:
-            last_step = False
-        return step, last_step
+             return False
+
+    def get_next_step(self) -> Step:
+        #assumes only future steps are in this list
+        return self.steps[0]
+
+    def run_next_step(self) -> bool:
+        #runs next step, returns true if it finishes the event
+        step: Step = self.pop_next_step()
+        step.run()
+        return self.is_finished()
 
     def pause(self) -> None:
         ...

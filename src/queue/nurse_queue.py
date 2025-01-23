@@ -12,8 +12,16 @@ class NurseQueue(EventQueue):
     def add_to_gap(self, event: Event) -> None:
         pass
 
-    def next_step(self) -> Step:
+    def get_next_step(self) -> Step:
         time: float
         event: Event
-        time, event= self.queue.peekitem(0)
-        return event.next_step() #sort out if this is the last step
+        time, event = self.queue.peekitem(0)
+        return event.get_next_step() #sort out if this is the last step
+
+    def run_next_step(self) -> None:
+        #call run next step of top event
+        next_event: Event = self.top_item()
+        finished = next_event.run_next_step()
+        #if the event is over, remove it (and maybe log that)
+        if finished:
+            self.pop()
