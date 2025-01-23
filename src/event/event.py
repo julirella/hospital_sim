@@ -9,6 +9,8 @@ from src.event.timed_occurrence import TimedOccurrence
 from src.nurse import Nurse
 from src.patient import Patient
 
+NURSE_SPEED = 4
+
 class EventStatus(IntEnum):
     NOT_STARTED = 1
     ACTIVE = 2
@@ -35,10 +37,15 @@ class Event(TimedOccurrence):
         prev_step_time = self.time
 
         #getting there
+        from_node = nurse_pos
         for i in range(len(path_there)):
-            step_time = prev_step_time #+ time it takes to get between the nodes
-            self.steps.append(Movement(nurse=self.assigned_nurse, start=path_there[i], end=path_there[i+1]))
+            to_node, dst = path_there[i]
+            step_duration = dst / NURSE_SPEED #TODO: sort out this conversion
+            step_time = prev_step_time + step_duration
+            step = Movement(step_time, self.assigned_nurse, from_node, to_node)
+            self.steps.append(step)
             prev_step_time = step_time
+            from_node = to_node
 
         #time there
         self.steps.append(TimeAtPatient(prev_step_time + self.duration, self.assigned_nurse, self.duration))
