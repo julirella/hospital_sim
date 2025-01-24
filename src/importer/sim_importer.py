@@ -8,6 +8,8 @@ from src.queue.event_queue import EventQueue
 from src.queue.nurse_queue import NurseQueue
 from src.simulator import Simulator
 from .importer import Importer
+from ..sim_time import SimTime
+
 
 class SimImporter(Importer):
     def __init__(self, graph_file_name: str, entity_file_name: str, event_file_name: str ) -> None:
@@ -15,21 +17,21 @@ class SimImporter(Importer):
         self.entity_file_name = entity_file_name
         self.event_file_name = event_file_name
 
-    def import_entities(self, graph: Graph) -> tuple[list[Nurse], list[Patient]]:
+    def import_entities(self, graph: Graph, sim_time: SimTime) -> tuple[list[Nurse], list[Patient]]:
         file = open(self.entity_file_name)
         entities_json = json.load(file)
 
         nurse_cnt = entities_json["nurses"]
         nurses: list[Nurse] = []
         for i in range(nurse_cnt):
-            nurses.append(Nurse(i, graph.nurse_office))
+            nurses.append(Nurse(i, graph.nurse_office, sim_time))
 
         patient_lst = entities_json["patients"]
         patients: list[Patient] = []
         for patient_info in patient_lst:
             nurse = nurses[patient_info["nurse_id"]]
             room = graph.patient_rooms[patient_info["room"]]
-            patient = Patient(nurse, room)
+            patient = Patient(nurse, room, sim_time)
             patients.append(patient)
 
         return nurses, patients
@@ -70,7 +72,8 @@ class SimImporter(Importer):
 
     def import_data(self) -> Simulator:
         graph = self._import_graph()
-        nurses, patients = self.import_entities(graph)
+        sim_time = SimTime()
+        nurses, patients = self.import_entities(graph, sim_time)
         req_queue, nurse_queues = self.import_events(nurses, patients)
-        simulator = Simulator(graph, nurses, patients, req_queue, nurse_queues)
+        simulator = Simulator(graph, nurses, patients, req_queue, nurse_queues, sim_time)
         return simulator

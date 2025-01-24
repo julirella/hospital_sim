@@ -51,6 +51,11 @@ class Event(TimedOccurrence):
         self.steps.append(TimeAtPatient(prev_step_time + self.duration, self.assigned_nurse, self.duration))
 
         #getting back? Is it a separate plan? Is it gonna be sorted out in simulator?
+    def start(self):
+        self.create_steps()
+        self.assigned_nurse.assign_event(self.event_id)
+        self.status = EventStatus.ACTIVE
+
     def pop_next_step(self) -> Step:
         step: Step = self.steps.pop(0)
         return step
@@ -67,8 +72,14 @@ class Event(TimedOccurrence):
 
     def run_next_step(self) -> bool:
         #runs next step, returns true if it finishes the event
+        if self.status == EventStatus.NOT_STARTED:
+            self.start()
         step: Step = self.pop_next_step()
         step.run()
+
+        if self.is_finished():
+            self.assigned_nurse.finish_event()
+
         return self.is_finished()
 
     def pause(self) -> None:

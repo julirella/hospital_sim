@@ -21,7 +21,7 @@ class NurseQueue(EventQueue):
     def run_next_step(self) -> None:
         #call run next step of top event
         next_event: Event = self.top_item()
-        finished = next_event.run_next_step()
+        finished: bool = next_event.run_next_step()
         #if the event is over, remove it (and maybe log that)
         if finished:
             self.pop()
