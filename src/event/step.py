@@ -5,7 +5,7 @@ from ..nurse import Nurse
 class Step(TimedOccurrence):
     def __init__(self, time: float, nurse: Nurse):
         super().__init__(time)
-        self.nurse = nurse
+        self._nurse = nurse
 
     def run(self):
         pass

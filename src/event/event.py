@@ -19,22 +19,22 @@ class EventStatus(IntEnum):
 class Event(TimedOccurrence):
     def __init__(self, event_id: int, time: float, duration: float, patient: Patient, assigned_nurse: Nurse | None, graph: Graph) -> None:
         super().__init__(time)
-        self.event_id = event_id
-        self.duration = duration
-        self.patient = patient
-        self.assigned_nurse = assigned_nurse
-        self.graph = graph #is this dependency injection?
-        self.status = EventStatus.NOT_STARTED
-        self.steps: list[Step] = []
+        self.__event_id = event_id
+        self.__duration = duration
+        self.__patient = patient
+        self._assigned_nurse = assigned_nurse
+        self.__graph = graph
+        self.__status = EventStatus.NOT_STARTED
+        self.__steps: list[Step] = []
 
-    def create_steps(self) -> None:
+    def __create_steps__(self) -> None:
         #nurse has to be assigned at this point
         #each step needs to happen at the end of it, but also it has to be obvious that the event is in progress
         #so maybe some start event step??
-        nurse_pos = self.assigned_nurse.get_pos()
-        patient_pos = self.patient.room
-        path_there = self.graph.find_path(nurse_pos, patient_pos)
-        prev_step_time = self.time
+        nurse_pos = self._assigned_nurse.get_pos()
+        patient_pos = self.__patient.room
+        path_there = self.__graph.find_path(nurse_pos, patient_pos)
+        prev_step_time = self._time
 
         #getting there
         from_node = nurse_pos
@@ -42,45 +42,45 @@ class Event(TimedOccurrence):
             to_node, dst = path_there[i]
             step_duration = dst / NURSE_SPEED #TODO: sort out this conversion
             step_time = prev_step_time + step_duration
-            step = Movement(step_time, self.assigned_nurse, from_node, to_node)
-            self.steps.append(step)
+            step = Movement(step_time, self._assigned_nurse, from_node, to_node)
+            self.__steps.append(step)
             prev_step_time = step_time
             from_node = to_node
 
         #time there
-        self.steps.append(TimeAtPatient(prev_step_time + self.duration, self.assigned_nurse, self.duration))
+        self.__steps.append(TimeAtPatient(prev_step_time + self.__duration, self._assigned_nurse, self.__duration))
 
         #getting back? Is it a separate plan? Is it gonna be sorted out in simulator?
-    def start(self):
-        self.create_steps()
-        self.assigned_nurse.assign_event(self.event_id)
-        self.status = EventStatus.ACTIVE
+    def __start__(self):
+        self.__create_steps__()
+        self._assigned_nurse.assign_event(self.__event_id)
+        self.__status = EventStatus.ACTIVE
 
-    def pop_next_step(self) -> Step:
-        step: Step = self.steps.pop(0)
+    def __pop_next_step__(self) -> Step:
+        step: Step = self.__steps.pop(0)
         return step
 
-    def is_finished(self) -> bool:
-        if len(self.steps) == 0:
+    def __is_finished__(self) -> bool:
+        if len(self.__steps) == 0:
             return True
         else:
              return False
 
     def get_next_step(self) -> Step:
-        #assumes only future steps are in this list
-        return self.steps[0]
+        #assumes only future __steps are in this list
+        return self.__steps[0]
 
     def run_next_step(self) -> bool:
         #runs next step, returns true if it finishes the event
-        if self.status == EventStatus.NOT_STARTED:
-            self.start()
-        step: Step = self.pop_next_step()
+        if self.__status == EventStatus.NOT_STARTED:
+            self.__start__()
+        step: Step = self.__pop_next_step__()
         step.run()
 
-        if self.is_finished():
-            self.assigned_nurse.finish_event()
+        if self.__is_finished__():
+            self._assigned_nurse.finish_event()
 
-        return self.is_finished()
+        return self.__is_finished__()
 
     def pause(self) -> None:
         ...
