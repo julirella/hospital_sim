@@ -1,7 +1,6 @@
 from abc import abstractmethod
 import json
 from src import Graph
-from src.nurse import Nurse
 from src.node import *
 
 
@@ -25,17 +24,21 @@ class Importer:
             node_type = val["properties"]["name"]
             if node_type == "J":
                 node = Junction(node_id, x, y)
-            elif node_type == "P":
-                node = PatientRoom(node_id, x, y, room_number)
-                patient_rooms.append(node)
-                room_number += 1
+            # elif node_type == "P":
+            #     node = PatientRoom(node_id, x, y, room_number)
+            #     patient_rooms.append(node)
+            #     room_number += 1
             elif node_type == "N":
                 node = NurseOffice(node_id, x, y)
                 if nurse_office is not None:
                     raise Exception("can't have two nurse offices")
                 nurse_office = node
             else:
-                raise Exception(f"Unknown node type: {node_type}")
+                node = PatientRoom(node_id, x, y, room_number)
+                patient_rooms.append(node)
+                room_number += 1
+            # else:
+            #     raise Exception(f"Unknown node type: {node_type}")
             nodes.append(node)
 
         graph = Graph(nodes, nurse_office, patient_rooms)

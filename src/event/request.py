@@ -1,5 +1,4 @@
 from . import Event
-from .start_event import StartEvent
 from src.patient import Patient
 from src.nurse import Nurse
 
