@@ -2,7 +2,7 @@ from abc import abstractmethod
 from enum import IntEnum
 from operator import truediv
 
-from src import Graph
+from src import Graph, SimTime
 from src.event import Step, Movement
 from src.event.time_at_patient import TimeAtPatient
 from src.event.timed_occurrence import TimedOccurrence
@@ -18,13 +18,15 @@ class EventStatus(IntEnum):
     PAUSED = 3
 
 class Event(TimedOccurrence):
-    def __init__(self, event_id: int, time: float, duration: float, patient: Patient, assigned_nurse: Nurse | None, graph: Graph) -> None:
+    def __init__(self, event_id: int, time: float, duration: float, patient: Patient, assigned_nurse: Nurse | None,
+                 graph: Graph, sim_time: SimTime) -> None:
         super().__init__(time)
         self.__event_id = event_id
         self.__duration = duration
         self.__patient = patient
         self._assigned_nurse = assigned_nurse
         self.__graph = graph
+        self.__sim_time = sim_time
         self.__status = EventStatus.NOT_STARTED
         self.__steps: list[Step] = []
 
@@ -33,7 +35,7 @@ class Event(TimedOccurrence):
         #each step needs to happen at the end of it, but also it has to be obvious that the event is in progress
         #so maybe some start event step??
         nurse_pos = self._assigned_nurse.get_pos()
-        patient_pos = self.__patient.__room
+        patient_pos = self.__patient.get_room()
         path_there = self.__graph.find_path(nurse_pos, patient_pos)
         prev_step_time = self._time
 
@@ -94,8 +96,8 @@ class Event(TimedOccurrence):
 
     def run_next_step(self) -> bool:
         #runs next step, returns true if it finishes the event
-        if self.__status == EventStatus.NOT_STARTED:
-            self.__start__()
+        if self.__status == EventStatus.NOT_STARTED or self.__status == EventStatus.PAUSED:
+            self.__start__() #at this point start and resume is the same
         else:
             step: Step = self.__pop_next_step__()
             step.run()
@@ -106,7 +108,18 @@ class Event(TimedOccurrence):
         return self.__is_finished__()
 
     def pause(self) -> None:
-        ...
+        self.__status = EventStatus.PAUSED
+        self._assigned_nurse.unassign_event()
+        next_step = self.get_next_step()
+        #if the next step was movement, sort out nurse position
+        if type(next_step) == Movement: #is this too ugly?
+            #TODO
+            #calculate nurse position based on time remaining to get to next node
+            #create a phantom node for them to be on, somehow sort out how to move them from there
+            ...
+        #if it's caring for patient, sort out duration
+        elif type(next_step) == TimeAtPatient:
+            self.__duration = next_step.get_time() - self.__sim_time.get_sim_time()
 
     def resume(self) -> None:
         ...

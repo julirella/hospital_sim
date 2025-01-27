@@ -38,6 +38,17 @@ class NurseQueue(EventQueue):
             self.queue[current_end] = new_event
         #push back other events? or recalculate their times later?
 
+    #add event to absolute start of event, pausing running event if necessary
+    def add_to_start(self, new_event: Event) -> None:
+        #pause event
+        current_event: Event = self.top_item()
+        if current_event.get_status() == EventStatus.NOT_STARTED:
+            current_event.pause()
+        #add to start
+        self.add_by_time(new_event.get_time(), new_event)
+        #push events back?
+        ...
+
     def get_next_step(self) -> Step:
         time: float
         event: Event

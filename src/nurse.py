@@ -26,6 +26,11 @@ class Nurse:
         self.__assigned_event_id = event_id
         self.__log_action__("assign event")
 
+    def unassign_event(self) -> None:
+        #effectively the same as finish except for different log message
+        self.__assigned_event_id = None
+        self.__log_action__("unassign event")
+
     def finish_event(self) -> None:
         self.__log_action__("finish event")
         self.__assigned_event_id = None

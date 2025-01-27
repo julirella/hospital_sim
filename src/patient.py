@@ -11,3 +11,6 @@ class Patient:
 
     def get_nurse(self) -> Nurse:
         return self.__nurse
+
+    def get_room(self) -> PatientRoom:
+        return self.__room

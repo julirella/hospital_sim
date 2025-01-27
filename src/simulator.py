@@ -51,11 +51,13 @@ class Simulator:
         elif request_level == 2:
             nurse_queue.add_after_current(request)
         elif request_level == 3:
-            #pause current
+            #add to start of nurse queue (and pause current if necessary)
+            nurse_queue.add_to_start(request)
             #take next nurse step out of global queue
-            #add to start of nurse queue
+            self.global_queue.remove_by_time(nurse_queue.next_time())
             #put new next nurse step into global queue
-            ...
+            self.global_queue.add_by_time(nurse_queue.next_time(), chosen_nurse_id)
+
 
     def __print_logs__(self):
         for nurse_id, nurse in enumerate(self.nurses):

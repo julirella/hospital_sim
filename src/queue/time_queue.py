@@ -12,6 +12,10 @@ class TimeQueue:
     def add_by_time(self, time: float, item) -> None:
         self.queue[time] = item
 
+    def remove_by_time(self, time: float) -> None:
+        #TODO sort out for multiple entries for one time
+        self.queue.pop(time)
+
     def add(self, item: TimedOccurrence):
         self.queue[item.get_time()] = item
 
