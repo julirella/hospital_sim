@@ -32,7 +32,7 @@ class Graph:
             prev_id, dst = prev[current_id]
             path.append((self.nodes[current_id], dst))
             current_id = prev_id
-        path.append((self.nodes[start_id], -1))
+        # path.append((self.nodes[start_id], 0.0)) #we don't need start in the path
         path.reverse()
         return path
     
