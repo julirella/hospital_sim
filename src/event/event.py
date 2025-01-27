@@ -67,10 +67,22 @@ class Event(TimedOccurrence):
         else:
              return False
 
-    def get_patient(self)-> Patient:
+    def get_patient(self) -> Patient:
         return self.__patient
 
-    def next_time(self)-> float:
+    def get_status(self) -> EventStatus:
+        return self.__status
+
+    def get_duration(self) -> float:
+        return self.__duration
+
+    def set_time(self, time: float) -> None:
+        self.__time = time
+
+    def end_time(self) -> float:
+        return self.__steps[-1].get_time()
+
+    def next_time(self) -> float:
         if len(self.__steps) == 0:
             return self.get_time()
         else:

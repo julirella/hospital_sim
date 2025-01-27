@@ -4,7 +4,7 @@ from src.event import Step, Request
 from src.nurse import Nurse
 from src.graph import Graph
 from src.patient import Patient
-from src.queue import StepQueue, TimeQueue
+from src.queue import TimeQueue
 from src.queue.event_queue import EventQueue
 from src.queue.nurse_queue import NurseQueue
 from src.sim_time import SimTime
