@@ -33,7 +33,7 @@ class Event(TimedOccurrence):
         #each step needs to happen at the end of it, but also it has to be obvious that the event is in progress
         #so maybe some start event step??
         nurse_pos = self._assigned_nurse.get_pos()
-        patient_pos = self.__patient.room
+        patient_pos = self.__patient.__room
         path_there = self.__graph.find_path(nurse_pos, patient_pos)
         prev_step_time = self._time
 
@@ -66,6 +66,9 @@ class Event(TimedOccurrence):
             return True
         else:
              return False
+
+    def get_patient(self)-> Patient:
+        return self.__patient
 
     def next_time(self)-> float:
         if len(self.__steps) == 0:

@@ -5,6 +5,9 @@ from .sim_time import SimTime
 
 class Patient:
     def __init__(self, nurse: Nurse, room: PatientRoom, sim_time: SimTime) -> None:
-        self.nurse = nurse
-        self.room = room
-        self.sim_time = sim_time
+        self.__nurse = nurse
+        self.__room = room
+        self.__sim_time = sim_time
+
+    def get_nurse(self) -> Nurse:
+        return self.__nurse

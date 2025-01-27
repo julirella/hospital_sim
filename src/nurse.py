@@ -10,6 +10,9 @@ class Nurse:
         self.__assigned_event_id: int | None = None
         self.__log: list[dict] = []
 
+    def get_id(self) -> int:
+        return self.__nurse_id
+
     def set_pos(self, pos: Node) -> None:
         self.__pos = pos
 

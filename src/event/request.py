@@ -11,3 +11,6 @@ class Request(Event):
 
     def assign_nurse(self, nurse: Nurse):
         self._assigned_nurse = nurse
+
+    def get_level(self) -> int:
+        return self.__level

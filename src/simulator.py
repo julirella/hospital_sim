@@ -1,6 +1,6 @@
 from sortedcontainers import SortedDict
 
-from src.event import Step
+from src.event import Step, Request
 from src.nurse import Nurse
 from src.graph import Graph
 from src.patient import Patient
@@ -31,6 +31,31 @@ class Simulator:
         nurse_queue.run_next_step()
         if not nurse_queue.is_empty():
             self.global_queue.add_by_time(nurse_queue.next_time(), next_step_nurse_id)
+
+    def assign_next_request(self):
+        self.sim_time.set_sim_time(self.request_queue.next_time())
+        request: Request = self.request_queue.pop()
+        #choose nurse
+        patient = request.get_patient()
+        patients_nurse = patient.get_nurse()
+        #TODO: add option for choosing other nurse if patients is unavailable/too far away based on request severity
+        chosen_nurse = patients_nurse
+        #put request in nurse queue
+        chosen_nurse_id = chosen_nurse.get_id()
+        request.assign_nurse(chosen_nurse)
+        nurse_queue = self.nurse_queues[chosen_nurse_id]
+
+        request_level = request.get_level()
+        if request_level == 1:
+            nurse_queue.add_to_gap(request)
+        elif request_level == 2:
+            nurse_queue.add_after_current(request)
+        elif request_level == 3:
+            #pause current
+            #take next nurse step out of global queue
+            #add to start of nurse queue
+            #put new next nurse step into global queue
+            ...
 
     def __print_logs__(self):
         for nurse_id, nurse in enumerate(self.nurses):

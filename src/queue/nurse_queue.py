@@ -1,6 +1,7 @@
 from .event_queue import EventQueue
 from src.nurse import Nurse
 from src.event import Event, Step
+from .. import Request
 
 
 class NurseQueue(EventQueue):
@@ -10,6 +11,10 @@ class NurseQueue(EventQueue):
 
     #find gap in queue to fit event and add it there
     def add_to_gap(self, event: Event) -> None:
+        pass
+
+    #add event after end of current running event
+    def add_after_current(self, event: Event) -> None:
         pass
 
     def get_next_step(self) -> Step:
