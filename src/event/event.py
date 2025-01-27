@@ -66,6 +66,12 @@ class Event(TimedOccurrence):
         else:
              return False
 
+    def next_time(self)-> float:
+        if len(self.__steps) == 0:
+            return self.get_time()
+        else:
+            return self.__steps[0].get_time()
+
     def get_next_step(self) -> Step:
         #assumes only future __steps are in this list
         return self.__steps[0]
@@ -74,8 +80,9 @@ class Event(TimedOccurrence):
         #runs next step, returns true if it finishes the event
         if self.__status == EventStatus.NOT_STARTED:
             self.__start__()
-        step: Step = self.__pop_next_step__()
-        step.run()
+        else:
+            step: Step = self.__pop_next_step__()
+            step.run()
 
         if self.__is_finished__():
             self._assigned_nurse.finish_event()

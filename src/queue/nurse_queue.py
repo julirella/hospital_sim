@@ -25,3 +25,7 @@ class NurseQueue(EventQueue):
         #if the event is over, remove it (and maybe log that)
         if finished:
             self.pop()
+
+    def next_time(self) -> float:
+        next_event: Event = self.top_item()
+        return next_event.next_time()
