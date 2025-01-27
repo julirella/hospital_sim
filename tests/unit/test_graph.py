@@ -1,13 +1,18 @@
 # import pytest
 import sys
 import os
+import unittest
+
 # sys.path.insert(1, str(os.getcwd()) + '/src') #https://stackoverflow.com/questions/4383571/importing-files-from-different-folder
 sys.path.insert(1, str(os.getcwd())) #https://stackoverflow.com/questions/4383571/importing-files-from-different-folder
 # from __graph import Graph
 # from node import Node
 from src import Graph, Node
 
-class TestGraph:
+class TestGraph(unittest.TestCase):
+    def setUp(self):
+
+
     def test_find_path(self):
         nodes = [Node(0, 0, 0), Node(1, 0, 0), Node(2, 0, 0), Node(3, 0, 0), Node(4, 0, 0)]
         edges = [

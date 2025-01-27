@@ -9,4 +9,4 @@ class Movement(Step):
         self.__end = end
 
     def run(self) -> None:
-        self._nurse.set_pos(self.__end)
+        self._nurse.move(self.__end)

@@ -13,7 +13,7 @@ class TimeQueue:
         self.queue[time] = item
 
     def add(self, item: TimedOccurrence):
-        self.queue[item.time] = item
+        self.queue[item.get_time()] = item
 
     def pop(self): #-> TimedOccurrence:
     #remove and return first element
@@ -29,4 +29,4 @@ class TimeQueue:
         return len(self.queue) == 0
 
     def remove(self, item: TimedOccurrence):
-        self.queue.pop(item.time)
+        self.queue.pop(item.get_time())

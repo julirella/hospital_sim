@@ -11,12 +11,20 @@ class TestEvent(unittest.TestCase):
         self.mock_graph = Mock()
         self.mock_nurse = Mock()
         self.mock_nurse.get_pos.return_value = Mock()
+        self.mock_node1 = Mock()
+        self.mock_node2 = Mock()
+        self.mock_node3 = Mock()
+        self.mock_graph.find_path = [(self.mock_node1, 1), (self.mock_node2, 2), (self.mock_node3, 3)]
         self.event = Event(event_id=1, time=50, duration=30, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
                            graph=self.mock_graph)
 
-    def test_run_next_step_starts_event(self):
+    def test_run_next_step_creates_steps(self):
         self.event.run_next_step()
-        self.assertNotEqual(self.event.get_next_step(), None)
+        print(type(Movement))
+        self.assertEqual(type(self.event.get_next_step()), type(Movement)) #is this still a unit test or integration?
+        #test that it's the right movement with the right nodes. Add getters to movement for that only?
+        # self.assertEqual(self.event.get_next_step(), )
+        # self.assertNotEqual(self.event.get_next_step()., None)
 
     def test_run_next_step_executes_steps(self):
         while not self.event.run_next_step():

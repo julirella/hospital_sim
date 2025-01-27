@@ -32,22 +32,33 @@ class Simulator:
         if not nurse_queue.is_empty():
             self.global_queue.add_by_time(nurse_queue.next_time(), next_step_nurse_id)
 
+    def __print_logs__(self):
+        for nurse_id, nurse in enumerate(self.nurses):
+            print(nurse_id, "---------------------------------\n")
+            log = nurse.get_log()
+            for line in log:
+                print(line)
+            # print(nurse.get_log())
+        print("\n")
+
     def simulate(self) -> None:
         #while any queue is not empty:
         #take next planned or waiting thing - request or step
         #if step, run it, replace it with that nurses next step
         #if request, decide which queue to put it in
         #log whatever happens
-
+        print("Simulating...")
         #TODO: add waiting requests
-        while not self.request_queue.is_empty() or not self.request_queue.is_empty():
+        while not self.request_queue.is_empty() or not self.global_queue.is_empty():
             if self.request_queue.is_empty():
                 self.run_next_step()
-            elif not self.request_queue.is_empty():
+            elif self.global_queue.is_empty():
                 #assign request
                 ...
-            elif self.request_queue.next_time() <= self.global_queue.next_time():
+            elif self.global_queue.next_time() < self.request_queue.next_time():
                 self.run_next_step()
             else:
                 #assign request
                 ...
+
+        self.__print_logs__()
