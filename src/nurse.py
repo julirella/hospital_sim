@@ -24,13 +24,16 @@ class Nurse:
         self.__log_action__("assign event")
 
     def finish_event(self) -> None:
-        self.__assigned_event_id = None
         self.__log_action__("finish event")
+        self.__assigned_event_id = None
 
     def move(self, dst: Node) -> None:
         #the same as set_pos, but logs movement
         self.__pos = dst
         self.__log_action__("move to")
+
+    def time_at_patient(self)-> None:
+        self.__log_action__("time at patient")
 
     def __log_action__(self, action: str) -> None:
         self.__log.append({"time": self.__sim_time.get_sim_time(), "position": self.__pos.node_id, "event": self.__assigned_event_id, "action": action})
