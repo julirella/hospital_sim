@@ -1,6 +1,4 @@
-from abc import abstractmethod
 from enum import IntEnum
-from operator import truediv
 
 from src import Graph, SimTime
 from src.event import Step, Movement
@@ -79,7 +77,7 @@ class Event(TimedOccurrence):
         return self.__duration
 
     def set_time(self, time: float) -> None:
-        self.__time = time
+        self._time = time
 
     def end_time(self) -> float:
         return self.__steps[-1].get_time()
@@ -110,6 +108,7 @@ class Event(TimedOccurrence):
     def pause(self) -> None:
         self.__status = EventStatus.PAUSED
         self._assigned_nurse.unassign_event()
+        self._time = self.__sim_time.get_sim_time() #so that it can be pushed back correctly. Not amazing relying on this
         next_step = self.get_next_step()
         #if the next step was movement, sort out nurse position
         if type(next_step) == Movement: #is this too ugly?
