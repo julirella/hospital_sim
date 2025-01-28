@@ -36,7 +36,7 @@ class SimImporter(Importer):
 
         return nurses, patients
 
-    def import_events(self, nurses: list[Nurse], patients: list[Patient], graph: Graph) -> tuple[EventQueue, list[NurseQueue]]:
+    def import_events(self, nurses: list[Nurse], patients: list[Patient], graph: Graph, sim_time: SimTime) -> tuple[EventQueue, list[NurseQueue]]:
         file = open(self.event_file_name)
         events_json = json.load(file)
         request_lst = events_json["requests"]
@@ -49,13 +49,13 @@ class SimImporter(Importer):
             patient: Patient = patients[request_dict["patient"]]
             level: int = request_dict["level"]
             duration: float = request_dict["duration"]
-            request = Request(event_id, time, duration, patient, level, graph)
+            request = Request(event_id, time, duration, patient, level, graph, sim_time)
             request_queue.add(request)
             event_id += 1
 
         nurse_queues: [NurseQueue] = []
         for nurse in nurses:
-            nurse_queues.append(NurseQueue(nurse))
+            nurse_queues.append(NurseQueue(nurse, sim_time))
 
         for plan_dict in plan_lst:
             time: float = plan_dict["time"]
@@ -63,7 +63,7 @@ class SimImporter(Importer):
             duration: float = plan_dict["duration"]
             nurse_id: int = plan_dict["nurse"]
             nurse: Nurse = nurses[nurse_id]
-            plan = Plan(event_id, time, duration, patient, nurse, graph)
+            plan = Plan(event_id, time, duration, patient, nurse, graph, sim_time)
             nurse_queues[nurse_id].add(plan)
             event_id += 1
 
@@ -75,6 +75,6 @@ class SimImporter(Importer):
         graph = self._import_graph()
         sim_time = SimTime()
         nurses, patients = self.import_entities(graph, sim_time)
-        req_queue, nurse_queues = self.import_events(nurses, patients, graph)
+        req_queue, nurse_queues = self.import_events(nurses, patients, graph, sim_time)
         simulator = Simulator(graph, nurses, patients, req_queue, nurse_queues, sim_time)
         return simulator

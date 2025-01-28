@@ -1,20 +1,20 @@
 from .event_queue import EventQueue
 from src.nurse import Nurse
 from src.event import Event, Step, EventStatus
-from .. import Request
+from src import SimTime
 
 MAX_WALK_TIME = 20 #TODO: recalculate based on dept size
 
 class NurseQueue(EventQueue):
-    def __init__(self, nurse: Nurse) -> None:
+    def __init__(self, nurse: Nurse, sim_time: SimTime) -> None:
         super().__init__()
         self.nurse = nurse
+        self.__sim_time = sim_time
 
     #find gap in queue to fit event and add it there
     def add_to_gap(self, event: Event) -> None:
         max_event_duration = event.get_duration() + MAX_WALK_TIME #TODO switch to smarter walk time
-        prev_end_time = event.get_time() #again assuming this is a request which has time set to now.
-        #probably better to get it from the time struct
+        prev_end_time = self.__sim_time.get_sim_time()
 
         for queue_event in self.queue.values():
             next_start_time = queue_event.get_time()
@@ -23,7 +23,6 @@ class NurseQueue(EventQueue):
                 self.queue[prev_end_time] = event
                 break
             prev_end_time = next_start_time + queue_event.get_duration()
-
 
     #add event after end of current running event
     def add_after_current(self, new_event: Event) -> None:
@@ -37,6 +36,7 @@ class NurseQueue(EventQueue):
             new_event.set_time(current_end)
             self.queue[current_end] = new_event
         #push back other events? or recalculate their times later?
+
 
     #add event to absolute start of event, pausing running event if necessary
     def add_to_start(self, new_event: Event) -> None:
