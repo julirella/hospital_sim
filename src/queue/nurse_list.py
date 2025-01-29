@@ -30,16 +30,16 @@ class NurseList:
         if pred_event is None:
             new_list_event = ListEvent(new_event, self.__front)
             self.__front = new_list_event
-            new_event.set_time(self.__sim_time.get_sim_time())
+            new_event.set_time(self.__sim_time.get_sim_time() + MAX_WALK_TIME / 2 + new_event.get_duration())
         else:
             new_list_event = ListEvent(new_event, pred_event.next)
             pred_event.next = new_list_event
             new_event.set_time(pred_event.event.get_time() + MAX_WALK_TIME / 2 + new_event.get_duration())
 
-        #push_back if necessary
+        #push_back if necessary, could probably be a separate method
         current = new_list_event
         while current.next is not None and current.event.get_time() + MAX_WALK_TIME / 2 > current.next.event.start_time():
-            current.next.event.set_time(current.event.get_time() + MAX_WALK_TIME / 2)
+            current.next.event.set_time(current.event.get_time() + MAX_WALK_TIME / 2 + current.next.event.get_duration())
             current = current.next
 
 
