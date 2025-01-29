@@ -82,6 +82,10 @@ class Event(TimedOccurrence):
     def end_time(self) -> float:
         return self.__steps[-1].get_time()
 
+    #time of start of main part that is of length duration
+    def start_time(self) -> float:
+        return self._time - self.__duration
+
     def next_time(self) -> float:
         if len(self.__steps) == 0:
             return self.get_time()
