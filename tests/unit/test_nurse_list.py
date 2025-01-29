@@ -36,7 +36,7 @@ class TestNurseList(unittest.TestCase):
         self.nurse_list.add_to_gap(new_event)
 
         self.assertEqual(self.nurse_list.top(), new_event)
-        new_event.set_time.assert_called_with(0)
+        new_event.set_time.assert_called_once_with(0)
 
     def test_add_to_gap_middle(self):
         new_event = Mock()
@@ -46,7 +46,7 @@ class TestNurseList(unittest.TestCase):
         self.assertEqual(self.nurse_list.pop(), self.event1)
         self.assertEqual(self.nurse_list.pop(), new_event)
         self.assertEqual(self.nurse_list.pop(), self.event2)
-        new_event.set_time.assert_called_with(65)
+        new_event.set_time.assert_called_once_with(65)
 
 
     def test_add_to_gap_end(self):
@@ -58,8 +58,7 @@ class TestNurseList(unittest.TestCase):
         self.assertEqual(self.nurse_list.pop(), self.event2)
         self.assertEqual(self.nurse_list.pop(), self.event3)
         self.assertEqual(self.nurse_list.pop(), new_event)
-        new_event.set_time.assert_called_with(260)
-
+        new_event.set_time.assert_called_once_with(260)
 
 if __name__ == "__main__":
     unittest.main()
