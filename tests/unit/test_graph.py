@@ -1,15 +1,8 @@
-# import pytest
 import math
-import sys
-import os
 import unittest
 from unittest.mock import Mock
-
-# sys.path.insert(1, str(os.getcwd()) + '/src') #https://stackoverflow.com/questions/4383571/importing-files-from-different-folder
-# sys.path.insert(1, str(os.getcwd())) #https://stackoverflow.com/questions/4383571/importing-files-from-different-folder
-# from __graph import Graph
-# from node import Node
 from src import Graph, Node, NurseOffice, Junction, PatientRoom
+from src.node.temp_node import TempNode
 
 
 class TestGraph(unittest.TestCase):
@@ -61,6 +54,7 @@ class TestGraph(unittest.TestCase):
         self.graph.add_edge(7, 8)
 
         self.graph.add_edge(3, 6)
+        self.graph.add_edge(8, 5)
         self.graph.add_edge(4, 7)
         self.graph.add_edge(4, 8)
 
@@ -73,6 +67,19 @@ class TestGraph(unittest.TestCase):
         path = self.graph.find_path(self.nodes[2], self.nodes[0])
         expected = [(self.nodes[10], 0.5), (self.nodes[1], 0.5), (self.nodes[9], 0.5), (self.nodes[0], 0.5)]
         self.assertEqual(expected, path)
+
+    def test_find_path_temp_node(self):
+        tmp_node = TempNode(1.5, 1.5, (4, math.sqrt(2) / 2), (8, math.sqrt(2) / 2))
+        path = self.graph.find_path(tmp_node, self.nodes[5])
+        expected = [(self.nodes[4], math.sqrt(2) / 2), (self.nodes[5], 1.0)]
+        self.assertEqual(expected, path)
+
+    def test_find_path_temp_node2(self):
+        tmp_node = TempNode(1.5, 1.5, (4, math.sqrt(2) / 2 + 0.1), (8, math.sqrt(2) / 2 - 0.1))
+        path = self.graph.find_path(tmp_node, self.nodes[5])
+        expected = [(self.nodes[8], math.sqrt(2) / 2 - 0.1), (self.nodes[5], 1.0)]
+        self.assertEqual(expected, path)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -52,6 +52,8 @@ class Graph:
         start_id = start.node_id
         end_id = end.node_id
         node_cnt = len(self._nodes)
+        if start_id == -1:
+            node_cnt += 1
 
         open_nodes = set()
         prev: list[tuple[int, float]] = [(-1, -1)] * node_cnt #predecessors
@@ -67,7 +69,11 @@ class Graph:
 
         while len(open_nodes) > 0:
             current_id: int = open_dist.popitem(0)[0]
-            for neighbour_id, weight in self._edges[current_id]:
+            if current_id == -1: #TODO: maybe have all nodes know their neighbours instead of this weird hotfix
+                neighbours = start.neighbours()
+            else:
+                neighbours = self._edges[current_id]
+            for neighbour_id, weight in neighbours:
                 new_dist = dist[current_id] + weight
                 if dist[neighbour_id] > new_dist: #what if neighbour is predecessor of current
                     dist[neighbour_id] = new_dist
