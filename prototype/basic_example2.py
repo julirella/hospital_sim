@@ -44,7 +44,7 @@ class Request(Event):
             return Request(min_busy_end, self.patient, self.id)
         else:
             if not assigned_nurse.is_free:
-                nurse_id = free_nurses.pop() 
+                nurse_id = free_nurses.pop_front()
                 assigned_nurse = nurses[nurse_id]
                 print(self.time, "nurse {} chosen for patient {} because nurse {} is busy".format(nurse_id, self.patient.id, self.patient.nurse_id))
                 self.log = {'time' : self.time, 'type' : "request", "request_id" : self.id, 'patient_id' : self.patient.id, 'patient_dst' : self.patient.office_dst, 'requested_nurse_id' : self.patient.nurse_id, 'chosen_nurse_id' : nurse_id, 'pushed_back' : False}
@@ -146,7 +146,7 @@ class EventQueue:
         if len(events) == 1:
             event = self.events.pop(time)[0]
         else:
-            event = events.pop(0)
+            event = events.pop_front(0)
         return time, event
 
 

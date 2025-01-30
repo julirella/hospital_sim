@@ -52,7 +52,7 @@ class Graph:
         start_id = start.node_id
         end_id = end.node_id
         node_cnt = len(self._nodes)
-        if start_id == -1:
+        if start_id == -1: #in case of tmp node start
             node_cnt += 1
 
         open_nodes = set()

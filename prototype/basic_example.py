@@ -77,7 +77,7 @@ def choose_nurse(patient, nurses, free_nurses, busy_nurses, time):
     assigned_nurse = nurses[nurse_id]
 
     if not assigned_nurse.is_free:
-        nurse_id = free_nurses.pop() #problem if there are no free nurses. Also this isn't fair to the nurses cause it picks an arbitrary free nurse
+        nurse_id = free_nurses.pop_front() #problem if there are no free nurses. Also this isn't fair to the nurses cause it picks an arbitrary free nurse
         assigned_nurse = nurses[nurse_id]
         print(time, "nurse {} chosen for patient {} because nurse {} is busy".format(nurse_id, patient.id, patient.nurse_id))
     else:
