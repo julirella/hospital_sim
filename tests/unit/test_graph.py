@@ -9,7 +9,8 @@ from unittest.mock import Mock
 # sys.path.insert(1, str(os.getcwd())) #https://stackoverflow.com/questions/4383571/importing-files-from-different-folder
 # from __graph import Graph
 # from node import Node
-from src import Graph, Node
+from src import Graph, Node, NurseOffice, Junction, PatientRoom
+
 
 class TestGraph(unittest.TestCase):
 
@@ -29,15 +30,15 @@ class TestGraph(unittest.TestCase):
         self.nodes = [
             Node(0,0, 0),
             Node(1,1, 0),
-            Node(2,2, 0),
+            Junction(2,2, 0),
             Node(3,0, 1),
             Node(4,1, 1),
             Node(5,2, 1),
             Node(6,0, 2),
             Node(7,1, 2),
             Node(8,2, 2),
-            Node(9, 0.5, 0),
-            Node(10, 1.5, 0)
+            NurseOffice(9, 0.5, 0),
+            PatientRoom(10, 1.5, 0, 0)
         ]
         self.nurse_office = Mock()
         self.patient_rooms = Mock()
