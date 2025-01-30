@@ -7,4 +7,4 @@ class TestImporter:
         graph_file_path = "input/layouts/testLayout.json"
         importer = Importer(graph_file_path)
         graph: Graph = importer.import_graphit_graph()
-        assert len(graph.nodes) == 4
+        assert len(graph._nodes) == 4
