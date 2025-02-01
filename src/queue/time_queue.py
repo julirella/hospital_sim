@@ -17,6 +17,7 @@ class TimeQueue:
     #     self.queue.pop(time)
 
     def add(self, item: TimedOccurrence):
+        #id is unique for each object throughout its existence https://docs.python.org/3/library/functions.html#id
         self._queue[(item.time(), id(item))] = item
 
     def pop(self): #-> TimedOccurrence:
