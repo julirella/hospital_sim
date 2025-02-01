@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 from . import TimedOccurrence
 from ..nurse import Nurse
 
@@ -10,6 +12,6 @@ class Step(TimedOccurrence):
     def run(self):
         pass
 
-    def pause(self, pause_time: float) -> None:
-        #TODO should this even exist? Maybe log here?
+    @abstractmethod
+    def pause(self, pause_time: float) -> float:
         pass

@@ -11,34 +11,79 @@ class TestEvent(unittest.TestCase):
         self.mock_graph = Mock()
         self.mock_nurse = Mock()
         self.mock_nurse.get_pos.return_value = Mock()
+        self.mock_sim_time = Mock()
         self.mock_node1 = Mock()
         self.mock_node2 = Mock()
         self.mock_node3 = Mock()
-        self.mock_graph.find_path = [(self.mock_node1, 1), (self.mock_node2, 2), (self.mock_node3, 3)]
+        self.mock_graph.find_path.return_value = [(self.mock_node1, 60), (self.mock_node2, 90), (self.mock_node3, 150)]
         self.event = Event(event_id=1, time=50, duration=30, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
-                           graph=self.mock_graph)
+                           graph=self.mock_graph, sim_time=self.mock_sim_time)
 
-    def test_run_next_step_creates_steps(self):
+        self.mock_move = Movement(0, self.mock_nurse, self.mock_node1, self.mock_node2)
+        self.mock_time = TimeAtPatient(0, self.mock_nurse, 0)
+
+    def test_run_next_step_creates_steps_of_type(self):
         self.event.run_next_step()
-        print(type(Movement))
-        self.assertEqual(type(self.event.get_next_step()), type(Movement)) #is this still a unit test or integration?
-        #test that it's the right movement with the right nodes. Add getters to movement for that only?
-        # self.assertEqual(self.event.get_next_step(), )
-        # self.assertNotEqual(self.event.get_next_step()., None)
-
-    def test_run_next_step_executes_steps(self):
-        while not self.event.run_next_step():
-            pass
-        self.mock_nurse.finish_event.assert_called()
-
-    def test_steps_execution_order(self):
+        # print(type(Movement))
+        self.assertEqual(type(self.mock_move), type(self.event.get_next_step()))
         self.event.run_next_step()
-        previous_step = None
+        self.assertEqual(type(self.mock_move), type(self.event.get_next_step()))
+        self.event.run_next_step()
+        self.assertEqual(type(self.mock_move), type(self.event.get_next_step()))
+        self.event.run_next_step()
+        self.assertEqual(type(self.mock_time), type(self.event.get_next_step()))
+
+    def test_run_next_step_creates_steps_with_time(self):
+        self.event.run_next_step()
+        self.assertEqual(52, self.event.next_time())
+        self.event.run_next_step()
+        self.assertEqual(55, self.event.next_time())
+        self.event.run_next_step()
+        self.assertEqual(60, self.event.next_time())
+        self.event.run_next_step()
+        self.assertEqual(90, self.event.next_time())
+
+
+    def test_first_next_time_returns_event_time(self):
+        self.assertEqual(50, self.event.next_time())
+
+    def test_run_next_step_starts_event(self):
+        self.event.run_next_step()
+        self.assertEqual(EventStatus.ACTIVE, self.event.get_status())
+
+    def test_run_next_step_finishes_event(self):
+        steps_taken = 0
         while not self.event.run_next_step():
-            current_step = self.event.get_next_step()
-            if previous_step:
-                self.assertGreater(current_step._time, previous_step._time)
-            previous_step = current_step
+            steps_taken += 1
+        self.mock_nurse.finish_event.assert_called_once()
+        self.assertEqual(4, steps_taken)
+
+    def test_pause_and_restart(self):
+        self.event.run_next_step()
+        self.event.run_next_step()
+        self.event.get_next_step().pause = Mock()
+        self.event.get_next_step().pause.return_value = 0
+
+        self.mock_nurse.unassign_event = Mock()
+        self.event.pause()
+        self.assertEqual(EventStatus.PAUSED, self.event.get_status())
+        self.mock_nurse.unassign_event.assert_called_once()
+
+        self.event.run_next_step()
+        self.assertEqual(EventStatus.ACTIVE, self.event.get_status())
+
+    def test_pause_during_time_at_patient(self):
+        self.event.run_next_step()
+        self.event.run_next_step()
+        self.event.run_next_step()
+        self.event.run_next_step()
+        self.mock_sim_time.get_sim_time().return_value = 75
+        self.event.get_next_step = Mock()
+        self.event.get_next_step().pause.return_value = 15
+
+        self.event.pause()
+
+        self.assertEqual(15, self.event.get_duration())
 
 if __name__ == "__main__":
     unittest.main()

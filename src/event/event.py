@@ -1,4 +1,5 @@
 from enum import IntEnum
+from logging import exception
 
 from src import Graph, SimTime
 from src.event import Step, Movement
@@ -79,13 +80,14 @@ class Event(TimedOccurrence):
     def set_time(self, time: float) -> None:
         self._time = time
 
-    def end_time(self) -> float:
-        return self._steps[-1].time()
+    # def end_time(self) -> float:
+    #     return self._steps[-1].time()
 
     #time of start of main part that is of length duration
     def start_time(self) -> float:
         return self._time - self._duration
 
+    #time of next step, or of event itself if steps have not yet been created
     def next_time(self) -> float:
         if len(self._steps) == 0:
             return self.time()
@@ -93,8 +95,11 @@ class Event(TimedOccurrence):
             return self._steps[0].time()
 
     def get_next_step(self) -> Step:
-        #assumes only future __steps are in this list
-        return self._steps[0]
+        #assumes only future steps are in this list
+        if self._status == EventStatus.ACTIVE:
+            return self._steps[0]
+        else:
+            raise Exception("get next step can only be called on active event")
 
     def run_next_step(self) -> bool:
         #runs next step, returns true if it finishes the event
@@ -110,15 +115,12 @@ class Event(TimedOccurrence):
         return self.__is_finished__()
 
     def pause(self) -> None:
+        next_step = self.get_next_step()
+        self._duration -= next_step.pause(self._sim_time.get_sim_time())
         self._status = EventStatus.PAUSED
         self._assigned_nurse.unassign_event()
         # self._time = self.__sim_time.get_sim_time() #so that it can be pushed back correctly. Not amazing relying on this
-        next_step = self.get_next_step()
-        next_step.pause(self._sim_time.get_sim_time())
         #if it's caring for patient, sort out duration
-        self._duration = next_step.time() - self._sim_time.get_sim_time()
+        # self._duration = next_step.time() - self._sim_time.get_sim_time()
 
         self._steps = [] #empty steps so that they can be recalculated when resuming
-
-    def resume(self) -> None:
-        ...

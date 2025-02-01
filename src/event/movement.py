@@ -15,7 +15,7 @@ class Movement(Step):
     def run(self) -> None:
         self._nurse.move(self._end)
 
-    def pause(self, pause_time) -> None:
+    def pause(self, pause_time) -> float:
         #surely there's a simpler way
         total_x = self._end.x - self._start.x
         total_y = self._end.y - self._start.y
@@ -35,3 +35,5 @@ class Movement(Step):
                                (self._end. node_id, remaining_dst))
 
         self._nurse.set_pos(current_pos)
+
+        return 0 #this is a bit hacky
