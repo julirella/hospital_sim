@@ -30,7 +30,6 @@ class TestMovement(unittest.TestCase):
         move.pause(100 - (math.sqrt(5) * 40) / NURSE_SPEED)
         x = self.nurse.get_pos().x
         y = self.nurse.get_pos().y
-        print(x, y)
         self.assertTrue(0.000001 > abs(x - 80.0))
         self.assertTrue(0.000001 > abs(y - 40.0))
 

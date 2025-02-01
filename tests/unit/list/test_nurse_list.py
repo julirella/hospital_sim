@@ -100,6 +100,28 @@ class TestNurseList(unittest.TestCase):
         self.assertEqual(170, self.nurse_list.pop_front().time())
         self.assertEqual(190, self.nurse_list.pop_front().time())
 
+    def test_add_to_start_no_pause(self):
+        new_event = Event(event_id=0, time=0, duration=45, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
+                          graph=self.mock_graph, sim_time=self.mock_sim_time)
+        # self.event1.get_status = Mock(return_value=EventStatus.ACTIVE)
+        self.nurse_list.add_to_start(new_event)
+
+        self.assertEqual(55, self.nurse_list.pop_front().time())
+        self.assertEqual(75, self.nurse_list.pop_front().time())
+        self.assertEqual(95, self.nurse_list.pop_front().time())
+        self.assertEqual(150, self.nurse_list.pop_front().time())
+
+        self.assertEqual(EventStatus.NOT_STARTED, self.event1.get_status())
+
+    def test_add_to_start_pause(self):
+        new_event = Event(event_id=0, time=0, duration=45, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
+                          graph=self.mock_graph, sim_time=self.mock_sim_time)
+        self.event1.get_status = Mock(return_value=EventStatus.ACTIVE)
+        self.event1.pause = Mock()
+        self.nurse_list.add_to_start(new_event)
+
+        self.event1.pause.assert_called_once()
+
 if __name__ == "__main__":
     unittest.main()
 
