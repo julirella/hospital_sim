@@ -80,7 +80,7 @@ class Event(TimedOccurrence):
         self._time = time
 
     def end_time(self) -> float:
-        return self.__steps[-1].get_time()
+        return self.__steps[-1].time()
 
     #time of start of main part that is of length duration
     def start_time(self) -> float:
@@ -88,9 +88,9 @@ class Event(TimedOccurrence):
 
     def next_time(self) -> float:
         if len(self.__steps) == 0:
-            return self.get_time()
+            return self.time()
         else:
-            return self.__steps[0].get_time()
+            return self.__steps[0].time()
 
     def get_next_step(self) -> Step:
         #assumes only future __steps are in this list
@@ -122,7 +122,7 @@ class Event(TimedOccurrence):
             ...
         #if it's caring for patient, sort out duration
         elif type(next_step) == TimeAtPatient:
-            self.__duration = next_step.get_time() - self.__sim_time.get_sim_time()
+            self.__duration = next_step.time() - self.__sim_time.get_sim_time()
 
     def resume(self) -> None:
         ...

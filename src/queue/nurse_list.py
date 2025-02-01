@@ -24,12 +24,12 @@ class NurseList(EventList):
         else:
             new_list_event = ListEvent(new_event, pred_event.next)
             pred_event.next = new_list_event
-            new_event.set_time(pred_event.event.get_time() + MAX_WALK_TIME / 2 + new_event.get_duration())
+            new_event.set_time(pred_event.event.time() + MAX_WALK_TIME / 2 + new_event.get_duration())
 
         #push_back if necessary, could probably be a separate method
         current = new_list_event
-        while current.next is not None and current.event.get_time() + MAX_WALK_TIME / 2 > current.next.event.start_time():
-            current.next.event.set_time(current.event.get_time() + MAX_WALK_TIME / 2 + current.next.event.get_duration())
+        while current.next is not None and current.event.time() + MAX_WALK_TIME / 2 > current.next.event.start_time():
+            current.next.event.set_time(current.event.time() + MAX_WALK_TIME / 2 + current.next.event.get_duration())
             current = current.next
 
     #find gap in queue to fit event and add it there
@@ -46,7 +46,7 @@ class NurseList(EventList):
                 self.__insert_after__(event, prev)
                 done = True
                 break
-            prev_end_time = current.event.get_time()
+            prev_end_time = current.event.time()
             prev = current
             current = current.next
 

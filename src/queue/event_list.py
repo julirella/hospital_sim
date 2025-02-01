@@ -1,4 +1,3 @@
-from src import SimTime
 from src.event import Event
 
 class ListEvent:
@@ -10,7 +9,7 @@ class ListEvent:
 class EventList:
     def __init__(self, events: list[Event]):
         #build linked list
-        events.sort(key=lambda x: x.get_time())
+        events.sort(key=lambda x: x.time())
         prev = None
         for event in reversed(events):
             prev = ListEvent(event, prev)

@@ -1,5 +1,3 @@
-from sortedcontainers import SortedDict
-from src.event import Event
 from src.queue import TimeQueue
 
 

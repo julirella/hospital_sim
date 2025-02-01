@@ -7,30 +7,30 @@ class TimeQueue:
     #TODO: maybe create another queue higher up that will work with any item and then this one will work with just TimedOccurrence, rather than combining it into one
     #priority queue for storing anything with time as a key
     def __init__(self):
-        self.queue = SortedDict()
+        self._queue = SortedDict()
 
-    def add_by_time(self, time: float, item) -> None:
-        self.queue[time] = item
-
-    def remove_by_time(self, time: float) -> None:
-        #TODO sort out for multiple entries for one time
-        self.queue.pop(time)
+    # def add_by_time(self, time: float, item) -> None:
+    #     self.queue[time] = item
+    #
+    # def remove_by_time(self, time: float) -> None:
+    #     #TODO sort out for multiple entries for one time
+    #     self.queue.pop(time)
 
     def add(self, item: TimedOccurrence):
-        self.queue[item.get_time()] = item
+        self._queue[(item.time(), id(item))] = item
 
     def pop(self): #-> TimedOccurrence:
     #remove and return first element
-        return self.queue.popitem(0)[1]
+        return self._queue.popitem(0)[1]
 
     def top_item(self):
-        return self.queue.peekitem(0)[1]
+        return self._queue.peekitem(0)[1] #this is still O(log(n)) which is not ideal
 
     def next_time(self) -> float:
-        return self.queue.peekitem(0)[0]
+        return self._queue.peekitem(0)[0][0]
 
     def is_empty(self):
-        return len(self.queue) == 0
+        return len(self._queue) == 0
 
     def remove(self, item: TimedOccurrence):
-        self.queue.pop(item.get_time())
+        self._queue.pop((item.time(), id(item)))

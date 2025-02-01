@@ -25,7 +25,7 @@ class NurseQueue(EventQueue):
         prev_end = self.__sim_time.get_sim_time()
         time: float
         event: Event
-        for time, event in self.queue.items():
+        for time, event in self._queue.items():
             event_start = time - event.get_duration()
             if time > start_time:
                 start = True
@@ -47,7 +47,7 @@ class NurseQueue(EventQueue):
 
         queue_event: Event
         for queue_event in self.queue.values():
-            next_start_time = queue_event.get_time()
+            next_start_time = queue_event.time()
             if next_start_time - prev_end_time > max_event_duration:
                 event.set_time(prev_end_time)
                 self.queue[prev_end_time] = event

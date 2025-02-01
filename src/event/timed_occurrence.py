@@ -2,6 +2,7 @@ class TimedOccurrence:
     def __init__(self, time):
         self._time = time
 
-    def get_time(self):
+    # @property
+    def time(self):
         return self._time
 
