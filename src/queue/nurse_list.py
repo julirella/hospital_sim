@@ -62,3 +62,11 @@ class NurseList(EventList):
             self.__insert_after__(event)
         else:
             self.__insert_after__(event, self._front)
+
+    def add_to_start(self, event: Event) -> None:
+        current_event: Event = self.front()
+        if current_event.get_status() == EventStatus.ACTIVE:
+            current_event.pause() #pause current if necessary
+
+        #insert new and push back rest
+        self.__insert_after__(event, None)
