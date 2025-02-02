@@ -10,6 +10,7 @@ class Graph:
         self._nurse_office = nurse_office
         self._patient_rooms = patient_rooms
         self._edges: list[list[tuple[int, float]]] = [[] for _ in range(len(nodes))] #prepare empty lists
+        self._max_distance: float | None = None
 
     @property
     def nurse_office(self) -> NurseOffice:
@@ -84,3 +85,20 @@ class Graph:
             open_nodes.remove(current_id)
 
         return self.__retrace_path__(start_id, end_id, prev)
+
+    def max_distance(self) -> float:
+        if self._max_distance is not None:
+            return self._max_distance
+        else: #probably about the slowest way of doing this
+            distances = []
+            for start in self._nodes:
+                for end in self._nodes:
+                    if start != end:
+                        path = self.find_path(start, end)
+                        dst = 0
+                        for node in path:
+                            dst += node[1]
+                        distances.append(dst)
+            max_dst = max(distances)
+            self._max_distance = max_dst
+            return max_dst

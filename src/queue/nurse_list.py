@@ -1,19 +1,18 @@
-from src import SimTime
+from src import SimTime, Nurse
 from src.event import Event, EventStatus, TimedNurseId
 from src.queue.event_list import EventList, ListEvent
 
-MAX_WALK_TIME = 20 #TODO: recalculate based on dept size
-
 #linkded list of nurse events
 class NurseList(EventList):
-    def __init__(self, events: list[Event], sim_time: SimTime, nurse_id: int):
+    def __init__(self, events: list[Event], sim_time: SimTime, nurse: Nurse, max_graph_dst: float):
         super().__init__(events)
         self._sim_time: SimTime = sim_time
-        self._nurse_id: int = nurse_id
+        self._nurse_id = nurse.get_id()
+        self._max_walk_time = max_graph_dst / nurse.speed
         self._timed_nurse_id: TimedNurseId
 
     def __max_event_duration__(self, event: Event) -> float:
-        return event.get_duration() + MAX_WALK_TIME  # TODO switch to smarter walk time
+        return event.get_duration() + self._max_walk_time * 2
 
     def __insert_after__(self, new_event: Event, pred_event: ListEvent=None) -> None:
         #insert new_event after pred_event. If pred_event is None, add to front of list
@@ -22,16 +21,16 @@ class NurseList(EventList):
         if pred_event is None:
             new_list_event = ListEvent(new_event, self._front)
             self._front = new_list_event
-            new_event.set_time(self._sim_time.get_sim_time() + MAX_WALK_TIME / 2 + new_event.get_duration())
+            new_event.set_time(self._sim_time.get_sim_time() + self._max_walk_time + new_event.get_duration())
         else:
             new_list_event = ListEvent(new_event, pred_event.next)
             pred_event.next = new_list_event
-            new_event.set_time(pred_event.event.time() + MAX_WALK_TIME / 2 + new_event.get_duration())
+            new_event.set_time(pred_event.event.time() + self._max_walk_time + new_event.get_duration())
 
         #push_back if necessary, could probably be a separate method
         current = new_list_event
-        while current.next is not None and current.event.time() + MAX_WALK_TIME / 2 > current.next.event.start_time():
-            current.next.event.set_time(current.event.time() + MAX_WALK_TIME / 2 + current.next.event.get_duration())
+        while current.next is not None and current.event.time() + self._max_walk_time > current.next.event.start_time():
+            current.next.event.set_time(current.event.time() + self._max_walk_time + current.next.event.get_duration())
             current = current.next
 
     #find gap in queue to fit event and add it there
