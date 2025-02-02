@@ -1,11 +1,9 @@
 import json
 
-from src import Graph
+from src import Graph, EventList, NurseList
 from src.event import Request, Plan
 from src.nurse import Nurse
 from src.patient import Patient
-from src.queue.event_queue import EventQueue
-from src.queue.nurse_queue import NurseQueue
 from src.simulator import Simulator
 from .importer import Importer
 from ..sim_time import SimTime
@@ -36,26 +34,31 @@ class SimImporter(Importer):
 
         return nurses, patients
 
-    def import_events(self, nurses: list[Nurse], patients: list[Patient], graph: Graph, sim_time: SimTime) -> tuple[EventQueue, list[NurseQueue]]:
+    def import_events(self, nurses: list[Nurse], patients: list[Patient], graph: Graph, sim_time: SimTime) -> tuple[EventList, list[NurseList]]:
         file = open(self.event_file_name)
         events_json = json.load(file)
         request_lst = events_json["requests"]
         plan_lst = events_json["plans"]
         event_id: int = 0
 
-        request_queue = EventQueue()
+        # request_queue = EventQueue()
+        requests = []
         for request_dict in request_lst:
             time: float = request_dict["time"]
             patient: Patient = patients[request_dict["patient"]]
             level: int = request_dict["level"]
             duration: float = request_dict["duration"]
             request = Request(event_id, time, duration, patient, level, graph, sim_time)
-            request_queue.add(request)
+            requests.append(request)
+            # request_queue.add(request)
             event_id += 1
+        request_queue = EventList(requests)
 
-        nurse_queues: [NurseQueue] = []
-        for nurse in nurses:
-            nurse_queues.append(NurseQueue(nurse, sim_time))
+        nurse_queues: [NurseList] = []
+        # for nurse in nurses:
+        #     nurse_queues.append(NurseQueue(nurse, sim_time))
+
+        plans = [[] for _ in range(len(nurses))]
 
         for plan_dict in plan_lst:
             time: float = plan_dict["time"]
@@ -64,8 +67,12 @@ class SimImporter(Importer):
             nurse_id: int = plan_dict["nurse"]
             nurse: Nurse = nurses[nurse_id]
             plan = Plan(event_id, time, duration, patient, nurse, graph, sim_time)
-            nurse_queues[nurse_id].add(plan)
+            # nurse_queues[nurse_id].add(plan)
+            plans[nurse_id].append(plan)
             event_id += 1
+
+        for plan_array in plans:
+            nurse_queues.append(NurseList(plan_array, sim_time))
 
         return request_queue, nurse_queues
 

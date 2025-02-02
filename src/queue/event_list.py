@@ -25,3 +25,6 @@ class EventList:
         event = self.front()
         self._front = self._front.next
         return event
+
+    def next_time(self) -> float:
+        return self.front().next_time()

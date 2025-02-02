@@ -1,9 +1,12 @@
+import unittest
+
 from src.importer import SimImporter
 from src.simulator import Simulator
 
 
-class TestSimImporter:
+class TestSimImporter(unittest.TestCase):
     def test_import_data(self):
+        #currently just tests that it doesn't crash
         graph_file_path = "input/layouts/testLayout.json"
         people_file_path = "input/people/testPeople.json"
         events_file_path = "input/events/testEvents.json"

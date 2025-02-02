@@ -1,17 +1,19 @@
 from sortedcontainers import SortedDict
 
 from src.event import Step, Request
+from src.event.timed_nurse_id import TimedNurseId
 from src.nurse import Nurse
 from src.graph import Graph
 from src.patient import Patient
-from src.queue import TimeQueue
+from src.queue import TimeQueue, EventList, NurseList
 from src.queue.event_queue import EventQueue
 from src.queue.nurse_queue import NurseQueue
 from src.sim_time import SimTime
 
 
 class Simulator:
-    def __init__(self, graph: Graph, nurses: list[Nurse], patients: list[Patient], request_queue: EventQueue, nurse_queues: list[NurseQueue], sim_time: SimTime) -> None:
+    def __init__(self, graph: Graph, nurses: list[Nurse], patients: list[Patient], request_queue: EventList,
+                 nurse_queues: list[NurseList], sim_time: SimTime) -> None:
         self.graph = graph
         self.nurses = nurses
         self.patients = patients
@@ -21,16 +23,17 @@ class Simulator:
         self.global_queue = TimeQueue()
         #put next step from each nurse queue into global queue
         for nurse_id, nurse_queue in enumerate(self.nurse_queues):
-            self.global_queue.add_by_time(nurse_queue.next_time(), nurse_id)
+            next_nurse_id = TimedNurseId(nurse_queue.next_time(), nurse_id)
+            self.global_queue.add(next_nurse_id)
 
     def run_next_step(self):
         step_time = self.global_queue.next_time()
         self.sim_time.set_sim_time(step_time)
-        next_step_nurse_id: int = self.global_queue.pop() #this should work anyway because python, but is it bad practice?
-        nurse_queue = self.nurse_queues[next_step_nurse_id]
+        next_step_nurse_id: TimedNurseId = self.global_queue.pop() #this should work anyway because python, but is it bad practice?
+        nurse_queue = self.nurse_queues[next_step_nurse_id.nurse_id]
         nurse_queue.run_next_step()
-        if not nurse_queue.is_empty():
-            self.global_queue.add_by_time(nurse_queue.next_time(), next_step_nurse_id)
+        if not nurse_queue.empty():
+            self.global_queue.add(TimedNurseId(nurse_queue.next_time(), next_step_nurse_id.nurse_id))
 
     def assign_next_request(self):
         self.sim_time.set_sim_time(self.request_queue.next_time())

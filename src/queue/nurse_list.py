@@ -70,3 +70,11 @@ class NurseList(EventList):
 
         #insert new and push back rest
         self.__insert_after__(event, None)
+
+    def run_next_step(self) -> None:
+        #call run next step of top event
+        next_event: Event = self.front()
+        finished: bool = next_event.run_next_step()
+        #if the event is over, remove it (and maybe log that)
+        if finished:
+            self.pop_front()
