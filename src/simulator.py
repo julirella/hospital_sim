@@ -81,12 +81,10 @@ class Simulator:
             if self.request_queue.empty():
                 self.run_next_step()
             elif self.global_queue.is_empty():
-                #assign request
-                ...
+                self.assign_next_request()
             elif self.global_queue.next_time() < self.request_queue.next_time():
                 self.run_next_step()
             else:
-                #assign request
-                ...
+                self.assign_next_request()
 
         self.__print_logs__()
