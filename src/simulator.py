@@ -1,13 +1,10 @@
-from sortedcontainers import SortedDict
 
-from src.event import Step, Request
+from src.event import Request
 from src.event.timed_nurse_id import TimedNurseId
 from src.nurse import Nurse
 from src.graph import Graph
 from src.patient import Patient
 from src.queue import TimeQueue, EventList, NurseList
-from src.queue.event_queue import EventQueue
-from src.queue.nurse_queue import NurseQueue
 from src.sim_time import SimTime
 
 
@@ -23,7 +20,8 @@ class Simulator:
         self.global_queue = TimeQueue()
         #put next step from each nurse queue into global queue
         for nurse_id, nurse_queue in enumerate(self.nurse_queues):
-            next_nurse_id = TimedNurseId(nurse_queue.next_time(), nurse_id)
+            next_nurse_id = nurse_queue.create_timed_nurse_id()
+            # next_nurse_id = TimedNurseId(nurse_queue.next_time(), nurse_id)
             self.global_queue.add(next_nurse_id)
 
     def run_next_step(self):
@@ -33,11 +31,11 @@ class Simulator:
         nurse_queue = self.nurse_queues[next_step_nurse_id.nurse_id]
         nurse_queue.run_next_step()
         if not nurse_queue.empty():
-            self.global_queue.add(TimedNurseId(nurse_queue.next_time(), next_step_nurse_id.nurse_id))
+            self.global_queue.add(nurse_queue.create_timed_nurse_id())
 
     def assign_next_request(self):
         self.sim_time.set_sim_time(self.request_queue.next_time())
-        request: Request = self.request_queue.pop()
+        request: Request = self.request_queue.pop_front()
         #choose nurse
         patient = request.get_patient()
         patients_nurse = patient.get_nurse()
@@ -57,9 +55,9 @@ class Simulator:
             #add to start of nurse queue (and pause current if necessary)
             nurse_queue.add_to_start(request)
             #take next nurse step out of global queue
-            self.global_queue.remove_by_time(nurse_queue.next_time())
+            self.global_queue.remove(nurse_queue.get_timed_nurse_id())
             #put new next nurse step into global queue
-            self.global_queue.add_by_time(nurse_queue.next_time(), chosen_nurse_id)
+            self.global_queue.add(nurse_queue.create_timed_nurse_id())
 
 
     def __print_logs__(self):
@@ -79,8 +77,8 @@ class Simulator:
         #log whatever happens
         print("Simulating...")
         #TODO: add waiting requests
-        while not self.request_queue.is_empty() or not self.global_queue.is_empty():
-            if self.request_queue.is_empty():
+        while not self.request_queue.empty() or not self.global_queue.is_empty():
+            if self.request_queue.empty():
                 self.run_next_step()
             elif self.global_queue.is_empty():
                 #assign request

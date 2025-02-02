@@ -1,14 +1,16 @@
 from src import SimTime
-from src.event import Event, EventStatus
+from src.event import Event, EventStatus, TimedNurseId
 from src.queue.event_list import EventList, ListEvent
 
 MAX_WALK_TIME = 20 #TODO: recalculate based on dept size
 
 #linkded list of nurse events
 class NurseList(EventList):
-    def __init__(self, events: list[Event], sim_time: SimTime):
+    def __init__(self, events: list[Event], sim_time: SimTime, nurse_id: int):
         super().__init__(events)
         self._sim_time: SimTime = sim_time
+        self._nurse_id: int = nurse_id
+        self._timed_nurse_id: TimedNurseId
 
     def __max_event_duration__(self, event: Event) -> float:
         return event.get_duration() + MAX_WALK_TIME  # TODO switch to smarter walk time
@@ -78,3 +80,10 @@ class NurseList(EventList):
         #if the event is over, remove it (and maybe log that)
         if finished:
             self.pop_front()
+
+    def create_timed_nurse_id(self) -> TimedNurseId:
+        self._timed_nurse_id = TimedNurseId(self.next_time(), self._nurse_id)
+        return self._timed_nurse_id
+
+    def get_timed_nurse_id(self) -> TimedNurseId:
+        return self._timed_nurse_id

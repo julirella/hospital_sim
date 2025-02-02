@@ -4,3 +4,4 @@ from .movement import *
 from .event import *
 from .request import *
 from .plan import *
+from .timed_nurse_id import *

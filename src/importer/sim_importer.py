@@ -71,8 +71,8 @@ class SimImporter(Importer):
             plans[nurse_id].append(plan)
             event_id += 1
 
-        for plan_array in plans:
-            nurse_queues.append(NurseList(plan_array, sim_time))
+        for nurse_id, plan_array in enumerate(plans):
+            nurse_queues.append(NurseList(plan_array, sim_time, nurse_id))
 
         return request_queue, nurse_queues
 
