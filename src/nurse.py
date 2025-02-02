@@ -1,6 +1,9 @@
 from .node import Node
 from .sim_time import SimTime
 
+# NURSE_KPH = 4
+# NURSE_PPS = 30 #pixels per second
+NURSE_SPEED_MPS = 1
 
 class Nurse:
     def __init__(self, nurse_id: int, pos: Node, sim_time: SimTime) -> None:
@@ -9,6 +12,11 @@ class Nurse:
         self.__sim_time: SimTime = sim_time
         self.__assigned_event_id: int | None = None
         self.__log: list[dict] = []
+        self._speed = NURSE_SPEED_MPS
+
+    @property
+    def speed(self) -> float:
+        return self._speed
 
     def get_id(self) -> int:
         return self.__nurse_id
@@ -21,6 +29,7 @@ class Nurse:
 
     def get_log(self) -> list[dict]:
         return self.__log
+
 
     def assign_event(self, event_id: int) -> None:
         self.__assigned_event_id = event_id

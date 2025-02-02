@@ -1,5 +1,4 @@
 from enum import IntEnum
-from logging import exception
 
 from src import Graph, SimTime
 from src.event import Step, Movement
@@ -8,8 +7,7 @@ from src.event.timed_occurrence import TimedOccurrence
 from src.nurse import Nurse
 from src.patient import Patient
 
-NURSE_KPH = 4
-NURSE_PPS = 30 #pixels per second
+
 
 class EventStatus(IntEnum):
     NOT_STARTED = 1
@@ -42,7 +40,7 @@ class Event(TimedOccurrence):
         from_node = nurse_pos
         for i in range(len(path_there)):
             to_node, dst = path_there[i]
-            step_duration = dst / NURSE_PPS #TODO: sort out this conversion
+            step_duration = dst / self._assigned_nurse.speed
             step_time = prev_step_time + step_duration
             step = Movement(step_time, self._assigned_nurse, from_node, to_node)
             self._steps.append(step)

@@ -20,8 +20,7 @@ class Movement(Step):
         total_x = self._end.x - self._start.x
         total_y = self._end.y - self._start.y
         total_dst = math.sqrt(total_x**2 + total_y**2)
-        nurse_speed = 30 #TODO: figure out actual speed
-        total_time = total_dst / nurse_speed
+        total_time = total_dst / self._nurse.speed
         remaining_time = self._time - pause_time
         remaining_time_ratio = remaining_time / total_time
         remaining_x = remaining_time_ratio * total_x

@@ -20,13 +20,13 @@ class Graph:
         return self._patient_rooms
 
     def __edge_weight__(self, src_node_id: int, dst_node_id: int) -> float:
+        #Euclidean distance between nodes
         src_x, src_y = self._nodes[src_node_id].x, self._nodes[src_node_id].y
         dst_x, dst_y = self._nodes[dst_node_id].x, self._nodes[dst_node_id].y
         weight = sqrt((src_x - dst_x)**2 + (src_y - dst_y)**2)
         return weight
 
     def add_edge(self, src_node_id: int, dst_node_id: int) -> None:
-        #TODO: somehow scale weight properly based on units - possibly to walking time (assuming all nurses have the same speed)
         weight = self.__edge_weight__(src_node_id, dst_node_id)
 
         #TODO: maybe check for duplicate edges

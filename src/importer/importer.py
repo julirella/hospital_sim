@@ -3,6 +3,7 @@ import json
 from src import Graph
 from src.node import *
 
+PIXELS_PER_METER = 35
 
 class Importer:
     def __init__(self, graph_filename: str, graph_type: str="graphit") -> None:
@@ -19,8 +20,8 @@ class Importer:
         for node_id, item in enumerate(nodes_dict.items()):
             key, val = item
             node_ids[key] = node_id
-            x = val["ui"]["pos"]["x"]
-            y = val["ui"]["pos"]["y"]
+            x = val["ui"]["pos"]["x"] / PIXELS_PER_METER
+            y = val["ui"]["pos"]["y"] / PIXELS_PER_METER
             node_type = val["properties"]["name"]
             if node_type == "J":
                 node = Junction(node_id, x, y)
