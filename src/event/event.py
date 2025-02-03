@@ -136,7 +136,7 @@ class Event(TimedOccurrence):
         self._steps = [] #empty steps so that they can be recalculated when resuming
 
     def __log_action__(self, action: str, time: float) -> None:
-        self._log.append({"time": time, "event": self._event_id, "action": action}) #add patient id later
+        self._log.append({"time": time, "event": self._event_id, "action": action, "patient": self._patient.patient_id}) #add patient id later
 
     def __log_action_now__(self, action: str) -> None:
         self.__log_action__(action, self._sim_time.get_sim_time())
