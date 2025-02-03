@@ -30,15 +30,14 @@ class Nurse:
     def get_log(self) -> list[dict]:
         return self.__log
 
-
     def assign_event(self, event_id: int) -> None:
         self.__assigned_event_id = event_id
         self.__log_action__("assign event")
 
     def unassign_event(self) -> None:
         #effectively the same as finish except for different log message
-        self.__assigned_event_id = None
         self.__log_action__("unassign event")
+        self.__assigned_event_id = None
 
     def finish_event(self) -> None:
         self.__log_action__("finish event")
@@ -53,4 +52,5 @@ class Nurse:
         self.__log_action__("time at patient")
 
     def __log_action__(self, action: str) -> None:
-        self.__log.append({"time": self.__sim_time.get_sim_time(), "position": self.__pos.node_id, "event": self.__assigned_event_id, "action": action})
+        # self.__log.append({"time": self.__sim_time.get_sim_time(), "position": self.__pos.node_id, "event": self.__assigned_event_id, "action": action})
+        self.__log.append({"time": self.__sim_time.get_sim_time(), "x": self.__pos.x, "y": self.__pos.y, "event": self.__assigned_event_id, "action": action})
