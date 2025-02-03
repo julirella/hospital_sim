@@ -8,11 +8,11 @@ class NurseList(EventList):
         super().__init__(events)
         self._sim_time: SimTime = sim_time
         self._nurse_id = nurse.get_id()
-        self._max_walk_time = max_graph_dst / nurse.speed
+        self._max_walk_time = max_graph_dst / nurse.speed #longest walk time for nurse between any two nodes in graph
         self._timed_nurse_id: TimedNurseId
 
     def __max_event_duration__(self, event: Event) -> float:
-        return event.get_duration() + self._max_walk_time * 2
+        return event.get_duration() + self._max_walk_time
 
     def __insert_after__(self, new_event: Event, pred_event: ListEvent=None) -> None:
         #insert new_event after pred_event. If pred_event is None, add to front of list
@@ -21,16 +21,17 @@ class NurseList(EventList):
         if pred_event is None:
             new_list_event = ListEvent(new_event, self._front)
             self._front = new_list_event
-            new_event.set_time(self._sim_time.get_sim_time() + self._max_walk_time + new_event.get_duration())
+            new_event.set_time(self._sim_time.get_sim_time())
         else:
             new_list_event = ListEvent(new_event, pred_event.next)
             pred_event.next = new_list_event
-            new_event.set_time(pred_event.event.time() + self._max_walk_time + new_event.get_duration())
+            new_event.set_time(pred_event.event.time() + pred_event.event.get_duration() + self._max_walk_time)
 
         #push_back if necessary, could probably be a separate method
+        #at this point we know new event is far enough from the event before it, but the following event may be too close
         current = new_list_event
-        while current.next is not None and current.event.time() + self._max_walk_time > current.next.event.start_time():
-            current.next.event.set_time(current.event.time() + self._max_walk_time + current.next.event.get_duration())
+        while current.next is not None and current.event.time() + current.event.get_duration() + self._max_walk_time > current.next.event.time():
+            current.next.event.set_time(current.event.time() + current.event.get_duration() + self._max_walk_time)
             current = current.next
 
     #find gap in queue to fit event and add it there
@@ -38,21 +39,21 @@ class NurseList(EventList):
         max_event_duration = self.__max_event_duration__(event)
         prev_end_time = self._sim_time.get_sim_time()
 
-        prev = None
-        current: ListEvent = self._front
+        prev_event = None
+        next_event: ListEvent = self._front
         done = False
-        while current is not None:
-            next_start_time = current.event.start_time()
+        while next_event is not None:
+            next_start_time = next_event.event.time()
             if next_start_time - prev_end_time > max_event_duration: #new event fits
-                self.__insert_after__(event, prev)
+                self.__insert_after__(event, prev_event)
                 done = True
                 break
-            prev_end_time = current.event.time()
-            prev = current
-            current = current.next
+            prev_end_time = next_event.event.time() + next_event.event.get_duration() + self._max_walk_time
+            prev_event = next_event
+            next_event = next_event.next
 
         if not done:
-            self.__insert_after__(event, prev)
+            self.__insert_after__(event, prev_event)
 
     #add event after end of current running event
     def add_after_current(self, event: Event) -> None:
