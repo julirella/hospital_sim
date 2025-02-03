@@ -61,13 +61,22 @@ class Simulator:
 
 
     def __print_logs__(self):
+        print("------------------nurse logs--------------------")
         for nurse_id, nurse in enumerate(self.nurses):
-            print(nurse_id, "---------------------------------\n")
+            print("nurse", nurse_id)
             log = nurse.get_log()
             for line in log:
                 print(line)
+
             # print(nurse.get_log())
         print("\n")
+        print("------------------event logs--------------------")
+        logs = []
+        for nurse_queue in self.nurse_queues:
+            logs += nurse_queue.event_logs
+
+        for log in logs:
+            print(log)
 
     def simulate(self) -> None:
         #while any queue is not empty:

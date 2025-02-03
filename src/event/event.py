@@ -26,6 +26,8 @@ class Event(TimedOccurrence):
         self._sim_time = sim_time
         self._status = EventStatus.NOT_STARTED
         self._steps: list[Step] = []
+        self._log: list[dict] = []
+        self.__log_action__("planned start", self._time)
 
     def __create_steps__(self) -> None:
         #nurse has to be assigned at this point
@@ -78,12 +80,16 @@ class Event(TimedOccurrence):
     def set_time(self, time: float) -> None:
         self._time = time
 
+    @property
+    def log(self) -> list[dict]:
+        return self._log
+
     # def end_time(self) -> float:
     #     return self._steps[-1].time()
 
     #time of start of main part that is of length duration
-    def start_time(self) -> float:
-        return self._time - self._duration
+    # def start_time(self) -> float:
+    #     return self._time - self._duration
 
     #time of next step, or of event itself if steps have not yet been created
     def next_time(self) -> float:
@@ -101,14 +107,19 @@ class Event(TimedOccurrence):
 
     def run_next_step(self) -> bool:
         #runs next step, returns true if it finishes the event
-        if self._status == EventStatus.NOT_STARTED or self._status == EventStatus.PAUSED:
+        if self._status == EventStatus.NOT_STARTED:
             self.__start__() #at this point start and resume is the same
+            self.__log_action_now__("actual start")
+        elif self._status == EventStatus.PAUSED:
+            self.__start__()
+            self.__log_action_now__("resume")
         else:
             step: Step = self.__pop_next_step__()
             step.run()
 
         if self.__is_finished__():
             self._assigned_nurse.finish_event()
+            self.__log_action_now__("end")
 
         return self.__is_finished__()
 
@@ -116,9 +127,16 @@ class Event(TimedOccurrence):
         next_step = self.get_next_step()
         self._duration -= next_step.pause(self._sim_time.get_sim_time())
         self._status = EventStatus.PAUSED
+        self.__log_action_now__("pause")
         self._assigned_nurse.unassign_event()
         # self._time = self.__sim_time.get_sim_time() #so that it can be pushed back correctly. Not amazing relying on this
         #if it's caring for patient, sort out duration
         # self._duration = next_step.time() - self._sim_time.get_sim_time()
 
         self._steps = [] #empty steps so that they can be recalculated when resuming
+
+    def __log_action__(self, action: str, time: float) -> None:
+        self._log.append({"time": time, "event": self._event_id, "action": action}) #add patient id later
+
+    def __log_action_now__(self, action: str) -> None:
+        self.__log_action__(action, self._sim_time.get_sim_time())

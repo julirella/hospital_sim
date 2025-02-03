@@ -10,6 +10,11 @@ class NurseList(EventList):
         self._nurse_id = nurse.get_id()
         self._max_walk_time = max_graph_dst / nurse.speed #longest walk time for nurse between any two nodes in graph
         self._timed_nurse_id: TimedNurseId
+        self._event_logs = []
+
+    @property
+    def event_logs(self):
+        return self._event_logs
 
     def __max_event_duration__(self, event: Event) -> float:
         return event.get_duration() + self._max_walk_time
@@ -79,7 +84,8 @@ class NurseList(EventList):
         finished: bool = next_event.run_next_step()
         #if the event is over, remove it (and maybe log that)
         if finished:
-            self.pop_front()
+            finished_log = self.pop_front().log
+            self._event_logs += finished_log
 
     def create_timed_nurse_id(self) -> TimedNurseId:
         self._timed_nurse_id = TimedNurseId(self.next_time(), self._nurse_id)
