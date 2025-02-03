@@ -10,6 +10,12 @@ class Importer:
         self.graph_filename = graph_filename
         self.graph_type = graph_type
 
+    def load_json(self, path):
+        file = open(path)
+        res = json.load(file)
+        file.close()
+        return res
+
     def parse_nodes(self, nodes_dict: dict) -> tuple[Graph, dict]:
         nodes: list[Node] = []
         node_ids = {}
@@ -54,8 +60,8 @@ class Importer:
             graph.add_edge(src_id, dst_id)
 
     def import_graphit_graph(self) -> Graph:
-        file = open(self.graph_filename)
-        graph_json = json.load(file)
+        graph_json = self.load_json(self.graph_filename)
+
         nodes_dict = graph_json['nodes']
         edges_dict = graph_json['edges']
 

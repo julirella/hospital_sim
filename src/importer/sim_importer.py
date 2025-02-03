@@ -16,8 +16,7 @@ class SimImporter(Importer):
         self.event_file_name = event_file_name
 
     def import_entities(self, graph: Graph, sim_time: SimTime) -> tuple[list[Nurse], list[Patient]]:
-        file = open(self.entity_file_name)
-        entities_json = json.load(file)
+        entities_json = self.load_json(self.entity_file_name)
 
         nurse_cnt = entities_json["nurses"]
         nurses: list[Nurse] = []
@@ -35,8 +34,8 @@ class SimImporter(Importer):
         return nurses, patients
 
     def import_events(self, nurses: list[Nurse], patients: list[Patient], graph: Graph, sim_time: SimTime) -> tuple[EventList, list[NurseList]]:
-        file = open(self.event_file_name)
-        events_json = json.load(file)
+        events_json = self.load_json(self.event_file_name)
+
         request_lst = events_json["requests"]
         plan_lst = events_json["plans"]
         event_id: int = 0
