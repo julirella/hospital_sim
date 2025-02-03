@@ -11,6 +11,7 @@ class TestEvent(unittest.TestCase):
         self.mock_graph = Mock()
         self.mock_nurse = Mock()
         self.mock_nurse.get_pos.return_value = Mock()
+        self.mock_nurse.speed = 1
         self.mock_sim_time = Mock()
         self.mock_node1 = Mock()
         self.mock_node2 = Mock()
@@ -35,13 +36,13 @@ class TestEvent(unittest.TestCase):
 
     def test_run_next_step_creates_steps_with_time(self):
         self.event.run_next_step()
-        self.assertEqual(52, self.event.next_time())
+        self.assertEqual(110, self.event.next_time())
         self.event.run_next_step()
-        self.assertEqual(55, self.event.next_time())
+        self.assertEqual(200, self.event.next_time())
         self.event.run_next_step()
-        self.assertEqual(60, self.event.next_time())
+        self.assertEqual(350, self.event.next_time())
         self.event.run_next_step()
-        self.assertEqual(90, self.event.next_time())
+        self.assertEqual(380, self.event.next_time())
 
 
     def test_first_next_time_returns_event_time(self):

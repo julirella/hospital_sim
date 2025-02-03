@@ -5,8 +5,6 @@ from unittest.mock import Mock
 from src import Nurse, Node
 from src.event import Movement
 
-NURSE_SPEED = 30
-
 class TestMovement(unittest.TestCase):
     def setUp(self):
         self.nurse_pos = Node(0, 0, 0)
@@ -17,7 +15,7 @@ class TestMovement(unittest.TestCase):
         start = Node(0, 0, 0)
         end = Node(0, 3, 4)
         move = Movement(100, self.nurse, start, end)
-        move.pause(100 - 2.5 / NURSE_SPEED)
+        move.pause(100 - 2.5 / self.nurse.speed)
         x = self.nurse.get_pos().x
         y = self.nurse.get_pos().y
         self.assertTrue(0.000001 > abs(x - 1.5))
@@ -27,7 +25,7 @@ class TestMovement(unittest.TestCase):
         start = Node(0, 120, 60)
         end = Node(0, 0, 0)
         move = Movement(100, self.nurse, start, end)
-        move.pause(100 - (math.sqrt(5) * 40) / NURSE_SPEED)
+        move.pause(100 - (math.sqrt(5) * 40) / self.nurse.speed)
         x = self.nurse.get_pos().x
         y = self.nurse.get_pos().y
         self.assertTrue(0.000001 > abs(x - 80.0))
