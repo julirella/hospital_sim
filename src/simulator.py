@@ -59,6 +59,12 @@ class Simulator:
             #put new next nurse step into global queue
             self.global_queue.add(nurse_queue.create_timed_nurse_id())
 
+    # def custom_print(*args, decimal_places=2):
+    #     formatted_args = [
+    #         f"{arg:.{decimal_places}f}" if isinstance(arg, float) else arg
+    #         for arg in args
+    #     ]
+    #     print(*formatted_args)
 
     def __print_logs__(self):
         print("------------------nurse logs--------------------")
@@ -67,6 +73,7 @@ class Simulator:
             log = nurse.get_log()
             for line in log:
                 print(line)
+                # self.custom_print(line)
 
             # print(nurse.get_log())
         print("\n")
