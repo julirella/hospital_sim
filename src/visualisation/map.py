@@ -1,5 +1,6 @@
 from src import PatientRoom, NurseOffice
 from src.visualisation.corridor import Corridor
+from .constants import *
 
 
 class Map:
@@ -7,7 +8,7 @@ class Map:
         self.rooms = rooms
         self.nurse_office = nurse_office
         self.corridors = corridors
-        self.width, self.height = self.__width_and_height__()
 
-    def __width_and_height__(self) -> tuple[float, float]:
-        pass
+        #assuming there will be no weird corridor sticking out further than a room
+        self.width = max(self.rooms + [nurse_office], key=lambda r: r.x).x + ROOM_SIDE_METERS
+        self.height = max(self.rooms + [nurse_office], key=lambda r: r.y).y + ROOM_SIDE_METERS

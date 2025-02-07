@@ -1,6 +1,5 @@
 import unittest
 
-from src import Simulator
 from src.importer import SimImporter
 
 

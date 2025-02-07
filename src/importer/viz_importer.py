@@ -1,5 +1,5 @@
 from src.importer import Importer
-from src.visualisation import Map, Corridor
+from src.visualisation import Map, Corridor, Visualiser
 
 
 class VizImporter(Importer):
@@ -18,5 +18,7 @@ class VizImporter(Importer):
 
         return Map(self.patient_rooms, self.nurse_office, corridors)
 
-    def import_data(self) -> None:
-        pass
+    def import_data(self) -> Visualiser:
+        dept_map = self.import_graphit_graph()
+        visualiser = Visualiser(dept_map)
+        return visualiser
