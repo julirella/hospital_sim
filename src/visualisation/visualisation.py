@@ -32,6 +32,11 @@ class Visualiser:
             pygame.draw.line(self.map_surf, 'red', self.scale_point(corridor.one_end),
                              self.scale_point(corridor.other_end), 5)
 
+        for room in self.map.rooms + [self.map.nurse_office]:
+            rect = pygame.Rect(self.scale_point((room.x - ROOM_SIDE_METERS / 2, room.y - ROOM_SIDE_METERS / 2)) ,
+                               self.scale_point((ROOM_SIDE_METERS, ROOM_SIDE_METERS)))
+            pygame.draw.rect(self.map_surf, 'blue', rect)
+
         self.screen.blit(self.map_surf, (0, 0))
 
     def process_input(self):
