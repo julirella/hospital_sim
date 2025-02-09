@@ -1,10 +1,13 @@
+import pygame
+
 from src.visualisation.corridor import Corridor
 from .constants import *
 from .vis_room import VisRoom
 
 
 class Map:
-    def __init__(self, rooms: list[VisRoom], nurse_office: VisRoom, corridors: list[Corridor], nurses, patients, width, height):
+    def __init__(self, rooms: list[VisRoom], nurse_office: VisRoom, corridors: list[Corridor],
+                 nurses, patients, width, height, pixels_per_meter):
         self.rooms = rooms
         self.nurse_office = nurse_office
         self.corridors = corridors
@@ -12,7 +15,30 @@ class Map:
         self.patients = patients
         self.width = width
         self.height = height
+        self.pixels_per_meter = pixels_per_meter
+        self.map_surf = pygame.surface.Surface((MAP_SURF_WIDTH, MAP_SURF_HEIGHT))
+
+        #tmp to check nurses print:
+        self.nurse_office.add_nurse(self.nurses[0])
+        self.nurse_office.add_nurse(self.nurses[1])
+
 
         #assuming there will be no weird corridor sticking out further than a room
         # self.width = max(self.rooms + [nurse_office], key=lambda r: r.x).x + ROOM_SIDE_METERS / 2
         # self.height = max(self.rooms + [nurse_office], key=lambda r: r.y).y + ROOM_SIDE_METERS / 2
+
+    def scale_point(self, point):
+        return tuple(map(lambda x: x * self.pixels_per_meter, point))
+
+    def surface(self):
+        self.map_surf.fill('white')
+
+        for corridor in self.corridors:
+            pygame.draw.line(self.map_surf, 'red', self.scale_point(corridor.one_end),
+                             self.scale_point(corridor.other_end), 5)
+
+        for room in self.rooms + [self.nurse_office]:
+            room_surf = room.surface()
+            self.map_surf.blit(room_surf, self.scale_point((room.x - ROOM_SIDE_METERS / 2, room.y - ROOM_SIDE_METERS / 2)))
+
+        return self.map_surf

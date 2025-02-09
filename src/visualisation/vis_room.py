@@ -12,7 +12,7 @@ class VisRoom:
         self._y = orig_room.y
         self._width_pixels = ROOM_SIDE_METERS * pixels_per_meter
         self._height_pixels = ROOM_SIDE_METERS * pixels_per_meter
-        self._room_surf = pygame.surface.Surface(self._width_pixels, self._height_pixels)
+        self._room_surf = pygame.surface.Surface((self._width_pixels, self._height_pixels))
         self._patients = patients
         self._rect = pygame.Rect(0, 0, self._width_pixels, self._height_pixels)
         # patient bed width is the same as width of gap between beds and beds and walls

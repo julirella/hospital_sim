@@ -31,18 +31,18 @@ class Visualiser:
         return tuple(map(lambda x: x * self.pixels_per_meter, point))
 
     def display_map(self):
-        self.map_surf.fill('white')
-
-        for corridor in self.map.corridors:
-            pygame.draw.line(self.map_surf, 'red', self.scale_point(corridor.one_end),
-                             self.scale_point(corridor.other_end), 5)
-
-        for room in self.map.rooms + [self.map.nurse_office]:
-            rect = pygame.Rect(self.scale_point((room.x - ROOM_SIDE_METERS / 2, room.y - ROOM_SIDE_METERS / 2)),
-                               self.scale_point((ROOM_SIDE_METERS, ROOM_SIDE_METERS)))
-            pygame.draw.rect(self.map_surf, 'blue', rect, 1)
-
-        self.screen.blit(self.map_surf, (0, 0))
+        # self.map_surf.fill('white')
+        #
+        # for corridor in self.map.corridors:
+        #     pygame.draw.line(self.map_surf, 'red', self.scale_point(corridor.one_end),
+        #                      self.scale_point(corridor.other_end), 5)
+        #
+        # for room in self.map.rooms + [self.map.nurse_office]:
+        #     rect = pygame.Rect(self.scale_point((room.x - ROOM_SIDE_METERS / 2, room.y - ROOM_SIDE_METERS / 2)),
+        #                        self.scale_point((ROOM_SIDE_METERS, ROOM_SIDE_METERS)))
+        #     pygame.draw.rect(self.map_surf, 'blue', rect, 1)
+        map_surf = self.map.surface()
+        self.screen.blit(map_surf, (0, 0))
 
     def process_input(self):
         for event in pygame.event.get():
