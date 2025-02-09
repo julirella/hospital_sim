@@ -1,8 +1,6 @@
 import pygame
 import sys
 
-from src import Graph
-from src.importer import Importer
 from src.visualisation import Map
 from .constants import *
 
@@ -35,7 +33,7 @@ class Visualiser:
         for room in self.map.rooms + [self.map.nurse_office]:
             rect = pygame.Rect(self.scale_point((room.x - ROOM_SIDE_METERS / 2, room.y - ROOM_SIDE_METERS / 2)) ,
                                self.scale_point((ROOM_SIDE_METERS, ROOM_SIDE_METERS)))
-            pygame.draw.rect(self.map_surf, 'blue', rect)
+            pygame.draw.rect(self.map_surf, 'blue', rect, 1)
 
         self.screen.blit(self.map_surf, (0, 0))
 
