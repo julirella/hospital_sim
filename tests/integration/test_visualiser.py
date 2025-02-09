@@ -7,9 +7,10 @@ class TestVisualiser(unittest.TestCase):
     def setUp(self):
         self.graph_path = "input/layouts/toScaleLayout.json"
         # self.graph_path = "input/layouts/testLayout.json"
+        self.nurse_log_path = "output/nurseLog.csv"
 
     def test_vis(self):
-        importer = VizImporter(self.graph_path)
+        importer = VizImporter(self.graph_path, self.nurse_log_path)
         visualiser = importer.import_data()
         visualiser.run()
 

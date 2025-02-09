@@ -6,7 +6,7 @@ from .constants import *
 
 
 class Visualiser:
-    def __init__(self, dept_map: Map):
+    def __init__(self, dept_map: Map, nurse_logs):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
@@ -14,6 +14,13 @@ class Visualiser:
         self.map_surf = pygame.surface.Surface((MAP_SURF_WIDTH, MAP_SURF_HEIGHT))
         self.map = dept_map
         self.pixels_per_meter = self.pixel_ratio()
+
+        self.nurse_logs = nurse_logs
+
+
+
+        self.time = 0
+
 
     def pixel_ratio(self):
         width_ratio = MAP_SURF_WIDTH / self.map.width
