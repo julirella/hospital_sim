@@ -38,7 +38,7 @@ class Visualiser:
                              self.scale_point(corridor.other_end), 5)
 
         for room in self.map.rooms + [self.map.nurse_office]:
-            rect = pygame.Rect(self.scale_point((room.x - ROOM_SIDE_METERS / 2, room.y - ROOM_SIDE_METERS / 2)) ,
+            rect = pygame.Rect(self.scale_point((room.x - ROOM_SIDE_METERS / 2, room.y - ROOM_SIDE_METERS / 2)),
                                self.scale_point((ROOM_SIDE_METERS, ROOM_SIDE_METERS)))
             pygame.draw.rect(self.map_surf, 'blue', rect, 1)
 
@@ -52,7 +52,9 @@ class Visualiser:
 
     def update(self):
         pass
-        #update state
+        #nurses:
+        #if nurse is moving, just calculate exact position
+        #otherwise figure out what room they're in and put them in the room to be displayed there
 
     def display(self):
         self.screen.fill('black')

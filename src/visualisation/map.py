@@ -1,10 +1,10 @@
-from src import PatientRoom, NurseOffice
 from src.visualisation.corridor import Corridor
 from .constants import *
+from .vis_room import VisRoom
 
 
 class Map:
-    def __init__(self, rooms: list[PatientRoom], nurse_office: NurseOffice, corridors: list[Corridor]):
+    def __init__(self, rooms: list[VisRoom], nurse_office: VisRoom, corridors: list[Corridor]):
         self.rooms = rooms
         self.nurse_office = nurse_office
         self.corridors = corridors
