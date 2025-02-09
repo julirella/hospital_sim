@@ -45,10 +45,12 @@ class Visualiser:
 
     def update(self):
         pass
+        #update state
 
     def display(self):
         self.screen.fill('black')
-        self.display_map()
+        self.display_map() #including everyone in rooms
+        #display moving nurses
         pygame.display.flip()
         self.clock.tick(60)
 

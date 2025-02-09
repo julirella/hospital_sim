@@ -1,3 +1,4 @@
+import csv
 
 from src.event import Request
 from src.event.timed_nurse_id import TimedNurseId
@@ -84,6 +85,20 @@ class Simulator:
 
         for log in logs:
             print(log)
+
+    def nurse_log(self) -> list[dict]:
+        nurse_logs = []
+        for nurse in self.nurses:
+            nurse_logs += nurse.get_log()
+
+        return nurse_logs
+
+    def event_log(self) -> list[dict]:
+        event_logs = []
+        for nurse_queue in self.nurse_queues:
+            event_logs += nurse_queue.event_logs
+
+        return event_logs
 
     def simulate(self) -> None:
         #while any queue is not empty:
