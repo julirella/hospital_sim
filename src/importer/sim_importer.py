@@ -11,7 +11,7 @@ from ..sim_time import SimTime
 
 class SimImporter(Importer):
     def __init__(self, graph_file_name: str, entity_file_name: str, event_file_name: str ) -> None:
-        super().__init__(graph_file_name)
+        super().__init__(graph_file_name, entity_file_name)
         self.entity_file_name = entity_file_name
         self.event_file_name = event_file_name
 

@@ -6,9 +6,10 @@ from src.node import Node, Junction, NurseOffice, PatientRoom
 PIXELS_PER_METER = 35
 
 class Importer:
-    def __init__(self, graph_filename: str, graph_type: str="graphit") -> None:
+    def __init__(self, graph_filename: str, entity_file_name: str, graph_type: str="graphit") -> None:
         self.graph_filename = graph_filename
         self.graph_type = graph_type
+        self.entity_file_name = entity_file_name
         self.node_ids = {}
         self.nodes: list[Node] = []
         self.nurse_office: NurseOffice | None = None
