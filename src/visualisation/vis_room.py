@@ -1,6 +1,6 @@
 import pygame
 
-from .constants import *
+from src.constants import *
 from .vis_nurse import VisNurse
 from .. import Room
 from ..node.vis_patient import VisPatient

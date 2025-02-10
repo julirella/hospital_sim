@@ -6,7 +6,7 @@ from src.importer import Importer
 from src.node.vis_patient import VisPatient
 from src.visualisation import Map, Corridor, Visualiser, VisRoom
 from src.visualisation.vis_nurse import VisNurse
-from src.visualisation.constants import *
+from src.constants import *
 
 
 class VizImporter(Importer):
@@ -58,7 +58,9 @@ class VizImporter(Importer):
 
         nurse_dfs = []
         for nurse_id in nurse_ids:
-            nurse_dfs.append(df[df['nurse'] == nurse_id])
+            # https://stackoverflow.com/questions/20490274/how-to-reset-index-in-a-pandas-dataframe
+            # reset index to start from 0 for each nurse df
+            nurse_dfs.append(df[df['nurse'] == nurse_id].reset_index(drop=True))
 
         return nurse_dfs
 

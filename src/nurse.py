@@ -1,9 +1,9 @@
 from .node import Node
 from .sim_time import SimTime
+from .constants import *
 
 # NURSE_KPH = 4
 # NURSE_PPS = 30 #pixels per second
-NURSE_SPEED_MPS = 1
 
 class Nurse:
     def __init__(self, nurse_id: int, pos: Node, sim_time: SimTime) -> None:
