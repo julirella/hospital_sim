@@ -53,6 +53,9 @@ class Map:
         room_number = self.patients[patient_id].room_number
         self.rooms[room_number].add_nurse(self.nurses[nurse_id])
 
+    def put_nurse_in_office(self, nurse_id: int) -> None:
+        self.nurse_office.add_nurse(self.nurses[nurse_id])
+
     def scale_point(self, point):
         return tuple(map(lambda x: x * self.pixels_per_meter, point))
 

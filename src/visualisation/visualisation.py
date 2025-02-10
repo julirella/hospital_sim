@@ -19,9 +19,7 @@ class Visualiser:
 
         self.nurse_logs = nurse_logs
 
-
-
-        self.time = 25
+        self.time = 2
 
 
     def pixel_ratio(self):
@@ -51,6 +49,18 @@ class Visualiser:
         point = start + unit_direction * dst_covered
         return point.tolist()
 
+    def put_nurse_in_room(self, nurse_id, row):
+        patient_id = row['patient']
+        self.map.put_nurse_in_room(nurse_id, patient_id)
+
+    def put_nurse_in_corridor(self, nurse_id, prev_row, row_after_time):
+        start = prev_row['x'].item(), prev_row['y'].item()
+        end = row_after_time['x'].item(), row_after_time['y'].item()
+        time_since_start = self.time - prev_row['time'].item()
+        speed = self.map.nurse_by_id(nurse_id).speed
+        nurse_pos = self.point_on_line(start, end, time_since_start, speed)
+        self.map.put_nurse_in_corridor(nurse_id, nurse_pos)
+
     def update(self):
         self.map.reset()
         #nurses:
@@ -58,29 +68,36 @@ class Visualiser:
         #otherwise figure out what room they're in and put them in the room to be displayed there
 
         for nurse_id, nurse_log in enumerate(self.nurse_logs):
-            row_after_time = nurse_log[nurse_log['time'] >= self.time].iloc[0]
-            action = row_after_time['action']
-            if action == 'time at patient':
-                patient_id = row_after_time['patient']
-                self.map.put_nurse_in_room(nurse_id, patient_id)
-            elif action == 'move to':
-                index_after_time = row_after_time.name.item()
-                prev_row = nurse_log.iloc[index_after_time - 1]
-                start = prev_row['x'].item(), prev_row['y'].item()
-                end = row_after_time['x'].item(), row_after_time['y'].item()
-                time_since_start = self.time - prev_row['time'].item()
-                speed = self.map.nurse_by_id(nurse_id).speed
-                nurse_pos = self.point_on_line(start, end, time_since_start, speed)
-                self.map.put_nurse_in_corridor(nurse_id, nurse_pos)
+            if self.time <= nurse_log.iloc[0]['time']:
+                #put nurse in nurse office - assuming nurses always start in office
+                self.map.put_nurse_in_office(nurse_id)
+            elif self.time > nurse_log.iloc[-1]['time']:
+                #assuming nurse always ends in room because all events end in room - this will fail if there's a time cut off
+                self.put_nurse_in_room(nurse_id, nurse_log.iloc[-1])
 
-            elif action == 'assign event':
-                #???
-                pass
-            elif action == 'unassign event':
-                #???
-                pass
             else:
-                raise Exception('unknown action') #finish action should probably not come up
+                row_after_time = nurse_log[nurse_log['time'] >= self.time].iloc[0]
+                action = row_after_time['action']
+
+                if action == 'time at patient':
+                    self.put_nurse_in_room(nurse_id, row_after_time)
+                elif action == 'move to':
+                    index_after_time = row_after_time.name.item()
+                    prev_row = nurse_log.iloc[index_after_time - 1]
+                    self.put_nurse_in_corridor(nurse_id, prev_row, row_after_time)
+                elif action == 'unassign event' or action == 'assign event':
+                    index_after_time = row_after_time.name.item()
+                    prev_row = nurse_log.iloc[index_after_time - 1]
+                    prev_pos = prev_row['x'].item(), prev_row['y'].item()
+                    next_pos = row_after_time['x'].item(), row_after_time['y'].item()
+                    if prev_pos == next_pos: #TODO: check for float problems
+                        # nurse is in room
+                        self.put_nurse_in_room(nurse_id, prev_row)
+                    else:
+                        # nurse is walking in corridor
+                        self.put_nurse_in_corridor(nurse_id, prev_row, row_after_time)
+                else:
+                    raise Exception('unknown action') #finish action should probably not come up
 
 
     def display(self):
