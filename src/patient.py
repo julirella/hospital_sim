@@ -4,7 +4,7 @@ from .sim_time import SimTime
 
 
 class Patient:
-    def __init__(self, patient_id: float, nurse: Nurse, room: PatientRoom, sim_time: SimTime) -> None:
+    def __init__(self, patient_id: int, nurse: Nurse, room: PatientRoom, sim_time: SimTime) -> None:
         self._patient_id = patient_id
         self.__nurse = nurse
         self.__room = room
@@ -13,7 +13,7 @@ class Patient:
         # self._log: list[dict] = []
 
     @property
-    def patient_id(self) -> float:
+    def patient_id(self) -> int:
         return self._patient_id
 
     def get_nurse(self) -> Nurse:

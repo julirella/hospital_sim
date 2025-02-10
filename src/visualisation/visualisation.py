@@ -21,7 +21,7 @@ class Visualiser:
 
 
 
-        self.time = 15
+        self.time = 25
 
 
     def pixel_ratio(self):
@@ -61,8 +61,8 @@ class Visualiser:
             row_after_time = nurse_log[nurse_log['time'] >= self.time].iloc[0]
             action = row_after_time['action']
             if action == 'time at patient':
-                #figure out room and put nurse there
-                pass
+                patient_id = row_after_time['patient']
+                self.map.put_nurse_in_room(nurse_id, patient_id)
             elif action == 'move to':
                 index_after_time = row_after_time.name.item()
                 prev_row = nurse_log.iloc[index_after_time - 1]

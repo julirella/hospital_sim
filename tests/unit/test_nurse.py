@@ -13,7 +13,7 @@ class TestNurse(unittest.TestCase):
         self.nurse = Nurse(nurse_id=1, pos=self.mock_node, sim_time=self.mock_sim_time)
 
     def test_assign_event(self):
-        self.nurse.assign_event(10)
+        self.nurse.assign_event(10, 0)
         self.assertEqual(self.nurse.get_pos(), self.mock_node)  # Position should not change
         log = self.nurse.get_log()
         self.assertEqual(log[-1]["time"], 100)

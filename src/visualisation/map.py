@@ -4,7 +4,7 @@ from src.visualisation.corridor import Corridor
 from src.constants import *
 from .vis_nurse import VisNurse
 from .vis_room import VisRoom
-from ..node.vis_patient import VisPatient
+from src.visualisation.vis_patient import VisPatient
 
 
 class Map:
@@ -36,6 +36,7 @@ class Map:
         for room in self.rooms + [self.nurse_office]:
             room.remove_nurses()
 
+
     def nurse_by_id(self, nurse_id: int) -> VisNurse:
         return self.nurses[nurse_id]
 
@@ -47,6 +48,10 @@ class Map:
         #accepts nurse pos in meters
         self.nurses_in_corridors.append(self.nurses[nurse_id])
         self.nurses[nurse_id].set_pos(self.scale_point(pos))
+
+    def put_nurse_in_room(self, nurse_id: int, patient_id: int) -> None:
+        room_number = self.patients[patient_id].room_number
+        self.rooms[room_number].add_nurse(self.nurses[nurse_id])
 
     def scale_point(self, point):
         return tuple(map(lambda x: x * self.pixels_per_meter, point))

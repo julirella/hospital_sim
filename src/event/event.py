@@ -55,7 +55,7 @@ class Event(TimedOccurrence):
         #getting back? Is it a separate plan? Is it gonna be sorted out in simulator?
     def __start__(self):
         self.__create_steps__()
-        self._assigned_nurse.assign_event(self._event_id)
+        self._assigned_nurse.assign_event(self._event_id, self._patient.patient_id)
         self._status = EventStatus.ACTIVE
 
     def __pop_next_step__(self) -> Step:

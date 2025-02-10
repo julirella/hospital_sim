@@ -3,7 +3,7 @@ import pygame
 from pandas.core.interchange.dataframe_protocol import DataFrame
 
 from src.importer import Importer
-from src.node.vis_patient import VisPatient
+from src.visualisation.vis_patient import VisPatient
 from src.visualisation import Map, Corridor, Visualiser, VisRoom
 from src.visualisation.vis_nurse import VisNurse
 from src.constants import *
@@ -46,7 +46,7 @@ class VizImporter(Importer):
         for i, patient_info in enumerate(patient_lst):
             nurse = patient_info["nurse_id"]
             room = patient_info["room"]
-            patient = VisPatient(self.int_to_colour(nurse, nurse_cnt))
+            patient = VisPatient(self.int_to_colour(nurse, nurse_cnt), room)
             self.patients_in_rooms[room].append(patient)
             patients.append(patient)
 
