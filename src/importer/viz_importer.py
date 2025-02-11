@@ -84,6 +84,7 @@ class VizImporter(Importer):
 
     def import_data(self) -> Visualiser:
         self.import_graphit_graph()
+        self.import_event_log()
         nurses, patients = self.import_entities()
 
         map_width = max(self.patient_rooms + [self.nurse_office], key=lambda r: r.x).x + ROOM_SIDE_METERS / 2

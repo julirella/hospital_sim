@@ -11,9 +11,10 @@ class TestVisualiser(unittest.TestCase):
         # self.graph_path = "input/layouts/testLayout.json"
         self.people_path = "input/people/testPeople2.json"
         self.nurse_log_path = "output/nurseLog.csv"
+        self.event_log_path = "output/eventLog.csv"
 
     def test_vis(self):
-        importer = VizImporter(self.graph_path, self.people_path, self.nurse_log_path)
+        importer = VizImporter(self.graph_path, self.people_path, self.nurse_log_path, self.event_log_path)
         visualiser = importer.import_data()
         visualiser.run()
 
@@ -25,7 +26,7 @@ class TestVisualiser(unittest.TestCase):
         event_log_path = "output/eventLog.csv"
         exporter = LogExporter(sim, self.nurse_log_path, event_log_path)
         exporter.export_data()
-        importer = VizImporter(self.graph_path, self.people_path, self.nurse_log_path)
+        importer = VizImporter(self.graph_path, self.people_path, self.nurse_log_path, self.event_log_path)
         visualiser = importer.import_data()
         visualiser.run()
 

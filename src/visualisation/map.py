@@ -59,7 +59,7 @@ class Map:
     def scale_point(self, point):
         return tuple(map(lambda x: x * self.pixels_per_meter, point))
 
-    def surface(self):
+    def surface(self, time: float) -> pygame.surface.Surface:
         self.map_surf.fill('white')
 
         for corridor in self.corridors:
@@ -67,7 +67,7 @@ class Map:
                              self.scale_point(corridor.other_end), 5)
 
         for room in self.rooms + [self.nurse_office]:
-            room_surf = room.surface()
+            room_surf = room.surface(time)
             self.map_surf.blit(room_surf, self.scale_point((room.x - ROOM_SIDE_METERS / 2, room.y - ROOM_SIDE_METERS / 2)))
 
         for nurse in self.nurses_in_corridors:

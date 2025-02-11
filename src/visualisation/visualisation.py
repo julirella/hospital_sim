@@ -10,6 +10,8 @@ from src.constants import *
 class Visualiser:
     def __init__(self, dept_map: Map, nurse_logs: list[pd.DataFrame]):
         pygame.init()
+        # pygame.font.init()
+
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
 
@@ -19,7 +21,7 @@ class Visualiser:
 
         self.nurse_logs = nurse_logs
 
-        self.time = 2
+        self.time = 20
 
 
     def pixel_ratio(self):
@@ -31,7 +33,7 @@ class Visualiser:
         return tuple(map(lambda x: x * self.pixels_per_meter, point))
 
     def display_map(self):
-        map_surf = self.map.surface()
+        map_surf = self.map.surface(self.time)
         self.screen.blit(map_surf, (0, 0))
 
     def process_input(self):
