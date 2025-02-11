@@ -3,3 +3,5 @@
 **/__pycache__
 /output
 /process_data/tmp.ipynb
+/process_data/.ipynb_checkpoints/
+#/process_data
