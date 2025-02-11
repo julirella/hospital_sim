@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from enum import IntEnum
 
 from src import Graph, SimTime
@@ -28,6 +29,12 @@ class Event(TimedOccurrence):
         self._steps: list[Step] = []
         self._log: list[dict] = []
         self.__log_action__("planned start", self._time)
+
+    @property
+    @abstractmethod
+    def type(self) -> str:
+        # https://stackoverflow.com/questions/2736255/abstract-attributes-in-python
+        pass
 
     def __create_steps__(self) -> None:
         #nurse has to be assigned at this point
@@ -136,7 +143,8 @@ class Event(TimedOccurrence):
         self._steps = [] #empty steps so that they can be recalculated when resuming
 
     def __log_action__(self, action: str, time: float) -> None:
-        self._log.append({"time": time, "event": self._event_id, "action": action, "patient": self._patient.patient_id}) #add patient id later
+        self._log.append({"time": time, "event": self._event_id, "action": action,
+                          "patient": self._patient.patient_id, "type": self.type})
 
     def __log_action_now__(self, action: str) -> None:
         self.__log_action__(action, self._sim_time.get_sim_time())

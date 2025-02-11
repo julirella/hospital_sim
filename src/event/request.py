@@ -14,3 +14,8 @@ class Request(Event):
 
     def get_level(self) -> int:
         return self.__level
+
+    @property
+    def type(self) -> str:
+        return "request"
+

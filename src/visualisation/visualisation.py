@@ -61,18 +61,17 @@ class Visualiser:
         nurse_pos = self.point_on_line(start, end, time_since_start, speed)
         self.map.put_nurse_in_corridor(nurse_id, nurse_pos)
 
-    def update(self):
-        self.map.reset()
-        #nurses:
-        #if nurse is moving, just calculate exact position
-        #otherwise figure out what room they're in and put them in the room to be displayed there
+    def update_nurses(self):
+        # nurses:
+        # if nurse is moving, just calculate exact position
+        # otherwise figure out what room they're in and put them in the room to be displayed there
 
         for nurse_id, nurse_log in enumerate(self.nurse_logs):
             if self.time <= nurse_log.iloc[0]['time']:
-                #put nurse in nurse office - assuming nurses always start in office
+                # put nurse in nurse office - assuming nurses always start in office
                 self.map.put_nurse_in_office(nurse_id)
             elif self.time > nurse_log.iloc[-1]['time']:
-                #assuming nurse always ends in room because all events end in room - this will fail if there's a time cut off
+                # assuming nurse always ends in room because all events end in room - this will fail if there's a time cut off
                 self.put_nurse_in_room(nurse_id, nurse_log.iloc[-1])
 
             else:
@@ -90,15 +89,23 @@ class Visualiser:
                     prev_row = nurse_log.iloc[index_after_time - 1]
                     prev_pos = prev_row['x'].item(), prev_row['y'].item()
                     next_pos = row_after_time['x'].item(), row_after_time['y'].item()
-                    if prev_pos == next_pos: #TODO: check for float problems
+                    if prev_pos == next_pos:  # TODO: check for float problems
                         # nurse is in room
                         self.put_nurse_in_room(nurse_id, prev_row)
                     else:
                         # nurse is walking in corridor
                         self.put_nurse_in_corridor(nurse_id, prev_row, row_after_time)
                 else:
-                    raise Exception('unknown action') #finish action should probably not come up
+                    raise Exception('unknown action')  # finish action should probably not come up
 
+    def update_patients(self):
+        #for each patient, figure out how many events they're waiting for
+        ...
+
+    def update(self):
+        self.map.reset()
+        self.update_nurses()
+        self.update_patients()
 
     def display(self):
         self.screen.fill('black')
