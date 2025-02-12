@@ -10,7 +10,6 @@ from src.constants import *
 class Visualiser:
     def __init__(self, dept_map: Map, nurse_logs: list[pd.DataFrame]):
         pygame.init()
-        # pygame.font.init()
 
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
@@ -19,9 +18,15 @@ class Visualiser:
         self.map = dept_map
         self.pixels_per_meter = self.pixel_ratio()
 
+        pygame.font.init()
+        self._font = pygame.font.Font(None, 50)
+
         self.nurse_logs = nurse_logs
 
-        self.time = 20
+        self.time = 0
+        self.increment = 1
+
+        self.paused = False
 
 
     def pixel_ratio(self):
@@ -36,11 +41,22 @@ class Visualiser:
         map_surf = self.map.surface(self.time)
         self.screen.blit(map_surf, (0, 0))
 
+    def display_text(self):
+        time_text = self._font.render(str(self.time), True, 'white')
+        self.screen.blit(time_text, (MAP_SURF_WIDTH + 20, 20))
+
     def process_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.paused = not self.paused
+
+
+        if not self.paused:
+            self.time += self.increment
 
     def point_on_line(self, start: tuple[float, float], end: tuple[float, float], time_since_start: float, speed: float):
         dst_covered = time_since_start * speed
@@ -100,21 +116,21 @@ class Visualiser:
                 else:
                     raise Exception('unknown action')  # finish action should probably not come up
 
-    def update_patients(self):
-        #for each patient, figure out how many events they're waiting for
-        ...
+    # def update_patients(self):
+    #     #for each patient, figure out how many events they're waiting for
+    #     ...
 
     def update(self):
         self.map.reset()
         self.update_nurses()
-        self.update_patients()
+        # self.update_patients()
 
     def display(self):
         self.screen.fill('black')
         self.display_map() #including everyone in rooms
-        #display moving nurses
+        self.display_text()
         pygame.display.flip()
-        self.clock.tick(60)
+        self.clock.tick(2)
 
     def run(self):
         while True:
