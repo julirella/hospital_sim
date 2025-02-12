@@ -20,7 +20,7 @@ class VisRoom:
         self._patient_width = self._width_pixels / (2 * len(self._patients) + 1)
         self._patient_height = self._height_pixels / 2 - self._height_pixels / 6
         pygame.font.init() #maybe initialise globally somehow?
-        self._font = pygame.font.Font(None, 36) #sort out adaptive size
+        self._font = pygame.font.Font(None, int(self._patient_height)) #sort out adaptive size
 
         self._nurses: list[VisNurse] = []
 
@@ -49,8 +49,8 @@ class VisRoom:
             patient_rect = (x, y, self._patient_width, self._patient_height)
             pygame.draw.rect(self._room_surf, patient.colour, patient_rect)
             text = self._font.render(str(patient.waiting_requests(time)), True, 'black')
-            # self._room_surf.blit(text, (x, y))
-            self._room_surf.blit(text, patient_rect) #maybe put it in center of rectangle to make it nicer
+            self._room_surf.blit(text, (x + self._patient_width / 10, y + self._patient_height / 10))
+            # self._room_surf.blit(text, patient_rect) #maybe put it in center of rectangle to make it nicer
 
         #draw nurses
         nurse_radius = self._width_pixels / (2 * len(self._nurses) + 1)
