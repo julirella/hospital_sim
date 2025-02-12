@@ -12,6 +12,7 @@ class Visualiser:
         #init pygame, surfaces, font
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen.fill('white')
         self.clock = pygame.time.Clock()
         self.map_surf = pygame.surface.Surface((MAP_SURF_WIDTH, MAP_SURF_HEIGHT))
         self.text_surf = pygame.surface.Surface((TEXT_SURF_WIDTH, TEXT_SURF_HEIGHT))
@@ -26,9 +27,10 @@ class Visualiser:
         self.end_time = sim_end_time
 
         self.paused = True
+        self.time_updated = True
 
     def display_map(self):
-        map_surf = self.map.surface(self.sim_time)
+        map_surf = self.map.update_surface(self.sim_time)
         self.screen.blit(map_surf, (TEXT_SURF_WIDTH + TEXT_SURF_OFFSET, 0))
 
     def display_text(self):
@@ -56,6 +58,8 @@ class Visualiser:
         elif self.sim_time > self.end_time:
             self.sim_time = self.end_time
 
+        self.time_updated = True
+
     def process_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -77,18 +81,17 @@ class Visualiser:
                 elif event.key == pygame.K_r:
                     self.sim_time = 0
 
-    def update(self):
+    def update_and_display(self):
         current_time = pygame.time.get_ticks()
         if current_time - self.prev_increment >= self.increment_rate_ms:
             if not self.paused:
                 self.update_sim_time(self.increment)
                 self.prev_increment = current_time
 
-        self.map.update(self.sim_time)
-
-    def display(self):
-        self.screen.fill('white')
-        self.display_map() #including everyone in rooms
+        if self.time_updated:
+            # only update map if time has changed
+            self.display_map() #including everyone in rooms
+            self.time_updated = False
         self.display_text()
         pygame.display.flip()
         self.clock.tick(60)
@@ -96,8 +99,8 @@ class Visualiser:
     def run(self):
         while True:
             self.process_input()
-            self.update()
-            self.display()
+            self.update_and_display()
+            # self.display()
 
 
 def main():

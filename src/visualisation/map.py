@@ -101,11 +101,10 @@ class Map:
                 else:
                     raise Exception('unknown action')  # finish action should probably not come up
 
-    def update(self, time):
+    def update_surface(self, time: float) -> pygame.surface.Surface:
         self.reset()
         self.update_nurses(time)
 
-    def surface(self, time: float) -> pygame.surface.Surface:
         self.map_surf.fill('white')
 
         for corridor in self.corridors:
