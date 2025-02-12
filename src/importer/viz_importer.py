@@ -72,7 +72,7 @@ class VizImporter(Importer):
 
         return nurse_dfs
 
-    def import_event_log(self):
+    def import_event_log(self) -> float:
         event_df = pd.read_csv(self.event_log_filename)
         req_df = event_df[event_df['type'] == "request"]
         patient_ids = req_df['patient'].unique().tolist()
@@ -82,9 +82,12 @@ class VizImporter(Importer):
             end_times = sorted(patient_reqs[patient_reqs['action'] == "end"]["time"].tolist())
             self.req_times[patient_id] = start_times, end_times
 
+        sim_end_time = max(event_df['time'].tolist())
+        return sim_end_time
+
     def import_data(self) -> Visualiser:
         self.import_graphit_graph()
-        self.import_event_log()
+        sim_end_time = self.import_event_log()
         nurses, patients = self.import_entities()
 
         map_width = max(self.patient_rooms + [self.nurse_office], key=lambda r: r.x).x + ROOM_SIDE_METERS / 2
@@ -102,5 +105,5 @@ class VizImporter(Importer):
 
         dept_map = Map(vis_rooms, nurse_office, self.corridors, nurses, patients, map_width, map_height, pixels_per_meter)
         nurse_dfs = self.import_nurse_log()
-        visualiser = Visualiser(dept_map, nurse_dfs)
+        visualiser = Visualiser(dept_map, nurse_dfs, sim_end_time)
         return visualiser

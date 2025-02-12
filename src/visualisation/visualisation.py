@@ -8,7 +8,7 @@ from src.constants import *
 
 
 class Visualiser:
-    def __init__(self, dept_map: Map, nurse_logs: list[pd.DataFrame]):
+    def __init__(self, dept_map: Map, nurse_logs: list[pd.DataFrame], sim_end_time: float):
         pygame.init()
 
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -24,12 +24,13 @@ class Visualiser:
 
         self.nurse_logs = nurse_logs
 
-        self.increment_ms = 500 # how often to increment in miliseconds
+        self.increment_ms = 500 # how often to increment in milliseconds
         self.sim_time = 0
         self.increment = 1
 
         self.paused = True
 
+        self.end_time = sim_end_time
 
     def pixel_ratio(self):
         width_ratio = MAP_SURF_WIDTH / self.map.width
@@ -57,6 +58,13 @@ class Visualiser:
             time_text = self._font.render("pause" ,True, 'red')
             self.screen.blit(time_text, (MAP_SURF_WIDTH, 140))
 
+    def update_sim_time(self, diff):
+        self.sim_time += diff
+        if self.sim_time < 0:
+            self.sim_time = 0
+        elif self.sim_time > self.end_time:
+            self.sim_time = self.end_time
+
     def process_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -68,9 +76,9 @@ class Visualiser:
                         self.prev_increment = pygame.time.get_ticks() # to wait before jumping after unpause
                     self.paused = not self.paused
                 elif event.key == pygame.K_RIGHT:
-                    self.sim_time += self.increment
+                    self.update_sim_time(self.increment)
                 elif event.key == pygame.K_LEFT:
-                    self.sim_time -= self.increment
+                    self.update_sim_time(-self.increment)
                 elif event.key == pygame.K_d:
                     self.increment += 0.1
                 elif event.key == pygame.K_s:
@@ -147,7 +155,7 @@ class Visualiser:
         current_time = pygame.time.get_ticks()
         if current_time - self.prev_increment >= self.increment_ms:
             if not self.paused:
-                self.sim_time += self.increment
+                self.update_sim_time(self.increment)
                 self.prev_increment = current_time
 
         self.map.reset()
