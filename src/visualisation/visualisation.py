@@ -26,7 +26,7 @@ class Visualiser:
         self.time = 0
         self.increment = 1
 
-        self.paused = False
+        self.paused = True
 
 
     def pixel_ratio(self):
@@ -42,8 +42,14 @@ class Visualiser:
         self.screen.blit(map_surf, (0, 0))
 
     def display_text(self):
-        time_text = self._font.render(str(self.time), True, 'white')
-        self.screen.blit(time_text, (MAP_SURF_WIDTH + 20, 20))
+        formatted_time = "{:.2f}".format(self.time).rstrip('0').rstrip('.')
+        formatted_increment = "{:.2f}".format(self.increment)
+
+        time_text = self._font.render(formatted_time, True, 'black')
+        self.screen.blit(time_text, (MAP_SURF_WIDTH, 20))
+
+        time_text = self._font.render(formatted_increment + "x", True, 'black')
+        self.screen.blit(time_text, (MAP_SURF_WIDTH, 80))
 
     def process_input(self):
         for event in pygame.event.get():
@@ -53,7 +59,16 @@ class Visualiser:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.paused = not self.paused
-
+                elif event.key == pygame.K_RIGHT:
+                    self.time += self.increment
+                elif event.key == pygame.K_LEFT:
+                    self.time -= self.increment
+                elif event.key == pygame.K_d:
+                    self.increment += 0.1
+                elif event.key == pygame.K_s:
+                    self.increment -= 0.1
+                elif event.key == pygame.K_r:
+                    self.time = 0
 
         if not self.paused:
             self.time += self.increment
@@ -126,7 +141,7 @@ class Visualiser:
         # self.update_patients()
 
     def display(self):
-        self.screen.fill('black')
+        self.screen.fill('white')
         self.display_map() #including everyone in rooms
         self.display_text()
         pygame.display.flip()
