@@ -16,8 +16,9 @@ class Visualiser:
         self.prev_increment = pygame.time.get_ticks()
 
         self.map_surf = pygame.surface.Surface((MAP_SURF_WIDTH, MAP_SURF_HEIGHT))
+        self.text_surf = pygame.surface.Surface((TEXT_SURF_WIDTH, TEXT_SURF_HEIGHT))
+
         self.map = dept_map
-        self.pixels_per_meter = self.pixel_ratio()
 
         pygame.font.init()
         self._font = pygame.font.Font(None, 50)
@@ -32,31 +33,27 @@ class Visualiser:
 
         self.end_time = sim_end_time
 
-    def pixel_ratio(self):
-        width_ratio = MAP_SURF_WIDTH / self.map.width
-        height_ratio = MAP_SURF_HEIGHT / self.map.height
-        return min(width_ratio, height_ratio)
-
-    def scale_point(self, point):
-        return tuple(map(lambda x: x * self.pixels_per_meter, point))
-
     def display_map(self):
         map_surf = self.map.surface(self.sim_time)
-        self.screen.blit(map_surf, (0, 0))
+        self.screen.blit(map_surf, (TEXT_SURF_WIDTH + TEXT_SURF_OFFSET, 0))
 
     def display_text(self):
+        self.text_surf.fill('white')
+
         formatted_time = "{:.2f}".format(self.sim_time).rstrip('0').rstrip('.')
         formatted_increment = "{:.2f}".format(self.increment)
 
         time_text = self._font.render(formatted_time, True, 'black')
-        self.screen.blit(time_text, (MAP_SURF_WIDTH, 20))
+        self.text_surf.blit(time_text, (0, 0))
 
         time_text = self._font.render(formatted_increment + "x", True, 'black')
-        self.screen.blit(time_text, (MAP_SURF_WIDTH, 80))
+        self.text_surf.blit(time_text, (0, 60))
 
         if self.paused:
             time_text = self._font.render("pause" ,True, 'red')
-            self.screen.blit(time_text, (MAP_SURF_WIDTH, 140))
+            self.text_surf.blit(time_text, (0, 120))
+
+        self.screen.blit(self.text_surf, (TEXT_SURF_OFFSET, TEXT_SURF_OFFSET))
 
     def update_sim_time(self, diff):
         self.sim_time += diff
