@@ -13,6 +13,7 @@ class Visualiser:
 
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
+        self.prev_increment = pygame.time.get_ticks()
 
         self.map_surf = pygame.surface.Surface((MAP_SURF_WIDTH, MAP_SURF_HEIGHT))
         self.map = dept_map
@@ -23,7 +24,8 @@ class Visualiser:
 
         self.nurse_logs = nurse_logs
 
-        self.time = 0
+        self.increment_ms = 500 # how often to increment in miliseconds
+        self.sim_time = 0
         self.increment = 1
 
         self.paused = True
@@ -38,11 +40,11 @@ class Visualiser:
         return tuple(map(lambda x: x * self.pixels_per_meter, point))
 
     def display_map(self):
-        map_surf = self.map.surface(self.time)
+        map_surf = self.map.surface(self.sim_time)
         self.screen.blit(map_surf, (0, 0))
 
     def display_text(self):
-        formatted_time = "{:.2f}".format(self.time).rstrip('0').rstrip('.')
+        formatted_time = "{:.2f}".format(self.sim_time).rstrip('0').rstrip('.')
         formatted_increment = "{:.2f}".format(self.increment)
 
         time_text = self._font.render(formatted_time, True, 'black')
@@ -51,6 +53,10 @@ class Visualiser:
         time_text = self._font.render(formatted_increment + "x", True, 'black')
         self.screen.blit(time_text, (MAP_SURF_WIDTH, 80))
 
+        if self.paused:
+            time_text = self._font.render("pause" ,True, 'red')
+            self.screen.blit(time_text, (MAP_SURF_WIDTH, 140))
+
     def process_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -58,20 +64,22 @@ class Visualiser:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    if self.paused:
+                        self.prev_increment = pygame.time.get_ticks() # to wait before jumping after unpause
                     self.paused = not self.paused
                 elif event.key == pygame.K_RIGHT:
-                    self.time += self.increment
+                    self.sim_time += self.increment
                 elif event.key == pygame.K_LEFT:
-                    self.time -= self.increment
+                    self.sim_time -= self.increment
                 elif event.key == pygame.K_d:
                     self.increment += 0.1
                 elif event.key == pygame.K_s:
                     self.increment -= 0.1
                 elif event.key == pygame.K_r:
-                    self.time = 0
+                    self.sim_time = 0
 
-        if not self.paused:
-            self.time += self.increment
+        # if not self.paused:
+        #     self.time += self.increment
 
     def point_on_line(self, start: tuple[float, float], end: tuple[float, float], time_since_start: float, speed: float):
         dst_covered = time_since_start * speed
@@ -89,7 +97,7 @@ class Visualiser:
     def put_nurse_in_corridor(self, nurse_id, prev_row, row_after_time):
         start = prev_row['x'].item(), prev_row['y'].item()
         end = row_after_time['x'].item(), row_after_time['y'].item()
-        time_since_start = self.time - prev_row['time'].item()
+        time_since_start = self.sim_time - prev_row['time'].item()
         speed = self.map.nurse_by_id(nurse_id).speed
         nurse_pos = self.point_on_line(start, end, time_since_start, speed)
         self.map.put_nurse_in_corridor(nurse_id, nurse_pos)
@@ -100,15 +108,15 @@ class Visualiser:
         # otherwise figure out what room they're in and put them in the room to be displayed there
 
         for nurse_id, nurse_log in enumerate(self.nurse_logs):
-            if self.time <= nurse_log.iloc[0]['time']:
+            if self.sim_time <= nurse_log.iloc[0]['time']:
                 # put nurse in nurse office - assuming nurses always start in office
                 self.map.put_nurse_in_office(nurse_id)
-            elif self.time > nurse_log.iloc[-1]['time']:
+            elif self.sim_time > nurse_log.iloc[-1]['time']:
                 # assuming nurse always ends in room because all events end in room - this will fail if there's a time cut off
                 self.put_nurse_in_room(nurse_id, nurse_log.iloc[-1])
 
             else:
-                row_after_time = nurse_log[nurse_log['time'] >= self.time].iloc[0]
+                row_after_time = nurse_log[nurse_log['time'] >= self.sim_time].iloc[0]
                 action = row_after_time['action']
 
                 if action == 'time at patient':
@@ -136,6 +144,12 @@ class Visualiser:
     #     ...
 
     def update(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.prev_increment >= self.increment_ms:
+            if not self.paused:
+                self.sim_time += self.increment
+                self.prev_increment = current_time
+
         self.map.reset()
         self.update_nurses()
         # self.update_patients()
@@ -145,7 +159,7 @@ class Visualiser:
         self.display_map() #including everyone in rooms
         self.display_text()
         pygame.display.flip()
-        self.clock.tick(2)
+        self.clock.tick(60)
 
     def run(self):
         while True:
