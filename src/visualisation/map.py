@@ -9,7 +9,7 @@ from src.visualisation.vis_patient import VisPatient
 
 class Map:
     def __init__(self, rooms: list[VisRoom], nurse_office: VisRoom, corridors: list[Corridor], nurses: list[VisNurse],
-                 patients: list[VisPatient], width: float, height: float, pixels_per_meter: float):
+                 patients: list[VisPatient], width: float, height: float, pixels_per_meter: int):
         self.rooms = rooms
         self.nurse_office = nurse_office
         self.corridors = corridors
@@ -71,5 +71,6 @@ class Map:
             self.map_surf.blit(room_surf, self.scale_point((room.x - ROOM_SIDE_METERS / 2, room.y - ROOM_SIDE_METERS / 2)))
 
         for nurse in self.nurses_in_corridors:
-            pygame.draw.circle(self.map_surf, nurse.colour, nurse.pos, 5) #TODO: sort out radius (and corridor width)
+            # pygame.draw.circle(self.map_surf, nurse.colour, nurse.pos, 5)
+            nurse.draw(self.map_surf, nurse.pos, self.pixels_per_meter)
         return self.map_surf

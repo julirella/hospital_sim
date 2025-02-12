@@ -1,4 +1,6 @@
-from src.constants import NURSE_SPEED_MPS
+import pygame
+
+from src.constants import NURSE_SPEED_MPS, NURSE_RADIUS_METERS
 
 
 class VisNurse:
@@ -15,3 +17,6 @@ class VisNurse:
     def set_pos(self, pos):
         self.x = pos[0]
         self.y = pos[1]
+
+    def draw(self, surf, pos, pixels_per_meter):
+        pygame.draw.circle(surf, self.colour, pos, NURSE_RADIUS_METERS * pixels_per_meter)

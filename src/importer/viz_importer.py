@@ -94,7 +94,7 @@ class VizImporter(Importer):
         map_height = max(self.patient_rooms + [self.nurse_office], key=lambda r: r.y).y + ROOM_SIDE_METERS / 2
         width_ratio = MAP_SURF_WIDTH / map_width
         height_ratio = MAP_SURF_HEIGHT / map_height
-        pixels_per_meter = min(width_ratio, height_ratio)
+        pixels_per_meter = int(min(width_ratio, height_ratio))
 
         vis_rooms = []
         for i, room in enumerate(self.patient_rooms):

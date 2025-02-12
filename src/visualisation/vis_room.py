@@ -7,9 +7,10 @@ from src.visualisation.vis_patient import VisPatient
 
 
 class VisRoom:
-    def __init__(self, orig_room: Room, pixels_per_meter: float, patients: list[VisPatient]):
+    def __init__(self, orig_room: Room, pixels_per_meter: int, patients: list[VisPatient]):
         self._x = orig_room.x
         self._y = orig_room.y
+        self._pixels_per_meter = pixels_per_meter
         self._width_pixels = ROOM_SIDE_METERS * pixels_per_meter
         self._height_pixels = ROOM_SIDE_METERS * pixels_per_meter
         self._room_surf = pygame.surface.Surface((self._width_pixels, self._height_pixels))
@@ -56,6 +57,8 @@ class VisRoom:
         for i, nurse in enumerate(self._nurses):
             x = nurse_radius + i * 2 * nurse_radius + nurse_radius / 2
             y = self._height_pixels / 6 + nurse_radius / 2
-            pygame.draw.circle(self._room_surf, nurse.colour, (x, y), nurse_radius)
+            # pygame.draw.circle(self._room_surf, nurse.colour, (x, y), nurse_radius)
+            nurse.draw(self._room_surf, (x, y), self._pixels_per_meter)
+
 
         return self._room_surf
