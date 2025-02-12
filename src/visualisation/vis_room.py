@@ -45,7 +45,7 @@ class VisRoom:
         #draw patients
         for i, patient in enumerate(self._patients):
             x = self._patient_width + i * 2 * self._patient_width
-            y = self._height_pixels * 2 / 3
+            y = self._height_pixels * 2 / 3 - self._patient_height / 10
             patient_rect = (x, y, self._patient_width, self._patient_height)
             pygame.draw.rect(self._room_surf, patient.colour, patient_rect)
             text = self._font.render(str(patient.waiting_requests(time)), True, 'black')

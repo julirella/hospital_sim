@@ -100,10 +100,11 @@ class VizImporter(Importer):
         for i, room in enumerate(self.patient_rooms):
             vis_rooms.append(VisRoom(room, pixels_per_meter, self.patients_in_rooms[i]))
 
-        self.import_nurse_log()
+        nurse_dfs = self.import_nurse_log()
         nurse_office = VisRoom(self.nurse_office, pixels_per_meter, [])
 
-        dept_map = Map(vis_rooms, nurse_office, self.corridors, nurses, patients, map_width, map_height, pixels_per_meter)
-        nurse_dfs = self.import_nurse_log()
-        visualiser = Visualiser(dept_map, nurse_dfs, sim_end_time)
+        dept_map = Map(vis_rooms, nurse_office, self.corridors, nurses, patients, nurse_dfs, map_width, map_height,
+                       pixels_per_meter)
+        # nurse_dfs = self.import_nurse_log()
+        visualiser = Visualiser(dept_map, sim_end_time)
         return visualiser
