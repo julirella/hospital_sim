@@ -11,13 +11,12 @@ from src.visualisation.vis_patient import VisPatient
 
 class Map:
     def __init__(self, rooms: list[VisRoom], nurse_office: VisRoom, corridors: list[Corridor], nurses: list[VisNurse],
-                 patients: list[VisPatient], nurse_logs: list[pd.DataFrame], width: float, height: float, pixels_per_meter: int):
+                 patients: list[VisPatient], width: float, height: float, pixels_per_meter: int):
         self.rooms = rooms
         self.nurse_office = nurse_office
         self.corridors = corridors
         self.nurses = nurses
         self.patients = patients
-        self.nurse_logs = nurse_logs
         self.width = width
         self.height = height
         self.pixels_per_meter = pixels_per_meter
@@ -69,9 +68,11 @@ class Map:
         # if nurse is moving, just calculate exact position
         # otherwise figure out what room they're in and put them in the room to be displayed there
 
-        for nurse_id, nurse_log in enumerate(self.nurse_logs):
-            if time <= nurse_log.iloc[0]['time']:
+        for nurse_id, nurse in enumerate(self.nurses):
+            nurse_log = nurse.nurse_log
+            if nurse_log.size == 0 or time <= nurse_log.iloc[0]['time']:
                 # put nurse in nurse office - assuming nurses always start in office
+                # also if nurse has no log, they were in the office the whole time
                 self.put_nurse_in_office(nurse_id)
             elif time > nurse_log.iloc[-1]['time']:
                 # assuming nurse always ends in room because all events end in room - this will fail if there's a time cut off

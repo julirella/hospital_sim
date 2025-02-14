@@ -18,6 +18,7 @@ class VizImporter(Importer):
         self.corridors = []
         self.patients_in_rooms = []
         self.req_times = {} #dict because not all patients have requests
+        self.nurse_logs = {}
 
     def import_graphit_graph(self) -> None:
         self.parse_graphit_graph()
@@ -40,7 +41,11 @@ class VizImporter(Importer):
         nurse_cnt = entities_json["nurses"]
         nurses: list[VisNurse] = []
         for i in range(nurse_cnt):
-            nurses.append(VisNurse(self.int_to_colour(i, nurse_cnt)))
+            if i in self.nurse_logs:
+                nurse_log = self.nurse_logs[i]
+            else:
+                nurse_log = pd.DataFrame()
+            nurses.append(VisNurse(self.int_to_colour(i, nurse_cnt), nurse_log))
 
         patient_lst = entities_json["patients"]
         patients: list[VisPatient] = []
@@ -60,17 +65,19 @@ class VizImporter(Importer):
 
         return nurses, patients
 
-    def import_nurse_log(self) -> list[DataFrame]:
+    def import_nurse_log(self) -> None:
         df = pd.read_csv(self.nurse_log_filename)
         nurse_ids = df['nurse'].unique().tolist()
 
-        nurse_dfs = []
+        # nurse_dfs = []
         for nurse_id in nurse_ids:
             # https://stackoverflow.com/questions/20490274/how-to-reset-index-in-a-pandas-dataframe
             # reset index to start from 0 for each nurse df
-            nurse_dfs.append(df[df['nurse'] == nurse_id].reset_index(drop=True))
+            nurse_df = df[df['nurse'] == nurse_id].reset_index(drop=True)
+            self.nurse_logs[nurse_id] = nurse_df
+            # nurse_dfs.append(df[df['nurse'] == nurse_id].reset_index(drop=True))
 
-        return nurse_dfs
+        # return nurse_dfs
 
     def import_event_log(self) -> float:
         event_df = pd.read_csv(self.event_log_filename)
@@ -88,6 +95,7 @@ class VizImporter(Importer):
     def import_data(self) -> Visualiser:
         self.import_graphit_graph()
         sim_end_time = self.import_event_log()
+        self.import_nurse_log()
         nurses, patients = self.import_entities()
 
         map_width = max(self.patient_rooms + [self.nurse_office], key=lambda r: r.x).x + ROOM_SIDE_METERS / 2
@@ -100,10 +108,9 @@ class VizImporter(Importer):
         for i, room in enumerate(self.patient_rooms):
             vis_rooms.append(VisRoom(room, pixels_per_meter, self.patients_in_rooms[i]))
 
-        nurse_dfs = self.import_nurse_log()
         nurse_office = VisRoom(self.nurse_office, pixels_per_meter, [])
 
-        dept_map = Map(vis_rooms, nurse_office, self.corridors, nurses, patients, nurse_dfs, map_width, map_height,
+        dept_map = Map(vis_rooms, nurse_office, self.corridors, nurses, patients, map_width, map_height,
                        pixels_per_meter)
         # nurse_dfs = self.import_nurse_log()
         visualiser = Visualiser(dept_map, sim_end_time)

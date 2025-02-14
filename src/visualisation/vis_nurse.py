@@ -1,13 +1,15 @@
 import pygame
+import pandas as pd
 
 from src.constants import NURSE_SPEED_MPS, NURSE_RADIUS_METERS
 
 
 class VisNurse:
-    def __init__(self, colour):
+    def __init__(self, colour, nurse_log: pd.DataFrame):
         self.x = 0
         self.y = 0
         self.colour = colour
+        self.nurse_log = nurse_log
         self.speed = NURSE_SPEED_MPS
 
     @property
