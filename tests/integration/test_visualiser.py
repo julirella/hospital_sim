@@ -35,7 +35,8 @@ class TestVisualiser(unittest.TestCase):
             event_log_path = self.event_log_path
 
         if sim:
-            self.run_vis_with_sim(graph_path, people_path, event_path, nurse_log_path, event_log_path)
+            self.run_vis_with_sim(graph_path=graph_path, people_path=people_path, event_path=event_path,
+                                  nurse_log_path=nurse_log_path, event_log_path=event_log_path)
         else:
             self.run_vis(graph_path, people_path, nurse_log_path, event_log_path)
 
@@ -45,14 +46,14 @@ class TestVisualiser(unittest.TestCase):
         event_path = "input/events/testEventsRequests.json"
 
         # self.run_test(graph_path, people_path)
-        self.run_test(graph_path, people_path, event_path=event_path, sim = True)
+        self.run_test(graph_path, people_path, event_path=event_path, sim=True)
 
     def test_vis_many_people(self):
         graph_path = "input/layouts/toScaleLayout.json"
         people_path = "input/people/manyPeople.json"
         event_path = "input/events/testEventsRequests.json"
 
-        self.run_test(graph_path, people_path, event_path=event_path, sim = True)
+        self.run_test(graph_path=graph_path, people_path=people_path, event_path=event_path, sim=True)
 
 
 

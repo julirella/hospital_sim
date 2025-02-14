@@ -19,11 +19,12 @@ class Simulator:
         self.request_queue = request_queue
         self.nurse_queues = nurse_queues
         self.global_queue = TimeQueue()
+
         #put next step from each nurse queue into global queue
         for nurse_id, nurse_queue in enumerate(self.nurse_queues):
-            next_nurse_id = nurse_queue.create_timed_nurse_id()
-            # next_nurse_id = TimedNurseId(nurse_queue.next_time(), nurse_id)
-            self.global_queue.add(next_nurse_id)
+            if not nurse_queue.empty():
+                next_nurse_id = nurse_queue.create_timed_nurse_id()
+                self.global_queue.add(next_nurse_id)
 
     def run_next_step(self):
         step_time = self.global_queue.next_time()
