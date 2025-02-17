@@ -17,7 +17,7 @@ class NurseList(EventList):
         return self._event_logs
 
     def __max_event_duration__(self, event: Event) -> float:
-        return event.get_duration() + self._max_walk_time
+        return event.duration + self._max_walk_time
 
     def __insert_after__(self, new_event: Event, pred_event: ListEvent=None) -> None:
         #insert new_event after pred_event. If pred_event is None, add to front of list
@@ -30,13 +30,13 @@ class NurseList(EventList):
         else:
             new_list_event = ListEvent(new_event, pred_event.next)
             pred_event.next = new_list_event
-            new_event.set_time(pred_event.event.time + pred_event.event.get_duration() + self._max_walk_time)
+            new_event.set_time(pred_event.event.time + pred_event.event.duration + self._max_walk_time)
 
         #push_back if necessary, could probably be a separate method
         #at this point we know new event is far enough from the event before it, but the following event may be too close
         current = new_list_event
-        while current.next is not None and current.event.time + current.event.get_duration() + self._max_walk_time > current.next.event.time:
-            current.next.event.set_time(current.event.time + current.event.get_duration() + self._max_walk_time)
+        while current.next is not None and current.event.time + current.event.duration + self._max_walk_time > current.next.event.time:
+            current.next.event.set_time(current.event.time + current.event.duration + self._max_walk_time)
             current = current.next
 
     #find gap in queue to fit event and add it there
@@ -53,7 +53,7 @@ class NurseList(EventList):
                 self.__insert_after__(event, prev_event)
                 done = True
                 break
-            prev_end_time = next_event.event.time + next_event.event.get_duration() + self._max_walk_time
+            prev_end_time = next_event.event.time + next_event.event.duration + self._max_walk_time
             prev_event = next_event
             next_event = next_event.next
 

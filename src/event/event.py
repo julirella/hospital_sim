@@ -83,7 +83,8 @@ class Event(TimedOccurrence):
     def status(self) -> EventStatus:
         return self._status
 
-    def get_duration(self) -> float:
+    @property
+    def duration(self) -> float:
         return self._duration
 
     def set_time(self, time: float) -> None:

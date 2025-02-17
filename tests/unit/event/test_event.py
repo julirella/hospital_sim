@@ -84,7 +84,7 @@ class TestEvent(unittest.TestCase):
 
         self.event.pause()
 
-        self.assertEqual(15, self.event.get_duration())
+        self.assertEqual(15, self.event.duration)
 
 if __name__ == "__main__":
     unittest.main()

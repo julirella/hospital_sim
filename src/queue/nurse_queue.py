@@ -14,7 +14,7 @@ class NurseQueue(EventQueue):
         self.__sim_time = sim_time
 
     def __max_event_duration__(self, event: Event) -> float:
-        return event.get_duration() + MAX_WALK_TIME  # TODO switch to smarter walk time
+        return event.duration + MAX_WALK_TIME  # TODO switch to smarter walk time
 
     #add amount to time of all events from start_time until a big enough gap is found
     def __push_back_events__(self, amount: float, start_time: float) -> None:
@@ -26,7 +26,7 @@ class NurseQueue(EventQueue):
         time: float
         event: Event
         for time, event in self._queue.items():
-            event_start = time - event.get_duration()
+            event_start = time - event.duration
             if time > start_time:
                 start = True
             if event_start - prev_end > amount: #found big enough gap for event, no need to push rest back
@@ -52,7 +52,7 @@ class NurseQueue(EventQueue):
                 event.set_time(prev_end_time)
                 self.queue[prev_end_time] = event
                 break
-            prev_end_time = next_start_time + queue_event.get_duration()
+            prev_end_time = next_start_time + queue_event.duration
 
     #add event after end of current running event
     def add_after_current(self, new_event: Event) -> None:
