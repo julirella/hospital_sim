@@ -9,7 +9,7 @@ class ListEvent:
 class EventList:
     def __init__(self, events: list[Event]):
         #build linked list
-        events.sort(key=lambda x: x.time())
+        events.sort(key=lambda x: x.time)
         prev = None
         for event in reversed(events):
             prev = ListEvent(event, prev)

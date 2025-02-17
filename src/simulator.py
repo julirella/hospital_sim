@@ -39,7 +39,7 @@ class Simulator:
         self.sim_time.set_sim_time(self.request_queue.next_time())
         request: Request = self.request_queue.pop_front()
         #choose nurse
-        patient = request.get_patient()
+        patient = request.patient
         patients_nurse = patient.get_nurse()
         #TODO: add option for choosing other nurse if patients is unavailable/too far away based on request severity
         chosen_nurse = patients_nurse

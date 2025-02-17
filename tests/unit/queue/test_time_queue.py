@@ -10,13 +10,13 @@ class TestTimeQueue(unittest.TestCase):
         self.queue = TimeQueue()
 
         self.event1 = Mock(spec=TimedOccurrence)
-        self.event1.time.return_value = 10.0
+        self.event1.time = 10.0
 
         self.event2 = Mock(spec=TimedOccurrence)
-        self.event2.time.return_value = 20.0
+        self.event2.time = 20.0
 
         self.event3 = Mock(spec=TimedOccurrence)
-        self.event3.time.return_value = 15.0
+        self.event3.time = 15.0
 
     def test_add_and_top_item(self):
         self.queue.add(self.event1)

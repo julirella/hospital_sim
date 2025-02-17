@@ -50,7 +50,7 @@ class TestEvent(unittest.TestCase):
 
     def test_run_next_step_starts_event(self):
         self.event.run_next_step()
-        self.assertEqual(EventStatus.ACTIVE, self.event.get_status())
+        self.assertEqual(EventStatus.ACTIVE, self.event.status)
 
     def test_run_next_step_finishes_event(self):
         steps_taken = 0
@@ -67,11 +67,11 @@ class TestEvent(unittest.TestCase):
 
         self.mock_nurse.unassign_event = Mock()
         self.event.pause()
-        self.assertEqual(EventStatus.PAUSED, self.event.get_status())
+        self.assertEqual(EventStatus.PAUSED, self.event.status)
         self.mock_nurse.unassign_event.assert_called_once()
 
         self.event.run_next_step()
-        self.assertEqual(EventStatus.ACTIVE, self.event.get_status())
+        self.assertEqual(EventStatus.ACTIVE, self.event.status)
 
     def test_pause_during_time_at_patient(self):
         self.event.run_next_step()

@@ -58,7 +58,7 @@ class NurseQueue(EventQueue):
     def add_after_current(self, new_event: Event) -> None:
         current_event: Event = self.top_item()
         max_event_duration = self.__max_event_duration__(new_event)
-        if current_event.get_status() == EventStatus.NOT_STARTED:
+        if current_event.status == EventStatus.NOT_STARTED:
             #it just goes straight away
             self.__push_back_events__(max_event_duration, self.__sim_time.get_sim_time())
             #if inserting request, its time is already current time, but if it was used elsewhere the time would have to be changed
@@ -75,7 +75,7 @@ class NurseQueue(EventQueue):
     def add_to_start(self, new_event: Event) -> None:
         #pause current event
         current_event: Event = self.top_item()
-        if current_event.get_status() == EventStatus.ACTIVE:
+        if current_event.status == EventStatus.ACTIVE:
             current_event.pause()
 
         #push events back?

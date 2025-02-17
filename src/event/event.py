@@ -60,7 +60,7 @@ class Event(TimedOccurrence):
         self._steps.append(TimeAtPatient(prev_step_time + self._duration, self._assigned_nurse, self._duration))
 
         #getting back? Is it a separate plan? Is it gonna be sorted out in simulator?
-    def __start__(self):
+    def __start__(self) -> None:
         self.__create_steps__()
         self._assigned_nurse.assign_event(self._event_id, self._patient.patient_id)
         self._status = EventStatus.ACTIVE
@@ -75,10 +75,12 @@ class Event(TimedOccurrence):
         else:
              return False
 
-    def get_patient(self) -> Patient:
+    @property
+    def patient(self) -> Patient:
         return self._patient
 
-    def get_status(self) -> EventStatus:
+    @property
+    def status(self) -> EventStatus:
         return self._status
 
     def get_duration(self) -> float:
@@ -91,19 +93,12 @@ class Event(TimedOccurrence):
     def log(self) -> list[dict]:
         return self._log
 
-    # def end_time(self) -> float:
-    #     return self._steps[-1].time()
-
-    #time of start of main part that is of length duration
-    # def start_time(self) -> float:
-    #     return self._time - self._duration
-
     #time of next step, or of event itself if steps have not yet been created
     def next_time(self) -> float:
         if len(self._steps) == 0:
-            return self.time()
+            return self.time
         else:
-            return self._steps[0].time()
+            return self._steps[0].time
 
     def get_next_step(self) -> Step:
         #assumes only future steps are in this list

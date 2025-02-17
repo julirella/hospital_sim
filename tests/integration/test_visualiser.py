@@ -53,7 +53,7 @@ class TestVisualiser(unittest.TestCase):
         people_path = "input/people/manyPeople.json"
         event_path = "input/events/testEventsRequests.json"
 
-        self.run_test(graph_path=graph_path, people_path=people_path, event_path=event_path, sim=False)
+        self.run_test(graph_path=graph_path, people_path=people_path, event_path=event_path, sim=True)
 
 
 
