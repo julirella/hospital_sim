@@ -5,3 +5,7 @@ class TimedOccurrence:
     @property
     def time(self):
         return self._time
+
+    @time.setter
+    def time(self, val):
+        self._time = val

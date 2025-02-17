@@ -26,17 +26,17 @@ class NurseList(EventList):
         if pred_event is None:
             new_list_event = ListEvent(new_event, self._front)
             self._front = new_list_event
-            new_event.set_time(self._sim_time.get_sim_time())
+            new_event.time = self._sim_time.get_sim_time()
         else:
             new_list_event = ListEvent(new_event, pred_event.next)
             pred_event.next = new_list_event
-            new_event.set_time(pred_event.event.time + pred_event.event.duration + self._max_walk_time)
+            new_event.time = pred_event.event.time + pred_event.event.duration + self._max_walk_time
 
         #push_back if necessary, could probably be a separate method
         #at this point we know new event is far enough from the event before it, but the following event may be too close
         current = new_list_event
         while current.next is not None and current.event.time + current.event.duration + self._max_walk_time > current.next.event.time:
-            current.next.event.set_time(current.event.time + current.event.duration + self._max_walk_time)
+            current.next.event.time = current.event.time + current.event.duration + self._max_walk_time
             current = current.next
 
     #find gap in queue to fit event and add it there

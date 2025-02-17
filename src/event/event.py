@@ -87,8 +87,8 @@ class Event(TimedOccurrence):
     def duration(self) -> float:
         return self._duration
 
-    def set_time(self, time: float) -> None:
-        self._time = time
+    # def set_time(self, time: float) -> None:
+    #     self._time = time
 
     @property
     def log(self) -> list[dict]:
