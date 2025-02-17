@@ -7,13 +7,13 @@ from src import Graph, SimTime
 class Request(Event):
     def __init__(self, event_id: int, time: float, duration: float, patient: Patient, level: int, graph: Graph, sim_time: SimTime) -> None:
         super().__init__(event_id, time, duration, patient, None, graph, sim_time)
-        self.__level = level
+        self._level = level
 
     def assign_nurse(self, nurse: Nurse):
         self._assigned_nurse = nurse
 
     def get_level(self) -> int:
-        return self.__level
+        return self._level
 
     @property
     def type(self) -> str:

@@ -87,9 +87,6 @@ class Event(TimedOccurrence):
     def duration(self) -> float:
         return self._duration
 
-    # def set_time(self, time: float) -> None:
-    #     self._time = time
-
     @property
     def log(self) -> list[dict]:
         return self._log
@@ -132,9 +129,6 @@ class Event(TimedOccurrence):
         self._status = EventStatus.PAUSED
         self.__log_action_now__("pause")
         self._assigned_nurse.unassign_event()
-        # self._time = self.__sim_time.get_sim_time() #so that it can be pushed back correctly. Not amazing relying on this
-        #if it's caring for patient, sort out duration
-        # self._duration = next_step.time() - self._sim_time.get_sim_time()
 
         self._steps = [] #empty steps so that they can be recalculated when resuming
 
