@@ -14,7 +14,7 @@ class TestNurseList(unittest.TestCase):
         self.mock_graph = Mock()
         # self.mock_graph.max_graph_dst().return_value = 20
         self.mock_sim_time = Mock()
-        self.mock_sim_time.get_sim_time.return_value = 0
+        self.mock_sim_time.sim_time = 0
 
         self.event1 = Event(event_id=0, time=40, duration=10, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
                             graph=self.mock_graph, sim_time=self.mock_sim_time)

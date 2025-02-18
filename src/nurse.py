@@ -58,5 +58,5 @@ class Nurse:
         self.__log_action__("time at patient")
 
     def __log_action__(self, action: str) -> None:
-        self._log.append({"time": self._sim_time.get_sim_time(), "nurse": self._nurse_id, "x": self._pos.x, "y": self._pos.y,
+        self._log.append({"time": self._sim_time.sim_time, "nurse": self._nurse_id, "x": self._pos.x, "y": self._pos.y,
                           "event": self._assigned_event_id, "action": action, "patient": self._current_patient_id})

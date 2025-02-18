@@ -78,7 +78,7 @@ class TestEvent(unittest.TestCase):
         self.event.run_next_step()
         self.event.run_next_step()
         self.event.run_next_step()
-        self.mock_sim_time.get_sim_time().return_value = 75
+        self.mock_sim_time.sim_time.return_value = 75
         self.event.get_next_step = Mock()
         self.event.get_next_step().pause.return_value = 15
 

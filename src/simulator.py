@@ -28,7 +28,7 @@ class Simulator:
 
     def run_next_step(self):
         step_time = self.global_queue.next_time()
-        self.sim_time.set_sim_time(step_time)
+        self.sim_time.sim_time = step_time
         next_step_nurse_id: TimedNurseId = self.global_queue.pop() #this should work anyway because python, but is it bad practice?
         nurse_queue = self.nurse_queues[next_step_nurse_id.nurse_id]
         nurse_queue.run_next_step()
@@ -36,11 +36,11 @@ class Simulator:
             self.global_queue.add(nurse_queue.create_timed_nurse_id())
 
     def assign_next_request(self):
-        self.sim_time.set_sim_time(self.request_queue.next_time())
+        self.sim_time.sim_time = self.request_queue.next_time()
         request: Request = self.request_queue.pop_front()
         #choose nurse
         patient = request.patient
-        patients_nurse = patient.get_nurse()
+        patients_nurse = patient.nurse
         #TODO: add option for choosing other nurse if patients is unavailable/too far away based on request severity
         chosen_nurse = patients_nurse
         #put request in nurse queue

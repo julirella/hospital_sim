@@ -41,7 +41,7 @@ class Event(TimedOccurrence):
         #each step needs to happen at the end of it, but also it has to be obvious that the event is in progress
         #so maybe some start event step??
         nurse_pos = self._assigned_nurse.pos
-        patient_pos = self._patient.get_room()
+        patient_pos = self._patient.room
         path_there = self._graph.find_path(nurse_pos, patient_pos)
         prev_step_time = self._time
 
@@ -125,7 +125,7 @@ class Event(TimedOccurrence):
 
     def pause(self) -> None:
         next_step = self.get_next_step()
-        self._duration -= next_step.pause(self._sim_time.get_sim_time())
+        self._duration -= next_step.pause(self._sim_time.sim_time)
         self._status = EventStatus.PAUSED
         self.__log_action_now__("pause")
         self._assigned_nurse.unassign_event()
@@ -137,4 +137,4 @@ class Event(TimedOccurrence):
                           "patient": self._patient.patient_id, "type": self.type})
 
     def __log_action_now__(self, action: str) -> None:
-        self.__log_action__(action, self._sim_time.get_sim_time())
+        self.__log_action__(action, self._sim_time.sim_time)

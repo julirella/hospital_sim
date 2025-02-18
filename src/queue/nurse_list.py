@@ -26,7 +26,7 @@ class NurseList(EventList):
         if pred_event is None:
             new_list_event = ListEvent(new_event, self._front)
             self._front = new_list_event
-            new_event.time = self._sim_time.get_sim_time()
+            new_event.time = self._sim_time.sim_time
         else:
             new_list_event = ListEvent(new_event, pred_event.next)
             pred_event.next = new_list_event
@@ -42,7 +42,7 @@ class NurseList(EventList):
     #find gap in queue to fit event and add it there
     def add_to_gap(self, event: Event) -> None:
         max_event_duration = self.__max_event_duration__(event)
-        prev_end_time = self._sim_time.get_sim_time()
+        prev_end_time = self._sim_time.sim_time
 
         prev_event = None
         next_event: ListEvent = self._front
