@@ -9,13 +9,6 @@ class TimeQueue:
     def __init__(self):
         self._queue = SortedDict()
 
-    # def add_by_time(self, time: float, item) -> None:
-    #     self.queue[time] = item
-    #
-    # def remove_by_time(self, time: float) -> None:
-    #     #TODO sort out for multiple entries for one time
-    #     self.queue.pop(time)
-
     def add(self, item: TimedOccurrence):
         #id is unique for each object throughout its existence https://docs.python.org/3/library/functions.html#id
         self._queue[(item.time, id(item))] = item
