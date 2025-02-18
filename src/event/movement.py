@@ -33,6 +33,6 @@ class Movement(Step):
         current_pos = TempNode(current_x, current_y, (self._start.node_id, covered_dst),
                                (self._end. node_id, remaining_dst))
 
-        self._nurse.set_pos(current_pos)
+        self._nurse.move_to(current_pos)
 
         return 0 #this is a bit hacky

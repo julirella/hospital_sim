@@ -16,8 +16,8 @@ class TestMovement(unittest.TestCase):
         end = Node(0, 3, 4)
         move = Movement(100, self.nurse, start, end)
         move.pause(100 - 2.5 / self.nurse.speed)
-        x = self.nurse.get_pos().x
-        y = self.nurse.get_pos().y
+        x = self.nurse.pos.x
+        y = self.nurse.pos.y
         self.assertTrue(0.000001 > abs(x - 1.5))
         self.assertTrue(0.000001 > abs(y - 2.0))
 
@@ -26,8 +26,8 @@ class TestMovement(unittest.TestCase):
         end = Node(0, 0, 0)
         move = Movement(100, self.nurse, start, end)
         move.pause(100 - (math.sqrt(5) * 40) / self.nurse.speed)
-        x = self.nurse.get_pos().x
-        y = self.nurse.get_pos().y
+        x = self.nurse.pos.x
+        y = self.nurse.pos.y
         self.assertTrue(0.000001 > abs(x - 80.0))
         self.assertTrue(0.000001 > abs(y - 40.0))
 

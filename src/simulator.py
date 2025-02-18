@@ -44,7 +44,7 @@ class Simulator:
         #TODO: add option for choosing other nurse if patients is unavailable/too far away based on request severity
         chosen_nurse = patients_nurse
         #put request in nurse queue
-        chosen_nurse_id = chosen_nurse.get_id()
+        chosen_nurse_id = chosen_nurse.nurse_id
         request.assign_nurse(chosen_nurse)
         nurse_queue = self.nurse_queues[chosen_nurse_id]
 
@@ -57,7 +57,7 @@ class Simulator:
             #add to start of nurse queue (and pause current if necessary)
             nurse_queue.add_to_start(request)
             #take next nurse step out of global queue
-            self.global_queue.remove(nurse_queue.get_timed_nurse_id())
+            self.global_queue.remove(nurse_queue.current_timed_nurse_id())
             #put new next nurse step into global queue
             self.global_queue.add(nurse_queue.create_timed_nurse_id())
 
@@ -72,12 +72,12 @@ class Simulator:
         print("------------------nurse logs--------------------")
         for nurse_id, nurse in enumerate(self.nurses):
             print("nurse", nurse_id)
-            log = nurse.get_log()
+            log = nurse.log
             for line in log:
                 print(line)
                 # self.custom_print(line)
 
-            # print(nurse.get_log())
+            # print(nurse.log)
         print("\n")
         print("------------------event logs--------------------")
         logs = []
@@ -90,7 +90,7 @@ class Simulator:
     def nurse_log(self) -> list[dict]:
         nurse_logs = []
         for nurse in self.nurses:
-            nurse_logs += nurse.get_log()
+            nurse_logs += nurse.log
 
         return nurse_logs
 

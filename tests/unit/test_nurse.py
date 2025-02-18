@@ -14,8 +14,8 @@ class TestNurse(unittest.TestCase):
 
     def test_assign_event(self):
         self.nurse.assign_event(10, 0)
-        self.assertEqual(self.nurse.get_pos(), self.mock_node)  # Position should not change
-        log = self.nurse.get_log()
+        self.assertEqual(self.nurse.pos, self.mock_node)  # Position should not change
+        log = self.nurse.log
         self.assertEqual(log[-1]["time"], 100)
         self.assertEqual(log[-1]["position"], self.mock_node.node_id)
         self.assertEqual(log[-1]["event"], 10)
@@ -23,8 +23,8 @@ class TestNurse(unittest.TestCase):
 
     def test_finish_event(self):
         self.nurse.finish_event()
-        self.assertEqual(self.nurse.get_pos(), self.mock_node)  # Position should remain unchanged
-        log = self.nurse.get_log()
+        self.assertEqual(self.nurse.pos, self.mock_node)  # Position should remain unchanged
+        log = self.nurse.log
         self.assertEqual(log[-1]["time"], 100)
         self.assertEqual(log[-1]["position"], self.mock_node.node_id)
         self.assertIsNone(log[-1]["event"])
@@ -34,8 +34,8 @@ class TestNurse(unittest.TestCase):
         new_node = Mock()
         new_node.node_id = 2
         self.nurse.move(new_node)
-        self.assertEqual(self.nurse.get_pos(), new_node)
-        log = self.nurse.get_log()
+        self.assertEqual(self.nurse.pos, new_node)
+        log = self.nurse.log
         self.assertEqual(log[-1]["time"], 100)
         self.assertEqual(log[-1]["position"], 2)
         self.assertEqual(log[-1]["event"], None)

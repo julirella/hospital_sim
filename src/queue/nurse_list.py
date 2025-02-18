@@ -7,7 +7,7 @@ class NurseList(EventList):
     def __init__(self, events: list[Event], sim_time: SimTime, nurse: Nurse, max_graph_dst: float):
         super().__init__(events)
         self._sim_time: SimTime = sim_time
-        self._nurse_id = nurse.get_id()
+        self._nurse_id = nurse.nurse_id
         self._max_walk_time = max_graph_dst / nurse.speed #longest walk time for nurse between any two nodes in graph
         self._timed_nurse_id: TimedNurseId
         self._event_logs = []
@@ -91,5 +91,5 @@ class NurseList(EventList):
         self._timed_nurse_id = TimedNurseId(self.next_time(), self._nurse_id)
         return self._timed_nurse_id
 
-    def get_timed_nurse_id(self) -> TimedNurseId:
+    def current_timed_nurse_id(self) -> TimedNurseId:
         return self._timed_nurse_id

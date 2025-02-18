@@ -19,16 +19,19 @@ class Nurse:
     def speed(self) -> float:
         return self._speed
 
-    def get_id(self) -> int:
+    @property
+    def nurse_id(self) -> int:
         return self._nurse_id
 
-    def set_pos(self, pos: Node) -> None:
+    def move_to(self, pos: Node) -> None:
         self._pos = pos
 
-    def get_pos(self) -> Node:
+    @property
+    def pos(self) -> Node:
         return self._pos
 
-    def get_log(self) -> list[dict]:
+    @property
+    def log(self) -> list[dict]:
         return self._log
 
     def assign_event(self, event_id: int, patient_id: int) -> None:
@@ -55,6 +58,5 @@ class Nurse:
         self.__log_action__("time at patient")
 
     def __log_action__(self, action: str) -> None:
-        # self.__log.append({"time": self.__sim_time.get_sim_time(), "position": self.__pos.node_id, "event": self.__assigned_event_id, "action": action})
         self._log.append({"time": self._sim_time.get_sim_time(), "nurse": self._nurse_id, "x": self._pos.x, "y": self._pos.y,
                           "event": self._assigned_event_id, "action": action, "patient": self._current_patient_id})

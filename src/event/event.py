@@ -40,7 +40,7 @@ class Event(TimedOccurrence):
         #nurse has to be assigned at this point
         #each step needs to happen at the end of it, but also it has to be obvious that the event is in progress
         #so maybe some start event step??
-        nurse_pos = self._assigned_nurse.get_pos()
+        nurse_pos = self._assigned_nurse.pos
         patient_pos = self._patient.get_room()
         path_there = self._graph.find_path(nurse_pos, patient_pos)
         prev_step_time = self._time
