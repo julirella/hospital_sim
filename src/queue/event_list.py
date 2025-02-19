@@ -1,13 +1,13 @@
-from src.event import Event
+from src.event import PatientEvent
 
 class ListEvent:
-    def __init__(self, event: Event, next_event):
+    def __init__(self, event: PatientEvent, next_event):
         self.event = event
         self.next: ListEvent | None = next_event
 
 #linked list of events
 class EventList:
-    def __init__(self, events: list[Event]):
+    def __init__(self, events: list[PatientEvent]):
         #build linked list
         events.sort(key=lambda x: x.time)
         prev = None
@@ -18,10 +18,10 @@ class EventList:
     def empty(self) -> bool:
         return self._front is None
 
-    def front(self) -> Event:
+    def front(self) -> PatientEvent:
         return self._front.event
 
-    def pop_front(self) -> Event:
+    def pop_front(self) -> PatientEvent:
         event = self.front()
         self._front = self._front.next
         return event

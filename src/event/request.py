@@ -1,10 +1,10 @@
-from . import Event
+from . import PatientEvent
 from src.patient import Patient
 from src.nurse import Nurse
 from src import Graph, SimTime
 
 
-class Request(Event):
+class Request(PatientEvent):
     def __init__(self, event_id: int, time: float, duration: float, patient: Patient, level: int, graph: Graph, sim_time: SimTime) -> None:
         super().__init__(event_id, time, duration, patient, None, graph, sim_time)
         self._level = level

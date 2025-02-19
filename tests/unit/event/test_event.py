@@ -17,8 +17,8 @@ class TestEvent(unittest.TestCase):
         self.mock_node2 = Mock()
         self.mock_node3 = Mock()
         self.mock_graph.find_path.return_value = [(self.mock_node1, 60), (self.mock_node2, 90), (self.mock_node3, 150)]
-        self.event = Event(event_id=1, time=50, duration=30, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
-                           graph=self.mock_graph, sim_time=self.mock_sim_time)
+        self.event = PatientEvent(event_id=1, time=50, duration=30, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
+                                  graph=self.mock_graph, sim_time=self.mock_sim_time)
 
         self.mock_move = Movement(0, self.mock_nurse, self.mock_node1, self.mock_node2)
         self.mock_time = TimeAtPatient(0, self.mock_nurse, 0)
