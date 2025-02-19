@@ -110,10 +110,10 @@ class NurseList(EventList):
         if finished: # don't return again if already returned to office
             finished_log = self.pop_front().log
             self._event_logs += finished_log
-            # if (self.empty() or self.next_time() - self._sim_time.sim_time > self._max_walk_time * 2) and self._nurse.pos != self._graph.nurse_office:
-            #     #create return to office event
-            #     return_event = ReturnToOffice(self._nurse, self._graph, self._sim_time)
-            #     self.__insert_after__(return_event)
+            if (self.empty() or self.next_time() - self._sim_time.sim_time > self._max_walk_time * 2) and self._nurse.pos != self._graph.nurse_office:
+                #create return to office event
+                return_event = ReturnToOffice(self._nurse, self._graph, self._sim_time)
+                self.__insert_after__(return_event)
 
     def create_timed_nurse_id(self) -> TimedNurseId:
         self._timed_nurse_id = TimedNurseId(self.next_time(), self._nurse_id)

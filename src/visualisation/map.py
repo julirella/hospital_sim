@@ -54,8 +54,11 @@ class Map:
 
     def put_nurse_in_room(self, nurse_id: int, row) -> None:
         patient_id = row['patient']
-        room_number = self.patients[patient_id].room_number
-        self.rooms[room_number].add_nurse(self.nurses[nurse_id])
+        if pd.isna(patient_id):
+            self.put_nurse_in_office(nurse_id)
+        else:
+            room_number = self.patients[patient_id].room_number
+            self.rooms[room_number].add_nurse(self.nurses[nurse_id])
 
     def put_nurse_in_office(self, nurse_id: int) -> None:
         self.nurse_office.add_nurse(self.nurses[nurse_id])
