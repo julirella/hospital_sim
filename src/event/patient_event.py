@@ -10,8 +10,8 @@ from src.patient import Patient
 class PatientEvent(Event):
     def __init__(self, event_id: int, time: float, duration: float, patient: Patient, assigned_nurse: Nurse | None,
                  graph: Graph, sim_time: SimTime) -> None:
-        super().__init__(event_id, time, duration, assigned_nurse, graph, sim_time)
         self._patient = patient
+        super().__init__(event_id, time, duration, assigned_nurse, graph, sim_time)
 
     @property
     @abstractmethod
@@ -22,7 +22,7 @@ class PatientEvent(Event):
         #nurse has to be assigned at this point
         #each step needs to happen at the end of it, but also it has to be obvious that the event is in progress
         #so maybe some start event step??
-        prev_step_time = self.__create_movement_steps__(self._assigned_nurse.pos, self.patient.room)
+        prev_step_time = self.__create_movement_steps__(self._assigned_nurse.pos, self._patient.room)
         #time there
         self._steps.append(TimeAtPatient(prev_step_time + self._duration, self._assigned_nurse, self._duration))
 

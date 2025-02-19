@@ -23,7 +23,7 @@ class TestNurseList(unittest.TestCase):
         self.event3 = PatientEvent(event_id=0, time=170, duration=10, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
                                    graph=self.mock_graph, sim_time=self.mock_sim_time)
 
-        self.nurse_list = NurseList([self.event3, self.event1, self.event2], self.mock_sim_time, self.mock_nurse, 20)
+        self.nurse_list = NurseList([self.event3, self.event1, self.event2], self.mock_sim_time, self.mock_nurse, 20, self.mock_graph)
 
     def test_init(self):
         self.assertEqual(self.event1, self.nurse_list.pop_front())

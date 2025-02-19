@@ -1,7 +1,8 @@
-from src.event import PatientEvent
+from src.event import PatientEvent, Event
+
 
 class ListEvent:
-    def __init__(self, event: PatientEvent, next_event):
+    def __init__(self, event: Event, next_event):
         self.event = event
         self.next: ListEvent | None = next_event
 
@@ -18,10 +19,10 @@ class EventList:
     def empty(self) -> bool:
         return self._front is None
 
-    def front(self) -> PatientEvent:
+    def front(self) -> Event:
         return self._front.event
 
-    def pop_front(self) -> PatientEvent:
+    def pop_front(self) -> Event:
         event = self.front()
         self._front = self._front.next
         return event
