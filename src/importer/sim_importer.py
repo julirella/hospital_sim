@@ -71,7 +71,7 @@ class SimImporter(Importer):
             event_id += 1
 
         for nurse_id, plan_array in enumerate(plans):
-            nurse_queues.append(NurseList(plan_array, sim_time, nurses[nurse_id], graph.max_distance()))
+            nurse_queues.append(NurseList(plan_array, sim_time, nurses[nurse_id], graph.max_distance(), graph))
 
         return request_queue, nurse_queues
 

@@ -34,7 +34,7 @@ class Nurse:
     def log(self) -> list[dict]:
         return self._log
 
-    def assign_event(self, event_id: int, patient_id: int) -> None:
+    def assign_event(self, event_id: int, patient_id: int=None) -> None:
         self._assigned_event_id = event_id
         self._current_patient_id = patient_id
         self.__log_action__("assign event")

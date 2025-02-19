@@ -1,13 +1,15 @@
-from src import SimTime, Nurse, Request
+from src import SimTime, Nurse, Request, Graph
 from src.event import PatientEvent, EventStatus, TimedNurseId
 from src.event.return_to_office import ReturnToOffice
 from src.queue.event_list import EventList, ListEvent
 
 #linkded list of nurse events
 class NurseList(EventList):
-    def __init__(self, events: list[PatientEvent], sim_time: SimTime, nurse: Nurse, max_graph_dst: float):
+    def __init__(self, events: list[PatientEvent], sim_time: SimTime, nurse: Nurse, max_graph_dst: float, graph: Graph):
         super().__init__(events)
         self._sim_time: SimTime = sim_time
+        self._graph = graph
+        self._nurse: Nurse = nurse
         self._nurse_id = nurse.nurse_id
         self._max_walk_time = max_graph_dst / nurse.speed #longest walk time for nurse between any two nodes in graph
         self._timed_nurse_id: TimedNurseId
@@ -111,7 +113,7 @@ class NurseList(EventList):
             self._event_logs += finished_log
             if self.next_time() - self._sim_time.sim_time > self._max_walk_time * 2:
                 #create return to office event
-                return_event = ReturnToOffice()
+                return_event = ReturnToOffice(self._nurse, self._graph, self._sim_time)
 
     def create_timed_nurse_id(self) -> TimedNurseId:
         self._timed_nurse_id = TimedNurseId(self.next_time(), self._nurse_id)

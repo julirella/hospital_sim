@@ -1,12 +1,12 @@
-from src import Patient, Nurse, Graph, SimTime
-from src.event import PatientEvent
+from src import Nurse, Graph, SimTime
+from src.event import Event
 
 
-class ReturnToOffice(PatientEvent):
+class ReturnToOffice(Event):
 
-    def __init__(self, patient: Patient, assigned_nurse: Nurse | None,
+    def __init__(self, assigned_nurse: Nurse,
                  graph: Graph, sim_time: SimTime) -> None:
-        super().__init__(100, sim_time.sim_time, 0, patient, assigned_nurse, graph, sim_time)
+        super().__init__(100, sim_time.sim_time, 0, assigned_nurse, graph, sim_time)
         #TODO sort out event id
 
     @property
@@ -14,7 +14,7 @@ class ReturnToOffice(PatientEvent):
         return 'return_to_office'
 
     def __create_steps__(self) -> None:
-        self.__create_movement_steps__()
+        self.__create_movement_steps__(self._assigned_nurse.pos, self._graph.nurse_office)
 
     def pause(self) -> None:
         #pause cancels the event, it will never be resumed
