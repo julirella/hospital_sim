@@ -1,4 +1,4 @@
-import csv
+from sortedcontainers import SortedList
 
 from src.event import Request
 from src.event.timed_nurse_id import TimedNurseId
@@ -21,6 +21,7 @@ class Simulator:
         self.request_queue = request_queue
         self.nurse_queues = nurse_queues
         self.global_queue = TimeQueue()
+        self.waiting_requests = SortedList(key=lambda request: (request.level, request.time))
 
         #put next step from each nurse queue into global queue
         for nurse_id, nurse_queue in enumerate(self.nurse_queues):
@@ -33,16 +34,15 @@ class Simulator:
         self.sim_time.sim_time = step_time
         next_step_nurse_id: TimedNurseId = self.global_queue.pop() #this should work anyway because python, but is it bad practice?
         nurse_queue = self.nurse_queues[next_step_nurse_id.nurse_id]
-        nurse_queue.run_next_step()
-        if not nurse_queue.empty():
+        finished = nurse_queue.run_next_step()
+        if finished and len(self.waiting_requests) > 0: #assuming request will definitely be assigned
+            self.assign_request(self.waiting_requests.pop(0))
+        elif not nurse_queue.empty():
             self.global_queue.add(nurse_queue.create_timed_nurse_id())
 
-    def assign_next_request(self):
-        self.sim_time.sim_time = self.request_queue.next_time()
-        request: Request = self.request_queue.pop_front()
 
+    def assign_request(self, request: Request):
         #choose nurse
-
         chosen_nurse_id = self.request_assigner.assign_request(request)
 
         if chosen_nurse_id is not None:
@@ -53,8 +53,12 @@ class Simulator:
             self.global_queue.add(nurse_queue.create_timed_nurse_id())
         else:
             #put in waiting requests
-            ...
+            self.waiting_requests.add(request)
 
+    def assign_next_request(self):
+        self.sim_time.sim_time = self.request_queue.next_time()
+        request: Request = self.request_queue.pop_front()
+        self.assign_request(request)
 
     def __print_logs__(self):
         print("------------------nurse logs--------------------")
@@ -96,7 +100,6 @@ class Simulator:
         #if request, decide which queue to put it in
         #log whatever happens
         print("Simulating...")
-        #TODO: add waiting requests
         while not self.request_queue.empty() or not self.global_queue.is_empty():
             if self.request_queue.empty():
                 self.run_next_step()

@@ -16,6 +16,10 @@ class Request(PatientEvent):
         return self._level
 
     @property
+    def level(self) -> int:
+        return self._level
+
+    @property
     def type(self) -> str:
         return "request"
 

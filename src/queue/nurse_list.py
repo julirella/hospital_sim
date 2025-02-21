@@ -128,7 +128,9 @@ class NurseList(EventList):
     #
     #     return top_event_changed
 
-    def run_next_step(self) -> None:
+    def run_next_step(self) -> bool:
+        #returns true if step run was last step of event (aka event was finished)
+
         #call run next step of top event
         next_event: Event = self.front()
         finished: bool = next_event.run_next_step()
@@ -140,6 +142,8 @@ class NurseList(EventList):
                 #create return to office event
                 return_event = ReturnToOffice(self._nurse, self._graph, self._sim_time)
                 self.__insert_after__(return_event)
+
+        return finished
 
     def create_timed_nurse_id(self) -> TimedNurseId:
         self._timed_nurse_id = TimedNurseId(self.next_time(), self._nurse_id)
