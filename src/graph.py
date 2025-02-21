@@ -89,7 +89,7 @@ class Graph:
     def max_distance(self) -> float:
         if self._max_distance is not None:
             return self._max_distance
-        else: #probably about the slowest way of doing this
+        else: #probably about the slowest way of doing this, but it's only gonna be run once
             distances = []
             for start in self._nodes:
                 for end in self._nodes:

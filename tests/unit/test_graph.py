@@ -80,6 +80,10 @@ class TestGraph(unittest.TestCase):
         expected = [(self.nodes[8], math.sqrt(2) / 2 - 0.1), (self.nodes[5], 1.0)]
         self.assertEqual(expected, path)
 
+    def test_max_distance(self):
+        max_dst = self.graph.max_distance()
+        self.assertEqual(3 + math.sqrt(2), max_dst)
+
 
 if __name__ == "__main__":
     unittest.main()
