@@ -23,9 +23,6 @@ class Nurse:
     def nurse_id(self) -> int:
         return self._nurse_id
 
-    def move_to(self, pos: Node) -> None:
-        self._pos = pos
-
     @property
     def pos(self) -> Node:
         return self._pos
@@ -48,6 +45,7 @@ class Nurse:
     def finish_event(self) -> None:
         self.__log_action__("finish event")
         self._assigned_event_id = None
+        self._current_patient_id = None
 
     def move(self, dst: Node) -> None:
         #the same as set_pos, but logs movement
