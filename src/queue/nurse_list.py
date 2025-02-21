@@ -1,5 +1,5 @@
 from src import SimTime, Nurse, Graph
-from src.event import PatientEvent, EventStatus, TimedNurseId, Request, ReturnToOffice, Event
+from src.event import PatientEvent, EventStatus, TimedNurseId, ReturnToOffice, Event
 from src.queue.event_list import EventList, ListEvent
 
 #linkded list of nurse events
@@ -49,15 +49,20 @@ class NurseList(EventList):
         prev_event = None
         next_event: ListEvent = self._front
         done = False
-        while next_event is not None:
-            next_start_time = next_event.event.time
-            if next_start_time - prev_end_time > max_event_duration: #new event fits
-                self.__insert_after__(event, prev_event)
-                done = True
-                break
-            prev_end_time = next_event.event.time + next_event.event.duration + self._max_walk_time
-            prev_event = next_event
-            next_event = next_event.next
+
+        if next_event.event.type == 'return_to_office' and next_event.next.event.time - prev_end_time > max_event_duration:
+            done = True
+            self.add_to_gap(event)
+        else:
+            while next_event is not None:
+                next_start_time = next_event.event.time
+                if next_start_time - prev_end_time > max_event_duration: #new event fits
+                    self.__insert_after__(event, prev_event)
+                    done = True
+                    break
+                prev_end_time = next_event.event.time + next_event.event.duration + self._max_walk_time
+                prev_event = next_event
+                next_event = next_event.next
 
         if not done:
             self.__insert_after__(event, prev_event)
@@ -69,6 +74,11 @@ class NurseList(EventList):
         if current_event.status == EventStatus.NOT_STARTED:
             #it just goes straight away
             self.__insert_after__(event)
+        elif current_event.type == 'return_to_office':
+            current_event.pause()
+            finished_log = self.pop_front().log
+            self._event_logs += finished_log
+            self.__insert_after__(event)
         else:
             self.__insert_after__(event, self._front)
 
@@ -76,31 +86,34 @@ class NurseList(EventList):
         current_event: Event = self.front()
         if current_event.status == EventStatus.ACTIVE:
             current_event.pause() #pause current if necessary
+            if current_event.type == 'return_to_office':
+                finished_log = self.pop_front().log
+                self._event_logs += finished_log
 
         #insert new and push back rest
         self.__insert_after__(event, None)
 
 
-    def add_request(self, request: Request) -> bool:
-        top_event_changed = False
-
-        #TODO what if list is empty
-        if self.front().type == 'return_to_office':
-            #return to office should be paused and removed
-            self.pop_front().pause()
-            top_event_changed = True
-
-        request_level = request.get_level()
-        if request_level == 1:
-            self.add_to_gap(request)
-        elif request_level == 2:
-            self.add_after_current(request)
-        elif request_level == 3:
-            # add to start of nurse queue (and pause current if necessary)
-            self.add_to_start(request)
-            top_event_changed = True
-
-        return top_event_changed
+    # def add_request(self, request: Request) -> bool:
+    #     top_event_changed = False
+    #
+    #     #TODO what if list is empty
+    #     if self.front().type == 'return_to_office':
+    #         #return to office should be paused and removed
+    #         self.pop_front().pause()
+    #         top_event_changed = True
+    #
+    #     request_level = request.get_level()
+    #     if request_level == 1:
+    #         self.add_to_gap(request)
+    #     elif request_level == 2:
+    #         self.add_after_current(request)
+    #     elif request_level == 3:
+    #         # add to start of nurse queue (and pause current if necessary)
+    #         self.add_to_start(request)
+    #         top_event_changed = True
+    #
+    #     return top_event_changed
 
     def run_next_step(self) -> None:
         #call run next step of top event

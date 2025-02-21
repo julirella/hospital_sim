@@ -1,4 +1,3 @@
-import json
 
 from src import Graph, EventList, NurseList
 from src.event import Request, Plan
@@ -6,6 +5,7 @@ from src.nurse import Nurse
 from src.patient import Patient
 from src.simulator import Simulator
 from .importer import Importer
+from ..request_assigner.basic_assigner import BasicAssigner
 from ..sim_time import SimTime
 
 
@@ -82,5 +82,6 @@ class SimImporter(Importer):
         sim_time = SimTime()
         nurses, patients = self.import_entities(graph, sim_time)
         req_queue, nurse_queues = self.import_events(nurses, patients, graph, sim_time)
-        simulator = Simulator(graph, nurses, patients, req_queue, nurse_queues, sim_time)
+        request_assigner = BasicAssigner(nurse_queues)
+        simulator = Simulator(graph, nurses, patients, req_queue, nurse_queues, sim_time, request_assigner)
         return simulator

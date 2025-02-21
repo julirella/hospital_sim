@@ -6,16 +6,18 @@ from src.nurse import Nurse
 from src.graph import Graph
 from src.patient import Patient
 from src.queue import TimeQueue, EventList, NurseList
+from src.request_assigner.request_assigner import RequestAssigner
 from src.sim_time import SimTime
 
 
 class Simulator:
     def __init__(self, graph: Graph, nurses: list[Nurse], patients: list[Patient], request_queue: EventList,
-                 nurse_queues: list[NurseList], sim_time: SimTime) -> None:
+                 nurse_queues: list[NurseList], sim_time: SimTime, request_assigner: RequestAssigner) -> None:
         self.graph = graph
         self.nurses = nurses
         self.patients = patients
         self.sim_time = sim_time
+        self.request_assigner = request_assigner
         self.request_queue = request_queue
         self.nurse_queues = nurse_queues
         self.global_queue = TimeQueue()
@@ -38,29 +40,21 @@ class Simulator:
     def assign_next_request(self):
         self.sim_time.sim_time = self.request_queue.next_time()
         request: Request = self.request_queue.pop_front()
-        #choose nurse
-        patient = request.patient
-        patients_nurse = patient.nurse
-        #TODO: add option for choosing other nurse if patients is unavailable/too far away based on request severity
-        chosen_nurse = patients_nurse
-        #put request in nurse queue
-        chosen_nurse_id = chosen_nurse.nurse_id
-        request.assign_nurse(chosen_nurse)
-        nurse_queue = self.nurse_queues[chosen_nurse_id]
 
-        top_event_changed = nurse_queue.add_request(request)
-        if top_event_changed:
+        #choose nurse
+
+        chosen_nurse_id = self.request_assigner.assign_request(request)
+
+        if chosen_nurse_id is not None:
+            nurse_queue = self.nurse_queues[chosen_nurse_id]
             #take next nurse step out of global queue
             self.global_queue.remove(nurse_queue.current_timed_nurse_id())
             #put new next nurse step into global queue
             self.global_queue.add(nurse_queue.create_timed_nurse_id())
+        else:
+            #put in waiting requests
+            ...
 
-    # def custom_print(*args, decimal_places=2):
-    #     formatted_args = [
-    #         f"{arg:.{decimal_places}f}" if isinstance(arg, float) else arg
-    #         for arg in args
-    #     ]
-    #     print(*formatted_args)
 
     def __print_logs__(self):
         print("------------------nurse logs--------------------")
