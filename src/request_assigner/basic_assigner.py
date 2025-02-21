@@ -17,7 +17,7 @@ class BasicAssigner(RequestAssigner):
         request.assign_nurse(chosen_nurse)
         nurse_queue = self.nurse_queues[chosen_nurse_id]
 
-        request_level = request.get_level()
+        request_level = request.level
         if request_level == 1:
             nurse_queue.add_to_gap(request)
         elif request_level == 2:

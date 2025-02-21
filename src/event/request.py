@@ -12,9 +12,6 @@ class Request(PatientEvent):
     def assign_nurse(self, nurse: Nurse):
         self._assigned_nurse = nurse
 
-    def get_level(self) -> int:
-        return self._level
-
     @property
     def level(self) -> int:
         return self._level

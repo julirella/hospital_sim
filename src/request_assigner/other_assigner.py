@@ -12,7 +12,7 @@ class OtherAssigner(RequestAssigner):
         patients_nurse = patient.nurse
         patients_nurse_queue = self.nurse_queues[patients_nurse.nurse_id]
 
-        request_level = request.get_level()
+        request_level = request.level
         if request_level == 1:
             patients_nurse_queue.add_to_gap(request)
             return patients_nurse.nurse_id
