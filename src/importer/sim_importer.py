@@ -1,11 +1,12 @@
 
-from src import Graph, EventList, NurseList
+from src import Graph, EventList, NurseList, RequestAssigner
 from src.event import Request, Plan
 from src.nurse import Nurse
 from src.patient import Patient
 from src.simulator import Simulator
 from .importer import Importer
 from ..request_assigner.basic_assigner import BasicAssigner
+from ..request_assigner.other_assigner import OtherAssigner
 from ..sim_time import SimTime
 
 
@@ -14,6 +15,7 @@ class SimImporter(Importer):
         super().__init__(graph_file_name, entity_file_name)
         self.entity_file_name = entity_file_name
         self.event_file_name = event_file_name
+        self.request_assigner: RequestAssigner
 
     def import_entities(self, graph: Graph, sim_time: SimTime) -> tuple[list[Nurse], list[Patient]]:
         entities_json = self.load_json(self.entity_file_name)
@@ -36,8 +38,12 @@ class SimImporter(Importer):
     def import_events(self, nurses: list[Nurse], patients: list[Patient], graph: Graph, sim_time: SimTime) -> tuple[EventList, list[NurseList]]:
         events_json = self.load_json(self.event_file_name)
 
+        request_assigner = events_json["request_assigner"]
         request_lst = events_json["requests"]
         plan_lst = events_json["plans"]
+
+
+
         event_id: int = 0
 
         # request_queue = EventQueue()
@@ -73,6 +79,11 @@ class SimImporter(Importer):
         for nurse_id, plan_array in enumerate(plans):
             nurse_queues.append(NurseList(plan_array, sim_time, nurses[nurse_id], graph.max_distance(), graph))
 
+        if request_assigner == "basic":
+            self.request_assigner = BasicAssigner(nurse_queues)
+        elif request_assigner == "other":
+            self.request_assigner = OtherAssigner(nurse_queues)
+
         return request_queue, nurse_queues
 
 
@@ -82,6 +93,5 @@ class SimImporter(Importer):
         sim_time = SimTime()
         nurses, patients = self.import_entities(graph, sim_time)
         req_queue, nurse_queues = self.import_events(nurses, patients, graph, sim_time)
-        request_assigner = BasicAssigner(nurse_queues)
-        simulator = Simulator(graph, nurses, patients, req_queue, nurse_queues, sim_time, request_assigner)
+        simulator = Simulator(graph, nurses, patients, req_queue, nurse_queues, sim_time, self.request_assigner)
         return simulator

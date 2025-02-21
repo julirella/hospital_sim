@@ -1,4 +1,5 @@
 {
+  "request_assigner" : "basic",
   "requests": [
     {
       "time": 5.0,
