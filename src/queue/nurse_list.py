@@ -41,6 +41,19 @@ class NurseList(EventList):
             current.next.event.time = current.event.time + current.event.duration + self._max_walk_time
             current = current.next
 
+    def has_time_now(self, event: Event) -> bool:
+        return self.__max_event_duration__(event) < self._front.event.time - self._sim_time.sim_time
+
+    def current_event_level(self) -> int:
+        if self.empty():
+            return -1
+
+        current_event = self._front.event
+        if current_event.status == EventStatus.ACTIVE and current_event.type == 'request':
+            return current_event.get_level() #TODO: maybe just get level from event too?
+        else:
+            return -1
+
     #find gap in queue to fit event and add it there
     def add_to_gap(self, event: Event) -> None:
         max_event_duration = self.__max_event_duration__(event)
