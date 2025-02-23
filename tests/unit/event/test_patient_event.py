@@ -4,7 +4,7 @@ from unittest.mock import Mock
 from src.event import *
 
 
-class TestEvent(unittest.TestCase):
+class TestPatientEvent(unittest.TestCase):
     def setUp(self):
         self.mock_patient = Mock()
         self.mock_patient.room = Mock()
@@ -21,7 +21,7 @@ class TestEvent(unittest.TestCase):
                                   graph=self.mock_graph, sim_time=self.mock_sim_time)
 
         self.mock_move = Movement(0, self.mock_nurse, self.mock_node1, self.mock_node2)
-        self.mock_time = TimeAtPatient(0, self.mock_nurse, 0)
+        self.mock_time_at_patient = TimeAtPatient(0, self.mock_nurse, 0)
 
     def test_run_next_step_creates_steps_of_type(self):
         self.event.run_next_step()
@@ -32,7 +32,7 @@ class TestEvent(unittest.TestCase):
         self.event.run_next_step()
         self.assertEqual(type(self.mock_move), type(self.event.get_next_step()))
         self.event.run_next_step()
-        self.assertEqual(type(self.mock_time), type(self.event.get_next_step()))
+        self.assertEqual(type(self.mock_time_at_patient), type(self.event.get_next_step()))
 
     def test_run_next_step_creates_steps_with_time(self):
         self.event.run_next_step()
@@ -41,8 +41,9 @@ class TestEvent(unittest.TestCase):
         self.assertEqual(200, self.event.next_time())
         self.event.run_next_step()
         self.assertEqual(350, self.event.next_time())
-        self.event.run_next_step()
+        finished = self.event.run_next_step()
         self.assertEqual(380, self.event.next_time())
+        self.assertEqual(True, finished)
 
 
     def test_first_next_time_returns_event_time(self):

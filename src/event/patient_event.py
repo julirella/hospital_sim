@@ -30,11 +30,6 @@ class PatientEvent(Event):
     def patient(self) -> Patient:
         return self._patient
 
-    def __start__(self) -> None:
-        self.__create_steps__()
-        self._assigned_nurse.assign_event(self._event_id, self._patient.patient_id)
-        self._status = EventStatus.ACTIVE
-
     def pause(self) -> None:
         next_step = self.get_next_step()
         self._duration -= next_step.pause(self._sim_time.sim_time)

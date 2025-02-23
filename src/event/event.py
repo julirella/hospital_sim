@@ -113,14 +113,9 @@ class Event(TimedOccurrence):
 
         return self.__is_finished__()
 
+    @abstractmethod
     def pause(self) -> None:
-        next_step = self.get_next_step()
-        self._duration -= next_step.pause(self._sim_time.sim_time)
-        self._status = EventStatus.PAUSED
-        self.__log_action_now__("pause")
-        self._assigned_nurse.unassign_event()
-
-        self._steps = []  # empty steps so that they can be recalculated when resuming
+        pass
 
     def __log_action__(self, action: str, time: float) -> None:
         self._log.append({"time": time, "event": self._event_id, "action": action, "type": self.type})
