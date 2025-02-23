@@ -42,7 +42,7 @@ class NurseList(EventList):
             current = current.next
 
     def has_time_now(self, event: Event) -> bool:
-        return self.__max_event_duration__(event) < self._front.event.time - self._sim_time.sim_time
+        return self.empty() or self.__max_event_duration__(event) < self._front.event.time - self._sim_time.sim_time
 
     def current_event_level(self) -> int:
         if self.empty():
@@ -56,6 +56,10 @@ class NurseList(EventList):
 
     #find gap in queue to fit event and add it there
     def add_to_gap(self, event: Event) -> None:
+        if self.empty():
+            self.__insert_after__(event)
+            return
+
         max_event_duration = self.__max_event_duration__(event)
         prev_end_time = self._sim_time.sim_time
 
@@ -82,6 +86,10 @@ class NurseList(EventList):
 
     #add event after end of current running event
     def add_after_current(self, event: Event) -> None:
+        if self.empty():
+            self.__insert_after__(event)
+            return
+
         current_event: Event = self.front()
         # max_event_duration = self.__max_event_duration__(event)
         if current_event.status == EventStatus.NOT_STARTED:
@@ -96,6 +104,10 @@ class NurseList(EventList):
             self.__insert_after__(event, self._front)
 
     def add_to_start(self, event: Event) -> None:
+        if self.empty():
+            self.__insert_after__(event)
+            return
+
         current_event: Event = self.front()
         if current_event.status == EventStatus.ACTIVE:
             current_event.pause() #pause current if necessary
@@ -110,7 +122,6 @@ class NurseList(EventList):
     # def add_request(self, request: Request) -> bool:
     #     top_event_changed = False
     #
-    #     #TODO what if list is empty
     #     if self.front().type == 'return_to_office':
     #         #return to office should be paused and removed
     #         self.pop_front().pause()
@@ -130,6 +141,8 @@ class NurseList(EventList):
 
     def run_next_step(self) -> bool:
         #returns true if step run was last step of event (aka event was finished)
+        if self.empty():
+            raise Exception("can't run next step of emtpy list")
 
         #call run next step of top event
         next_event: Event = self.front()

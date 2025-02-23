@@ -19,13 +19,16 @@ class EventList:
     def empty(self) -> bool:
         return self._front is None
 
-    def front(self) -> Event:
+    def front(self) -> Event | None:
         return self._front.event
 
-    def pop_front(self) -> Event:
+    def pop_front(self) -> Event | None:
         event = self.front()
-        self._front = self._front.next
+        if event is not None:
+            self._front = self._front.next
         return event
 
-    def next_time(self) -> float:
+    def next_time(self) -> float | None:
+        if self.empty():
+            return None
         return self.front().next_time()
