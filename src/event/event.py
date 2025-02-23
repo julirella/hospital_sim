@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from enum import IntEnum
+import itertools
 
 from src import Nurse, Graph, SimTime, Node
 from src.event import TimedOccurrence, Movement, Step
@@ -11,10 +12,12 @@ class EventStatus(IntEnum):
     PAUSED = 3
 
 class Event(TimedOccurrence):
-    def __init__(self, event_id: int, time: float, duration: float, assigned_nurse: Nurse | None,
+    _id_generator = itertools.count(0)
+
+    def __init__(self, time: float, duration: float, assigned_nurse: Nurse | None,
                  graph: Graph, sim_time: SimTime):
         super().__init__(time)
-        self._event_id = event_id
+        self._event_id = next(Event._id_generator)
         self._duration = duration
         self._assigned_nurse = assigned_nurse
         self._graph = graph

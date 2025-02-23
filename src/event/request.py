@@ -5,8 +5,8 @@ from src import Graph, SimTime
 
 
 class Request(PatientEvent):
-    def __init__(self, event_id: int, time: float, duration: float, patient: Patient, level: int, graph: Graph, sim_time: SimTime) -> None:
-        super().__init__(event_id, time, duration, patient, None, graph, sim_time)
+    def __init__(self, time: float, duration: float, patient: Patient, level: int, graph: Graph, sim_time: SimTime) -> None:
+        super().__init__(time, duration, patient, None, graph, sim_time)
         self._level = level
 
     def assign_nurse(self, nurse: Nurse):

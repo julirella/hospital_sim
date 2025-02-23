@@ -8,10 +8,10 @@ from src.patient import Patient
 
 
 class PatientEvent(Event):
-    def __init__(self, event_id: int, time: float, duration: float, patient: Patient, assigned_nurse: Nurse | None,
+    def __init__(self, time: float, duration: float, patient: Patient, assigned_nurse: Nurse | None,
                  graph: Graph, sim_time: SimTime) -> None:
         self._patient = patient
-        super().__init__(event_id, time, duration, assigned_nurse, graph, sim_time)
+        super().__init__(time, duration, assigned_nurse, graph, sim_time)
 
     @property
     @abstractmethod

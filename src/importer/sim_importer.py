@@ -42,10 +42,6 @@ class SimImporter(Importer):
         request_lst = events_json["requests"]
         plan_lst = events_json["plans"]
 
-
-
-        event_id: int = 0
-
         # request_queue = EventQueue()
         requests = []
         for request_dict in request_lst:
@@ -53,10 +49,9 @@ class SimImporter(Importer):
             patient: Patient = patients[request_dict["patient"]]
             level: int = request_dict["level"]
             duration: float = request_dict["duration"]
-            request = Request(event_id, time, duration, patient, level, graph, sim_time)
+            request = Request(time, duration, patient, level, graph, sim_time)
             requests.append(request)
             # request_queue.add(request)
-            event_id += 1
         request_queue = EventList(requests)
 
         nurse_queues: [NurseList] = []
@@ -71,10 +66,9 @@ class SimImporter(Importer):
             duration: float = plan_dict["duration"]
             nurse_id: int = plan_dict["nurse"]
             nurse: Nurse = nurses[nurse_id]
-            plan = Plan(event_id, time, duration, patient, nurse, graph, sim_time)
+            plan = Plan(time, duration, patient, nurse, graph, sim_time)
             # nurse_queues[nurse_id].add(plan)
             plans[nurse_id].append(plan)
-            event_id += 1
 
         for nurse_id, plan_array in enumerate(plans):
             nurse_queues.append(NurseList(plan_array, sim_time, nurses[nurse_id], graph.max_distance(), graph))

@@ -6,8 +6,7 @@ class ReturnToOffice(Event):
 
     def __init__(self, assigned_nurse: Nurse,
                  graph: Graph, sim_time: SimTime) -> None:
-        super().__init__(100, sim_time.sim_time, 0, assigned_nurse, graph, sim_time)
-        #TODO sort out event id
+        super().__init__(sim_time.sim_time, 0, assigned_nurse, graph, sim_time)
 
     @property
     def type(self) -> str:
