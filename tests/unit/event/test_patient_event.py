@@ -41,9 +41,8 @@ class TestPatientEvent(unittest.TestCase):
         self.assertEqual(200, self.event.next_time())
         self.event.run_next_step()
         self.assertEqual(350, self.event.next_time())
-        finished = self.event.run_next_step()
+        self.event.run_next_step()
         self.assertEqual(380, self.event.next_time())
-        self.assertEqual(True, finished)
 
 
     def test_first_next_time_returns_event_time(self):

@@ -11,6 +11,12 @@ class TestMovement(unittest.TestCase):
         self.sim_time = Mock()
         self.nurse = Nurse(0, self.nurse_pos, self.sim_time)
 
+    def test_run(self):
+        new_pos = Mock()
+        move = Movement(100, self.nurse, self.nurse_pos, new_pos)
+        move.run()
+        self.assertEqual(new_pos, self.nurse.pos)
+
     def test_pause_forward(self):
         start = Node(0, 0, 0)
         end = Node(0, 3, 4)
