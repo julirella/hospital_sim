@@ -100,10 +100,10 @@ class Simulator:
         #if request, decide which queue to put it in
         #log whatever happens
         print("Simulating...")
-        while not self.request_queue.empty() or not self.global_queue.is_empty():
+        while not self.request_queue.empty() or not self.global_queue.empty():
             if self.request_queue.empty():
                 self.run_next_step()
-            elif self.global_queue.is_empty():
+            elif self.global_queue.empty():
                 self.assign_next_request()
             elif self.global_queue.next_time() < self.request_queue.next_time():
                 self.run_next_step()

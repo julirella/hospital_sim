@@ -4,8 +4,7 @@ from src.event import TimedOccurrence
 
 
 class TimeQueue:
-    #TODO: maybe create another queue higher up that will work with any item and then this one will work with just TimedOccurrence, rather than combining it into one
-    #priority queue for storing anything with time as a key
+    #priority queue for storing anything with (time, id) as a key
     def __init__(self):
         self._queue = SortedDict()
 
@@ -23,7 +22,7 @@ class TimeQueue:
     def next_time(self) -> float:
         return self._queue.peekitem(0)[0][0]
 
-    def is_empty(self):
+    def empty(self):
         return len(self._queue) == 0
 
     def remove(self, item: TimedOccurrence):
