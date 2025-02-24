@@ -42,7 +42,7 @@ class NurseList(EventList):
             current = current.next
 
     def has_time_now(self, event: Event) -> bool:
-        return self.empty() or self.__max_event_duration__(event) < self._front.event.time - self._sim_time.sim_time
+        return self.empty() or self.__max_event_duration__(event) <= self._front.event.time - self._sim_time.sim_time
 
     def current_event_level(self) -> int:
         if self.empty():
@@ -50,7 +50,7 @@ class NurseList(EventList):
 
         current_event = self._front.event
         if current_event.status == EventStatus.ACTIVE and current_event.type == 'request':
-            return current_event.get_level() #TODO: maybe just get level from event too?
+            return current_event.level #TODO: maybe just get level from event too?
         else:
             return -1
 
@@ -119,26 +119,6 @@ class NurseList(EventList):
         self.__insert_after__(event, None)
 
 
-    # def add_request(self, request: Request) -> bool:
-    #     top_event_changed = False
-    #
-    #     if self.front().type == 'return_to_office':
-    #         #return to office should be paused and removed
-    #         self.pop_front().pause()
-    #         top_event_changed = True
-    #
-    #     request_level = request.get_level()
-    #     if request_level == 1:
-    #         self.add_to_gap(request)
-    #     elif request_level == 2:
-    #         self.add_after_current(request)
-    #     elif request_level == 3:
-    #         # add to start of nurse queue (and pause current if necessary)
-    #         self.add_to_start(request)
-    #         top_event_changed = True
-    #
-    #     return top_event_changed
-
     def run_next_step(self) -> bool:
         #returns true if step run was last step of event (aka event was finished)
         if self.empty():
@@ -151,7 +131,7 @@ class NurseList(EventList):
         if finished: # don't return again if already returned to office
             finished_log = self.pop_front().log
             self._event_logs += finished_log
-            if (self.empty() or self.next_time() - self._sim_time.sim_time > self._max_walk_time * 2) and self._nurse.pos != self._graph.nurse_office:
+            if (self.empty() or self.next_time() - self._sim_time.sim_time >= self._max_walk_time * 2) and self._nurse.pos != self._graph.nurse_office:
                 #create return to office event
                 return_event = ReturnToOffice(self._nurse, self._graph, self._sim_time)
                 self.__insert_after__(return_event)

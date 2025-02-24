@@ -7,4 +7,5 @@ from .unit.event.test_return_to_office import TestReturnToOffice
 
 from .unit.list.test_nurse_list import TestNurseList
 from .unit.queue.test_time_queue import TestTimeQueue
+from .unit.list.test_event_list import TestEventList
 
