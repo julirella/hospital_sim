@@ -20,7 +20,10 @@ class EventList:
         return self._front is None
 
     def front(self) -> Event | None:
-        return self._front.event
+        if self._front is None:
+            return None
+        else:
+            return self._front.event
 
     def pop_front(self) -> Event | None:
         event = self.front()
