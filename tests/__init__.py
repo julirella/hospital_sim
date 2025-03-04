@@ -9,3 +9,4 @@ from .unit.list.test_nurse_list import TestNurseList
 from .unit.queue.test_time_queue import TestTimeQueue
 from .unit.list.test_event_list import TestEventList
 
+from .unit.assigner.test_basic_assigner import TestBasicAssigner
