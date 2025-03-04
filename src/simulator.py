@@ -110,4 +110,4 @@ class Simulator:
             else:
                 self.assign_next_request()
 
-        self.__print_logs__()
+        # self.__print_logs__()
