@@ -1,0 +1,30 @@
+{
+  "request_assigner" : "basic",
+  "requests": [],
+
+  "plans": [
+    {
+      "time": 5.0,
+      "patient": 0,
+      "nurse": 0,
+      "duration": 20.0
+    },
+        {
+      "time": 10.0,
+      "patient": 3,
+      "nurse": 1,
+      "duration": 20.0
+    },
+        {
+      "time": 70.0,
+      "patient": 3,
+      "nurse": 1,
+      "duration": 20.0
+    },    {
+      "time": 90.0,
+      "patient": 0,
+      "nurse": 0,
+      "duration": 20.0
+    }
+  ]
+}

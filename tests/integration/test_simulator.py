@@ -82,6 +82,34 @@ class TestSimulator(unittest.TestCase):
         self.assertEqual(1, len(active_nurses))
         self.assertEqual(0, active_nurses[0])
 
+    def test_two_nurses_alternating(self):
+        graph_path = "input/layouts/toScaleLayout.json"
+        people_path = "input/people/manyPeople.json"
+        event_path = "input/events/twoNurses.json"
+
+        sim = self.run_sim(event_path=event_path, graph_path=graph_path, people_path=people_path)
+        self.export_logs(sim=sim)
+
+        #nurses both do work that overlaps timewise and don't interfere with each other
+        #nurse 0 has time to return to office, nurse 1 doesn't
+        conditions = (('nurse', 0), ('x', 9), ('y', 17), ('time', 5), ('action', 'assign event'))
+        self.assertTrue(self.check_conditions(conditions))
+        conditions = (('nurse', 0), ('x', 9), ('y', 17), ('time', 90), ('action', 'assign event'))
+        self.assertTrue(self.check_conditions(conditions))
+        conditions = (('nurse', 1), ('x', 9), ('y', 17), ('time', 10), ('action', 'assign event'))
+        self.assertTrue(self.check_conditions(conditions))
+        conditions = (('nurse', 1), ('x', 3), ('y', 8), ('time', 70), ('action', 'assign event'))
+        self.assertTrue(self.check_conditions(conditions))
+
+        conditions = (('nurse', 0), ('x', 3), ('y', 3), ('time', 45), ('action', 'finish event'))
+        self.assertTrue(self.check_conditions(conditions))
+        conditions = (('nurse', 0), ('x', 3), ('y', 3), ('time', 130), ('action', 'finish event'))
+        self.assertTrue(self.check_conditions(conditions))
+        conditions = (('nurse', 1), ('x', 3), ('y', 8), ('time', 45), ('action', 'finish event'))
+        self.assertTrue(self.check_conditions(conditions))
+        conditions = (('nurse', 1), ('x', 3), ('y', 8), ('time', 90), ('action', 'finish event'))
+        self.assertTrue(self.check_conditions(conditions))
+
     # def test_sim_basic_patients_nurse_always_chosen(self):
     #     graph_path = "input/layouts/toScaleLayout.json"
     #     people_path = "input/people/manyPeople.json"
