@@ -10,3 +10,4 @@ from .unit.queue.test_time_queue import TestTimeQueue
 from .unit.list.test_event_list import TestEventList
 
 from .unit.assigner.test_basic_assigner import TestBasicAssigner
+from .unit.assigner.test_other_assigner import TestOtherAssigner

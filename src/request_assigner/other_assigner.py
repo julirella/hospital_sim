@@ -36,14 +36,14 @@ class OtherAssigner(RequestAssigner):
                 active_event_levels = []
                 for nurse_id, nurse_queue in enumerate(self.nurse_queues):
                     if nurse_queue.has_time_now(request):
-                        active_event_levels.append(nurse_queue)
+                        active_event_levels.append(-1)
                     else:
                         active_event_levels.append(nurse_queue.current_event_level())
 
                 min_level = min(active_event_levels)
+                min_nurse_id = int(np.argmin(active_event_levels))
                 if min_level == 3:
                     return None #all nurses dealing with emergency
                 else:
-                    nurse_id = int(np.argmax(min_level))
-                    self.nurse_queues[nurse_id].add_to_start(request)
-                    return nurse_id
+                    self.nurse_queues[min_nurse_id].add_to_start(request)
+                    return min_nurse_id
