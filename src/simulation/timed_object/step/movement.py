@@ -1,6 +1,6 @@
 import math
 
-from .step import Step
+from src.simulation.timed_object.step.step import Step
 from src.simulation.people.nurse import Nurse
 from src.simulation.node import Node
 from src.simulation.node.temp_node import TempNode

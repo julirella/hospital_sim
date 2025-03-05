@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from . import TimedObject
+from src.simulation.timed_object import TimedObject
 from src.simulation.people.nurse import Nurse
 
 

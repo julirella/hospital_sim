@@ -1,4 +1,4 @@
-from . import PatientEvent
+from src.simulation.timed_object import PatientEvent
 from src.simulation.people.patient import Patient
 from src.simulation.people.nurse import Nurse
 from src import Graph, SimTime
