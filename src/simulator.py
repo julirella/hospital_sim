@@ -20,7 +20,7 @@ class Simulator:
         self.request_assigner = request_assigner
         self.request_queue = request_queue
         self.nurse_queues = nurse_queues
-        self.global_queue = TimeQueue()
+        self.global_queue = TimeQueue[TimedNurseId]()
         self.waiting_requests = SortedList(key=lambda request: (request.level, request.time))
 
         #put next step from each nurse queue into global queue
