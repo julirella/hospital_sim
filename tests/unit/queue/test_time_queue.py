@@ -2,23 +2,23 @@ import unittest
 from unittest.mock import Mock
 
 from src import TimeQueue
-from src.simulation.event import TimedOccurrence
+from src.simulation.event import TimedObject
 
 
 class TestTimeQueue(unittest.TestCase):
     def setUp(self):
         self.queue = TimeQueue()
 
-        self.event1 = Mock(spec=TimedOccurrence)
+        self.event1 = Mock(spec=TimedObject)
         self.event1.time = 10.0
 
-        self.event2 = Mock(spec=TimedOccurrence)
+        self.event2 = Mock(spec=TimedObject)
         self.event2.time = 20.0
 
-        self.event3 = Mock(spec=TimedOccurrence)
+        self.event3 = Mock(spec=TimedObject)
         self.event3.time = 15.0
 
-        self.event4 = Mock(spec=TimedOccurrence)
+        self.event4 = Mock(spec=TimedObject)
         self.event4.time = 15.0
 
     def test_add_and_top_item(self):

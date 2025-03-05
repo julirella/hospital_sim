@@ -1,4 +1,4 @@
-class TimedOccurrence:
+class TimedObject:
     def __init__(self, time):
         self._time = time
 

@@ -2,9 +2,9 @@ from typing import TypeVar, Generic
 
 from sortedcontainers import SortedDict
 
-from src.simulation.event import TimedOccurrence
+from src.simulation.event import TimedObject
 
-T = TypeVar("T", bound=TimedOccurrence)
+T = TypeVar("T", bound=TimedObject)
 
 class TimeQueue(Generic[T]):
     #priority queue for storing anything with (time, id) as a key

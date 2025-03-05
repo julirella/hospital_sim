@@ -1,4 +1,4 @@
-from .timed_occurrence import *
+from .timed_object import *
 from .step import *
 from .movement import *
 from .event import *

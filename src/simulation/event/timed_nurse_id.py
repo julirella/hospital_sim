@@ -1,7 +1,7 @@
-from src.simulation.event import TimedOccurrence
+from src.simulation.event import TimedObject
 
 
-class TimedNurseId(TimedOccurrence):
+class TimedNurseId(TimedObject):
     #nurse id wrapped up with time of next step/event for global queue
     def __init__(self, time: float, nurse_id: int):
         super().__init__(time)

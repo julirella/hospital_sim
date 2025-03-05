@@ -1,10 +1,10 @@
 from abc import abstractmethod
 
-from . import TimedOccurrence
+from . import TimedObject
 from src.simulation.people.nurse import Nurse
 
 
-class Step(TimedOccurrence):
+class Step(TimedObject):
     def __init__(self, time: float, nurse: Nurse):
         super().__init__(time)
         self._nurse = nurse

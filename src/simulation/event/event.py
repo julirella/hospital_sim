@@ -3,7 +3,7 @@ from enum import IntEnum
 import itertools
 
 from src import Nurse, Graph, SimTime, Node
-from src.simulation.event import TimedOccurrence, Movement, Step
+from src.simulation.event import TimedObject, Movement, Step
 
 
 class EventStatus(IntEnum):
@@ -11,7 +11,7 @@ class EventStatus(IntEnum):
     ACTIVE = 2
     PAUSED = 3
 
-class Event(TimedOccurrence):
+class Event(TimedObject):
     _id_generator = itertools.count(0)
 
     def __init__(self, time: float, duration: float, assigned_nurse: Nurse | None,
