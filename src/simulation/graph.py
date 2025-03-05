@@ -1,8 +1,8 @@
 from sortedcontainers import SortedDict
 from math import sqrt
 
-from src.node import NurseOffice, PatientRoom
-from src.node import Node
+from src.simulation.node import NurseOffice, PatientRoom
+from src.simulation.node import Node
 
 class Graph:
     def __init__(self, nodes: list[Node], nurse_office: NurseOffice, patient_rooms: list[PatientRoom]) -> None:

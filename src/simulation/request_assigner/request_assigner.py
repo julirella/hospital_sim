@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-from src.event import Request
-from src.queue import NurseList
+from src.simulation.event import Request
+from src.simulation.queue import NurseList
 
 
 class RequestAssigner:

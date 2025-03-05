@@ -2,8 +2,8 @@ import unittest
 from unittest.mock import Mock, PropertyMock, patch
 
 from src import Request
-from src.event import PatientEvent, EventStatus, Plan
-from src.queue import NurseList
+from src.simulation.event import PatientEvent, EventStatus, Plan
+from src.simulation.queue import NurseList
 
 
 class TestNurseList(unittest.TestCase):

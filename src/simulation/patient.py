@@ -1,6 +1,6 @@
-from .nurse import Nurse
-from .node import PatientRoom
-from .sim_time import SimTime
+from src.simulation.nurse import Nurse
+from src.simulation.node import PatientRoom
+from src.simulation.sim_time import SimTime
 
 
 class Patient:

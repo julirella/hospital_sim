@@ -1,6 +1,6 @@
-from .node import Node
-from .sim_time import SimTime
-from .constants import *
+from src.simulation.node import Node
+from src.simulation.sim_time import SimTime
+from src.constants import *
 
 # NURSE_KPH = 4
 # NURSE_PPS = 30 #pixels per second

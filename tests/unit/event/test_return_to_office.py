@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
-from src.event import ReturnToOffice, Movement
+from src.simulation.event import ReturnToOffice, Movement
 
 
 class TestReturnToOffice(unittest.TestCase):

@@ -1,5 +1,4 @@
 # from event.request import Request
-from event import Request
 
 def main():
     print(req)

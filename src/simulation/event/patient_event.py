@@ -1,10 +1,10 @@
 from abc import abstractmethod
 
 from src import Graph, SimTime
-from src.event.event import Event, EventStatus
-from src.event.time_at_patient import TimeAtPatient
-from src.nurse import Nurse
-from src.patient import Patient
+from src.simulation.event.event import Event, EventStatus
+from src.simulation.event.time_at_patient import TimeAtPatient
+from src.simulation.nurse import Nurse
+from src.simulation.patient import Patient
 
 
 class PatientEvent(Event):

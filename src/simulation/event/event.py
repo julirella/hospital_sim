@@ -3,7 +3,7 @@ from enum import IntEnum
 import itertools
 
 from src import Nurse, Graph, SimTime, Node
-from src.event import TimedOccurrence, Movement, Step
+from src.simulation.event import TimedOccurrence, Movement, Step
 
 
 class EventStatus(IntEnum):

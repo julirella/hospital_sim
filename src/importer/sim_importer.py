@@ -1,13 +1,13 @@
 
 from src import Graph, EventList, NurseList, RequestAssigner
-from src.event import Request, Plan
-from src.nurse import Nurse
-from src.patient import Patient
-from src.simulator import Simulator
+from src.simulation.event import Request, Plan
+from src.simulation.nurse import Nurse
+from src.simulation.patient import Patient
+from src.simulation.simulator import Simulator
 from .importer import Importer
-from ..request_assigner.basic_assigner import BasicAssigner
-from ..request_assigner.other_assigner import OtherAssigner
-from ..sim_time import SimTime
+from src.simulation.request_assigner import BasicAssigner
+from src.simulation.request_assigner import OtherAssigner
+from src.simulation.sim_time import SimTime
 
 
 class SimImporter(Importer):

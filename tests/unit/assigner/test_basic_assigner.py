@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from src import NurseList, Request
-from src.request_assigner import BasicAssigner
+from src.simulation.request_assigner import BasicAssigner
 
 
 class TestBasicAssigner(unittest.TestCase):

@@ -1,5 +1,5 @@
 from src import Nurse, Graph, SimTime
-from src.event import Event
+from src.simulation.event import Event
 
 
 class ReturnToOffice(Event):

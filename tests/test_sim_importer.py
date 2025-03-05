@@ -1,7 +1,7 @@
 import unittest
 
 from src.importer import SimImporter
-from src.simulator import Simulator
+from src.simulation.simulator import Simulator
 
 
 class TestSimImporter(unittest.TestCase):

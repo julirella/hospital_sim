@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 from src import Nurse, Node
-from src.event import Movement
+from src.simulation.event import Movement
 
 class TestMovement(unittest.TestCase):
     def setUp(self):

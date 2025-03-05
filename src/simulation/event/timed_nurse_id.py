@@ -1,4 +1,4 @@
-from src.event import TimedOccurrence
+from src.simulation.event import TimedOccurrence
 
 
 class TimedNurseId(TimedOccurrence):

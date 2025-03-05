@@ -1,4 +1,4 @@
-from src.event import PatientEvent, Event
+from src.simulation.event import PatientEvent, Event
 
 
 class ListEvent:

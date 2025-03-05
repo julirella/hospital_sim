@@ -1,9 +1,9 @@
 import math
 
 from .step import Step
-from src.nurse import Nurse
-from src.node import Node
-from src.node.temp_node import TempNode
+from src.simulation.nurse import Nurse
+from src.simulation.node import Node
+from src.simulation.node.temp_node import TempNode
 
 
 class Movement(Step):

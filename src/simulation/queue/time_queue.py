@@ -2,7 +2,7 @@ from typing import TypeVar, Generic
 
 from sortedcontainers import SortedDict
 
-from src.event import TimedOccurrence
+from src.simulation.event import TimedOccurrence
 
 T = TypeVar("T", bound=TimedOccurrence)
 

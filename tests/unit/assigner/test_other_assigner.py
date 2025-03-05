@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from src import NurseList, Request
-from src.request_assigner.other_assigner import OtherAssigner
+from src.simulation.request_assigner.other_assigner import OtherAssigner
 
 
 class TestOtherAssigner(unittest.TestCase):
