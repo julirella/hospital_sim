@@ -1,4 +1,4 @@
-from src.simulation.event import Step
+from src.simulation.timed_object import Step
 from src.simulation.people.nurse import Nurse
 
 

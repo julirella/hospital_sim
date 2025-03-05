@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from src import TimeQueue
-from src.simulation.event import TimedObject
+from src.simulation.timed_object import TimedObject
 
 
 class TestTimeQueue(unittest.TestCase):

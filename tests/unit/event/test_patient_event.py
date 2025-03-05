@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
-from src.simulation.event import *
+from src.simulation.timed_object import *
 
 
 class TestPatientEvent(unittest.TestCase):

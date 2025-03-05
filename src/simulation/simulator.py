@@ -1,7 +1,7 @@
 from sortedcontainers import SortedList
 
-from src.simulation.event import Request
-from src.simulation.event.timed_nurse_id import TimedNurseId
+from src.simulation.timed_object import Request
+from src.simulation.timed_object.timed_nurse_id import TimedNurseId
 from src.simulation.people.nurse import Nurse
 from src.simulation.graph import Graph
 from src.simulation.people.patient import Patient

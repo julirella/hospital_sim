@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, PropertyMock, patch
 
 from src import Request
-from src.simulation.event import PatientEvent, EventStatus, Plan
+from src.simulation.timed_object import PatientEvent, EventStatus, Plan
 from src.simulation.queue import NurseList
 
 

@@ -1,5 +1,5 @@
 from src import SimTime, Nurse, Graph
-from src.simulation.event import PatientEvent, EventStatus, TimedNurseId, ReturnToOffice, Event
+from src.simulation.timed_object import PatientEvent, EventStatus, TimedNurseId, ReturnToOffice, Event
 from src.simulation.queue.event_list import EventList, ListEvent
 
 #linkded list of nurse events

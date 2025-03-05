@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from src import EventList
-from src.simulation.event import PatientEvent
+from src.simulation.timed_object import PatientEvent
 
 
 
