@@ -2,9 +2,9 @@ from sortedcontainers import SortedList
 
 from src.simulation.event import Request
 from src.simulation.event.timed_nurse_id import TimedNurseId
-from src.simulation.nurse import Nurse
+from src.simulation.people.nurse import Nurse
 from src.simulation.graph import Graph
-from src.simulation.patient import Patient
+from src.simulation.people.patient import Patient
 from src.simulation.queue import TimeQueue, EventList, NurseList
 from src.simulation.request_assigner import RequestAssigner
 from src.simulation.sim_time import SimTime

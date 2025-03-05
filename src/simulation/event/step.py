@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 from . import TimedOccurrence
-from src.simulation.nurse import Nurse
+from src.simulation.people.nurse import Nurse
 
 
 class Step(TimedOccurrence):

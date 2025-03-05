@@ -1,7 +1,7 @@
 import math
 
 from .step import Step
-from src.simulation.nurse import Nurse
+from src.simulation.people.nurse import Nurse
 from src.simulation.node import Node
 from src.simulation.node.temp_node import TempNode
 

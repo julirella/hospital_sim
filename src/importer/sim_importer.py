@@ -1,8 +1,8 @@
 
 from src import Graph, EventList, NurseList, RequestAssigner
 from src.simulation.event import Request, Plan
-from src.simulation.nurse import Nurse
-from src.simulation.patient import Patient
+from src.simulation.people.nurse import Nurse
+from src.simulation.people.patient import Patient
 from src.simulation.simulator import Simulator
 from .importer import Importer
 from src.simulation.request_assigner import BasicAssigner

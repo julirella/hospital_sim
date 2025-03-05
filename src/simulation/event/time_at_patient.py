@@ -1,5 +1,5 @@
 from src.simulation.event import Step
-from src.simulation.nurse import Nurse
+from src.simulation.people.nurse import Nurse
 
 
 class TimeAtPatient(Step):

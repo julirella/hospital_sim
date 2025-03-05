@@ -1,6 +1,6 @@
 from . import PatientEvent
-from src.simulation.patient import Patient
-from src.simulation.nurse import Nurse
+from src.simulation.people.patient import Patient
+from src.simulation.people.nurse import Nurse
 from src import Graph, SimTime
 
 
