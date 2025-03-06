@@ -26,12 +26,13 @@ class TestSimulator(unittest.TestCase):
     def export_logs(self, sim: Simulator):
         log_exporter = LogExporter(sim, self.test_nurse_output, self.test_event_output)
         log_exporter.export_data()
-        self.df = pd.read_csv("output/testNurseLog.csv")
+        self.nurse_df = pd.read_csv("output/testNurseLog.csv")
+        self.event_df = pd.read_csv("output/testEventLog.csv")
 
     def check_conditions(self, conditions) -> bool:
         result = True
         for condition in conditions:
-            result &= (self.df[condition[0]] == condition[1])
+            result &= (self.nurse_df[condition[0]] == condition[1])
 
         return result.any()
 
@@ -78,7 +79,7 @@ class TestSimulator(unittest.TestCase):
         self.assertTrue(self.check_conditions(conditions))
 
         #only nurse 0 did something
-        active_nurses = self.df['nurse'].unique()
+        active_nurses = self.nurse_df['nurse'].unique()
         self.assertEqual(1, len(active_nurses))
         self.assertEqual(0, active_nurses[0])
 
@@ -118,8 +119,20 @@ class TestSimulator(unittest.TestCase):
     #     sim = self.run_sim(event_path=event_path, graph_path=graph_path, people_path=people_path)
     #     self.export_logs(sim=sim)
     #
-    # def test_requests_dont_reorder_plans(self):
-    #     ...
+    def test_sim_basic_event_ordering(self):
+        # events should be run in correct order, requests should not reorder plans
+        graph_path = "input/layouts/toScaleLayout.json"
+        people_path = "input/people/manyPeople.json"
+        event_path = "input/events/reqReorder.json"
+
+        sim = self.run_sim(event_path=event_path, graph_path=graph_path, people_path=people_path)
+        self.export_logs(sim=sim)
+
+        df2 = self.event_df[self.event_df.action == "actual start"]
+        df3 = df2.sort_values(by=['time'])
+        res_event_order = df3.event.to_list()
+
+        self.assertEqual([3,1,2,4,0,5], res_event_order)
 
 
 if __name__ == '__main__':
