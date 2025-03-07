@@ -1,14 +1,17 @@
-from src.simulation.timed_object import PatientEvent, Event
+from src.simulation.timed_object import Event
+from typing import TypeVar, Generic
 
+
+E = TypeVar("E", bound=Event)
 
 class ListEvent:
-    def __init__(self, event: Event, next_event):
+    def __init__(self, event: E, next_event):
         self.event = event
         self.next: ListEvent | None = next_event
 
 #linked list of events
-class EventList:
-    def __init__(self, events: list[PatientEvent]):
+class EventList(Generic[E]):
+    def __init__(self, events: list[E]):
         #build linked list
         events.sort(key=lambda x: x.time)
         prev = None
@@ -19,13 +22,13 @@ class EventList:
     def empty(self) -> bool:
         return self._front is None
 
-    def front(self) -> Event | None:
+    def front(self) -> E | None:
         if self._front is None:
             return None
         else:
             return self._front.event
 
-    def pop_front(self) -> Event | None:
+    def pop_front(self) -> E | None:
         event = self.front()
         if event is not None:
             self._front = self._front.next

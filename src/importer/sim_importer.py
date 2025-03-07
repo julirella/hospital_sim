@@ -35,7 +35,7 @@ class SimImporter(Importer):
 
         return nurses, patients
 
-    def import_events(self, nurses: list[Nurse], patients: list[Patient], graph: Graph, sim_time: SimTime) -> tuple[EventList, list[NurseList]]:
+    def import_events(self, nurses: list[Nurse], patients: list[Patient], graph: Graph, sim_time: SimTime) -> tuple[EventList[Request], list[NurseList]]:
         events_json = self.load_json(self.event_file_name)
 
         request_assigner = events_json["request_assigner"]

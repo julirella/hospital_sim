@@ -11,7 +11,7 @@ from src.simulation.sim_time import SimTime
 
 
 class Simulator:
-    def __init__(self, graph: Graph, nurses: list[Nurse], patients: list[Patient], request_queue: EventList,
+    def __init__(self, graph: Graph, nurses: list[Nurse], patients: list[Patient], request_queue: EventList[Request],
                  nurse_queues: list[NurseList], sim_time: SimTime, request_assigner: RequestAssigner) -> None:
         self.graph = graph
         self.nurses = nurses

@@ -1,10 +1,10 @@
 from src import SimTime, Nurse, Graph
-from src.simulation.timed_object import PatientEvent, EventStatus, TimedNurseId, ReturnToOffice, Event
+from src.simulation.timed_object import EventStatus, TimedNurseId, ReturnToOffice, Event
 from src.simulation.queue.event_list import EventList, ListEvent
 
 #linkded list of nurse events
-class NurseList(EventList):
-    def __init__(self, events: list[PatientEvent], sim_time: SimTime, nurse: Nurse, max_graph_dst: float, graph: Graph):
+class NurseList(EventList[Event]):
+    def __init__(self, events: list[Event], sim_time: SimTime, nurse: Nurse, max_graph_dst: float, graph: Graph):
         super().__init__(events)
         self._sim_time: SimTime = sim_time
         self._graph = graph
