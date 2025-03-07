@@ -9,6 +9,7 @@ class Step(TimedObject):
         super().__init__(time)
         self._nurse = nurse
 
+    @abstractmethod
     def run(self):
         pass
 
