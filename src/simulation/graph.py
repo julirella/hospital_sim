@@ -9,7 +9,6 @@ class Graph:
         self._nodes = nodes
         self._nurse_office = nurse_office
         self._patient_rooms = patient_rooms
-        self._edges: list[list[tuple[int, float]]] = [[] for _ in range(len(nodes))] #prepare empty lists
         self._max_distance: float | None = None
 
     @property
@@ -31,8 +30,8 @@ class Graph:
         weight = self.__edge_weight__(src_node_id, dst_node_id)
 
         #TODO: maybe check for duplicate edges
-        self._edges[src_node_id].append((dst_node_id, weight))
-        self._edges[dst_node_id].append((src_node_id, weight))
+        self._nodes[src_node_id].add_neighbour(dst_node_id, weight)
+        self._nodes[dst_node_id].add_neighbour(src_node_id, weight)
 
     def __retrace_path__(self, start_id: int, end_id: int, prev: list[tuple[int, float]]) -> list[tuple[Node, float]]:
         path: list[tuple[Node, float]] = []
@@ -70,10 +69,10 @@ class Graph:
 
         while len(open_nodes) > 0:
             current_id: int = open_dist.popitem(0)[0]
-            if current_id == -1: #TODO: maybe have all nodes know their neighbours instead of this weird hotfix
-                neighbours = start.neighbours()
+            if current_id == -1: # -1 means it's a tmp node, which can only be start
+                neighbours = start.neighbours
             else:
-                neighbours = self._edges[current_id]
+                neighbours = self._nodes[current_id].neighbours
             for neighbour_id, weight in neighbours:
                 new_dist = dist[current_id] + weight
                 if dist[neighbour_id] > new_dist: #what if neighbour is predecessor of current

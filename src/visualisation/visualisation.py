@@ -14,7 +14,7 @@ class Visualiser:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.screen.fill('white')
         self.clock = pygame.time.Clock()
-        self.map_surf = pygame.surface.Surface((MAP_SURF_WIDTH, MAP_SURF_HEIGHT))
+        # self.map_surf = pygame.surface.Surface((MAP_SURF_WIDTH, MAP_SURF_HEIGHT))
         self.text_surf = pygame.surface.Surface((TEXT_SURF_WIDTH, TEXT_SURF_HEIGHT))
         pygame.font.init()
         self._font = pygame.font.Font(None, 50)
