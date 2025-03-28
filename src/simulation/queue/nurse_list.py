@@ -13,10 +13,19 @@ class NurseList(EventList[Event]):
         self._max_walk_time = max_graph_dst / nurse.speed #longest walk time for nurse between any two nodes in graph
         self._timed_nurse_id: TimedNurseId
         self._event_logs = []
+        self._in_global_queue: bool = False
 
     @property
     def event_logs(self):
         return self._event_logs
+
+    @property
+    def in_global_queue(self) -> bool:
+        return self._in_global_queue
+
+    @in_global_queue.setter
+    def in_global_queue(self, value: bool):
+        self._in_global_queue = value
 
     def __max_event_duration__(self, event: Event) -> float:
         return event.duration + self._max_walk_time

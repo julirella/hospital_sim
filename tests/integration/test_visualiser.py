@@ -59,7 +59,8 @@ class TestVisualiser(unittest.TestCase):
     def test_vis_exp(self):
         graph_path = "input/layouts/expLayout.json"
         people_path = "input/people/expPeople1.json"
-        event_path = "input/events/expEvents1.json"
+        # event_path = "input/events/expEvents1.json"
+        event_path = "input/events/genTestEvents.json"
 
         self.run_test(graph_path=graph_path, people_path=people_path, event_path=event_path, sim=True)
 
