@@ -27,7 +27,7 @@ class Movement(Step):
         remaining_y = remaining_time_ratio * total_y
         current_x = self._end.x - remaining_x
         current_y = self._end.y - remaining_y
-        remaining_dst = remaining_time_ratio / total_dst
+        remaining_dst = remaining_time_ratio * total_dst
         covered_dst = total_dst - remaining_dst
 
         current_pos = TempNode(current_x, current_y, (self._start.node_id, covered_dst),
