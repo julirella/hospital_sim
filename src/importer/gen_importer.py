@@ -11,7 +11,7 @@ class GenImporter(Importer):
         nurse_cnt = entities_json["nurses"]
         patient_lst = entities_json["patients"]
         self.nurse_patients = [[] for _ in range(nurse_cnt)] #list containing a list of patient ids for each nurse
-
+        self.patient_cnt = len(patient_lst)
         for patient_id, patient in enumerate(patient_lst):
             nurse_id: int = patient["nurse_id"]
             self.nurse_patients[nurse_id].append(patient_id)
