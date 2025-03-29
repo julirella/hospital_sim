@@ -78,8 +78,12 @@ class DataProcessor:
         resting_time = end_time - self.nurse_time_at_all_patients(nurse_id) - self.nurse_time_walked(nurse_id)
         return resting_time
     
-    def patient_time_waiting(self, patient_id):
-        ...
-
-
-        
+    def patient_time_waiting(self, patient_id, request_level=None):
+        if request_level is None:
+            request_events = self.event_df[(self.event_df['patient'] == patient_id) & (self.event_df['type'] == 'request')]
+        total_time = 0
+        for _, event in request_events.groupby('event'):
+            planned_start = event[event['action'] == 'planned start']['time']
+            end_time = event[event['action'] == 'end']['time']
+            total_time += end_time.values[0] - planned_start.values[0]
+        return total_time
