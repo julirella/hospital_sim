@@ -370,27 +370,27 @@
             "duration": 60
         },
         {
-            "time": 0,
+            "time": 308.0,
             "patient": 4,
-            "nurse": 1,
+            "nurse": 0,
             "duration": 60
         },
         {
-            "time": 77.0,
+            "time": 385.0,
             "patient": 5,
-            "nurse": 1,
+            "nurse": 0,
             "duration": 60
         },
         {
-            "time": 154.0,
+            "time": 462.0,
             "patient": 6,
-            "nurse": 1,
+            "nurse": 0,
             "duration": 60
         },
         {
-            "time": 231.0,
+            "time": 539.0,
             "patient": 7,
-            "nurse": 1,
+            "nurse": 0,
             "duration": 60
         },
         {
@@ -418,27 +418,27 @@
             "duration": 60
         },
         {
-            "time": 1800,
+            "time": 2108.0,
             "patient": 4,
-            "nurse": 1,
+            "nurse": 0,
             "duration": 60
         },
         {
-            "time": 1877.0,
+            "time": 2185.0,
             "patient": 5,
-            "nurse": 1,
+            "nurse": 0,
             "duration": 60
         },
         {
-            "time": 1954.0,
+            "time": 2262.0,
             "patient": 6,
-            "nurse": 1,
+            "nurse": 0,
             "duration": 60
         },
         {
-            "time": 2031.0,
+            "time": 2339.0,
             "patient": 7,
-            "nurse": 1,
+            "nurse": 0,
             "duration": 60
         }
     ]

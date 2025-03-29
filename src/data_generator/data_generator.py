@@ -5,7 +5,7 @@ from src.importer import GenImporter
 
 
 class DataGenerator:
-    def __init__(self, rnd: int,layout_file: str, people_file: str, out_file: str, plan_starts: list[int],
+    def __init__(self, rnd: int,layout_file: str, people_file: str, out_file: str, plan_starts: list[int] = [0, 1800],
                  request_assigner: str = 'basic', med_duration: int = 60, interval_len: int = 3600,
                  min_requests = 3, max_requests = 10, min_req_len = 30, max_req_len = 180):
         self.gen_importer = GenImporter(graph_file_name = layout_file, entity_file_name = people_file)

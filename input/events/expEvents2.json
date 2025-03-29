@@ -1,5 +1,5 @@
 {
-    "request_assigner": "basic",
+    "request_assigner": "other",
     "requests": [
         {
             "time": 2867.554752696838,
