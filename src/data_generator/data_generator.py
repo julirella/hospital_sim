@@ -6,7 +6,7 @@ from src.importer import GenImporter
 
 class DataGenerator:
     def __init__(self, rnd: int,layout_file: str, people_file: str, out_file: str, plan_starts: list[int] = [0, 1800],
-                 request_assigner: str = 'basic', med_duration: int = 60, interval_len: int = 3600,
+                 request_assigner: str = 'basic', include_plans: bool = True , med_duration: int = 60, interval_len: int = 3600,
                  min_requests = 3, max_requests = 10, min_req_len = 30, max_req_len = 180):
         self.gen_importer = GenImporter(graph_file_name = layout_file, entity_file_name = people_file)
         self.gen_importer.import_data()
@@ -14,6 +14,7 @@ class DataGenerator:
         self.plans = []
         self.requests = []
         self.request_assigner = request_assigner
+        self.include_plans = include_plans
         self.out_file = out_file
         self.plan_starts = plan_starts
         self.med_duration = med_duration
@@ -31,7 +32,10 @@ class DataGenerator:
         for nurse_id, patient_lst in enumerate(self.nurse_patients):
             time = start_time
             for patient_id in patient_lst:
-                plan = {"time": time, "patient": patient_id, "nurse": nurse_id, "duration": self.med_duration}
+                if self.include_plans:
+                    plan = {"time": time, "patient": patient_id, "nurse": nurse_id, "duration": self.med_duration}
+                else:
+                    plan = {"time": time, "patient": patient_id, "level": 1, "duration": self.med_duration}
                 time += self.med_duration + plan_gap
                 plans.append(plan)
 
@@ -39,7 +43,10 @@ class DataGenerator:
 
     def med_plans(self):
         for time in self.plan_starts:
-            self.plans += self.med_plan_group(time)
+            if self.include_plans:
+                self.plans += self.med_plan_group(time)
+            else:
+                self.requests += self.med_plan_group(time)
 
     def generate_requests(self):
         patient_cnt = self.gen_importer.patient_cnt
