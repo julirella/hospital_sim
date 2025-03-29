@@ -81,6 +81,8 @@ class DataProcessor:
     def patient_time_waiting(self, patient_id, request_level=None):
         if request_level is None:
             request_events = self.event_df[(self.event_df['patient'] == patient_id) & (self.event_df['type'] == 'request')]
+        else: 
+            request_events = self.event_df[(self.event_df['patient'] == patient_id) & (self.event_df['type'] == 'request') & (self.event_df['request_level'] == request_level)]
         total_time = 0
         for _, event in request_events.groupby('event'):
             planned_start = event[event['action'] == 'planned start']['time']
