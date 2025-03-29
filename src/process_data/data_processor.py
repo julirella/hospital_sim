@@ -1,6 +1,7 @@
 import pandas as pd
 from math import sqrt
 from itertools import chain
+import numpy as np
 
 from src.importer.gen_importer import GenImporter
 
@@ -78,14 +79,21 @@ class DataProcessor:
         resting_time = end_time - self.nurse_time_at_all_patients(nurse_id) - self.nurse_time_walked(nurse_id)
         return resting_time
     
-    def patient_time_waiting(self, patient_id, request_level=None):
+    def patient_time_waiting_per_event(self, patient_id, request_level=None) -> list[float]:
         if request_level is None:
             request_events = self.event_df[(self.event_df['patient'] == patient_id) & (self.event_df['type'] == 'request')]
         else: 
             request_events = self.event_df[(self.event_df['patient'] == patient_id) & (self.event_df['type'] == 'request') & (self.event_df['request_level'] == request_level)]
-        total_time = 0
+        event_times = []
         for _, event in request_events.groupby('event'):
             planned_start = event[event['action'] == 'planned start']['time']
             end_time = event[event['action'] == 'end']['time']
-            total_time += end_time.values[0] - planned_start.values[0]
-        return total_time
+            wait_time = end_time.values[0] - planned_start.values[0]
+            event_times.append(wait_time)
+        return event_times
+    
+    def patient_total_time_waiting(self, patient_id, request_level=None) -> float:
+        return sum(self.patient_time_waiting_per_event(patient_id, request_level))
+    
+    def patient_avg_time_waiting(self, patient_id, request_level=None):
+        return np.average(self.patient_time_waiting_per_event(patient_id, request_level))
