@@ -23,6 +23,10 @@ class NurseList(EventList[Event]):
     def in_global_queue(self) -> bool:
         return self._in_global_queue
 
+    @property
+    def nurse(self) -> Nurse:
+        return self._nurse
+
     @in_global_queue.setter
     def in_global_queue(self, value: bool):
         self._in_global_queue = value

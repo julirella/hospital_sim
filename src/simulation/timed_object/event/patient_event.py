@@ -45,5 +45,8 @@ class PatientEvent(Event):
         self._steps = [] #empty steps so that they can be recalculated when resuming
 
     def __log_action__(self, action: str, time: float) -> None:
+        action_dict = {"time": time, "event": self._event_id, "action": action,
+                          "patient": self._patient.patient_id, "type": self.type}
+        print(action_dict)
         self._log.append({"time": time, "event": self._event_id, "action": action,
                           "patient": self._patient.patient_id, "type": self.type})

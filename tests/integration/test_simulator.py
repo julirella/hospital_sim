@@ -4,6 +4,7 @@ import pandas as pd
 from src import Simulator
 from src.exporter.log_exporter import LogExporter
 from src.importer import SimImporter
+from src.main import App
 
 
 class TestSimulator(unittest.TestCase):
@@ -133,6 +134,26 @@ class TestSimulator(unittest.TestCase):
         res_event_order = df3.event.to_list()
 
         self.assertEqual([3,1,2,4,0,5], res_event_order)
+
+
+    def test_sim_other_assigner(self):
+        #TODO: something weird is going on with displayed request numbers
+        graph_path = "input/layouts/toScaleLayout.json"
+        people_path = "input/people/manyPeople.json"
+        event_path = "input/events/testEventsRequestsOther.json"
+        app = App(graph_path=graph_path, people_path=people_path, event_path=event_path,
+                  nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
+
+        app.run_simulation(visualise=True)
+
+    def test_sim_other_assigner_exp2(self):
+        graph_path = "input/layouts/expLayout.json"
+        people_path = "input/people/expPeople1.json"
+        event_path = "input/events/expEvents2.json"
+        app = App(graph_path=graph_path, people_path=people_path, event_path=event_path,
+                  nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
+
+        app.run_simulation()
 
 
 if __name__ == '__main__':
