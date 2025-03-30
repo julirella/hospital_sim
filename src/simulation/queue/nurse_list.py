@@ -56,7 +56,11 @@ class NurseList(EventList[Event]):
 
     def __replace_return_to_office__(self, event: Event):
         #stops current return to office event, removes it, logs it and adds event to start
-        self._front.event.pause()
+        current_event = self._front.event
+        if current_event.type != 'return_to_office':
+            raise Exception("can't replace event that isn't return to office")
+        if current_event.status == EventStatus.ACTIVE:
+            current_event.pause()
         finished_log = self.pop_front().log
         self._event_logs += finished_log
         self.__insert_after__(event)
