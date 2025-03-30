@@ -91,7 +91,8 @@ class NurseList(EventList[Event]):
         next_event: ListEvent = self._front
         done = False
 
-        if next_event.event.type == 'return_to_office' and next_event.next.event.time - prev_end_time > max_event_duration:
+        if (next_event.event.type == 'return_to_office' and
+                (next_event.next is None or next_event.next.event.time - prev_end_time > max_event_duration)):
             #there is enough time before the next non return to office event, but there is a return to office in the way
             # TODO: this path is not tested
             done = True

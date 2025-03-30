@@ -155,6 +155,15 @@ class TestSimulator(unittest.TestCase):
 
         app.run_simulation()
 
+    def test_sim_exp5(self):
+        graph_path = "input/layouts/expLayout.json"
+        people_path = "input/people/expPeople1.json"
+        event_path = "input/events/expEvents5.json"
+        app = App(graph_path=graph_path, people_path=people_path, event_path=event_path,
+                  nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
+
+        app.run_simulation()
+
 
 if __name__ == '__main__':
     unittest.main()
