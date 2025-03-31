@@ -1,0 +1,21 @@
+{
+    "nurses": 1,
+    "patients": [
+      {
+        "nurse_id": 0,
+        "room": 0
+      },
+      {
+        "nurse_id": 0,
+        "room": 0
+      },
+      {
+        "nurse_id": 0,
+        "room": 1
+      },
+      {
+        "nurse_id": 0,
+        "room": 1
+      }
+    ]
+  }
