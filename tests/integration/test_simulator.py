@@ -165,17 +165,18 @@ class TestSimulator(unittest.TestCase):
 
         app.run_simulation()
 
-    def test_other_assigner_one_nurse(self):
+    def test_sim_assigner_comparison_one_nurse(self):
+        #one nurse should spend the same amount of time at patients with both assigners
         graph_path = "input/layouts/toScaleLayout.json"
         people_path = "input/people/oneNurse.json"
         basic_event_path = "input/events/basic1nurse.json"
         other_event_path = "input/events/other1nurse.json"
 
-        # app = App(graph_path=graph_path, people_path=people_path, event_path=basic_event_path,
-        #           nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
-        # app.run_simulation()
-        # dp = DataProcessor(nurse_log_path=self.test_nurse_output, event_log_path=self.test_event_output, people_path=people_path)
-        # basic_time_at_patients = dp.nurse_time_at_all_patients(0)
+        app = App(graph_path=graph_path, people_path=people_path, event_path=basic_event_path,
+                  nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
+        app.run_simulation()
+        dp = DataProcessor(nurse_log_path=self.test_nurse_output, event_log_path=self.test_event_output, people_path=people_path)
+        basic_time_at_patients = dp.nurse_time_at_all_patients(0)
 
         app = App(graph_path=graph_path, people_path=people_path, event_path=other_event_path,
                   nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
