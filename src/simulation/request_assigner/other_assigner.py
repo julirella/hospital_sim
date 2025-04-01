@@ -24,7 +24,7 @@ class OtherAssigner(RequestAssigner):
         elif request_level == 2:
             if patients_nurse_queue.has_time_now(request):
                 patients_nurse_queue.add_to_start(request)
-                return patients_nurse.nurse_id
+                chosen_nurse_id = patients_nurse.nurse_id
             else:
                 for nurse_id, nurse_queue in enumerate(self.nurse_queues):
                     if nurse_queue.has_time_now(request):
