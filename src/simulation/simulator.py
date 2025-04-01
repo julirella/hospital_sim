@@ -61,13 +61,15 @@ class Simulator:
         nurse_queue = self.nurse_queues[next_step_nurse_id]
         finished = nurse_queue.run_next_step()
         if finished and len(self.waiting_requests) > 0: #assuming request will definitely be assigned
-            self.assign_request(self.waiting_requests.pop(0))
+            success = self.assign_request(self.waiting_requests.pop(0))
+            if not success:
+                self.add_to_global_queue(next_step_nurse_id)
         # elif not nurse_queue.empty():
         #     self.global_queue.add(nurse_queue.create_timed_nurse_id())
         else:
             self.add_to_global_queue(next_step_nurse_id)
 
-    def assign_request(self, request: Request):
+    def assign_request(self, request: Request) -> bool:
         #choose nurse
         chosen_nurse_id = self.request_assigner.assign_request(request)
 
@@ -80,9 +82,11 @@ class Simulator:
             #put new next nurse step into global queue
             # self.global_queue.add(nurse_queue.create_timed_nurse_id())
             self.add_to_global_queue(chosen_nurse_id)
+            return True
         else:
             #put in waiting requests
             self.waiting_requests.add(request)
+            return False
 
     def assign_next_request(self):
         self.sim_time.sim_time = self.request_queue.next_time()
