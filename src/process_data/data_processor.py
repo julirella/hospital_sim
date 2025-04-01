@@ -43,13 +43,30 @@ class DataProcessor:
         for row in move_rows:
             total_time += self.row_diff(row, self.nurse_df, "time")
         return total_time
-    
+
     def nurse_time_at_patient(self, nurse_id, patient_id):
         #assuming the df is sorted by nurse_id first and time second
-        time_rows = self.nurse_df[(self.nurse_df['nurse'] == nurse_id) & (self.nurse_df['patient'] == patient_id) & (self.nurse_df['action'] == "time at patient")].index.tolist()
+        events = self.nurse_df[(self.nurse_df['nurse'] == nurse_id) & (self.nurse_df['patient'] == patient_id) & (self.nurse_df['action'] == "time at patient")].event.tolist()
         total_time = 0
-        for row in time_rows:
-            total_time += self.row_diff(row, self.nurse_df, "time")
+        for event in events:
+            event_df = self.nurse_df[self.nurse_df['event'] == event].reset_index(drop=True)
+            time_at_patient_idx = event_df[event_df['action'] == 'time at patient'].index[0]
+            int_end_time = event_df.loc[time_at_patient_idx].time  # end of current calculated interval
+
+            #go back through all pauses
+            for idx in range(time_at_patient_idx, -1, -1):
+                line = event_df.loc[idx]
+                action = line["action"]
+                if action == 'move to' or idx == 0: #so start of first interval. If idx is 0, the nurse never had to move
+                    total_time += int_end_time - line["time"]
+                    break
+                if action == 'assign event':
+                    total_time += int_end_time - line["time"]
+                elif action == 'unassign event':
+                    int_end_time = line["time"]
+                print(idx, action, total_time)
+
+            # total_time += self.row_diff(row, self.nurse_df, "time")
         return total_time
     
     def nurse_time_at_patients(self, nurse_id, patient_ids):
