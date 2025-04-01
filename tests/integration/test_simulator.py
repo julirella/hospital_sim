@@ -209,5 +209,27 @@ class TestSimulator(unittest.TestCase):
 
         self.assertEqual(basic_time_at_patients, other_time_at_patients)
 
+    def test_sim_assigner_comparison_exp3_and_4(self):
+        # one nurse should spend the same amount of time at patients with both assigners
+        graph_path = "input/layouts/expLayout.json"
+        people_path = "input/people/expOneNurse.json"
+        basic_event_path = "input/events/expEvents3.json"
+        other_event_path = "input/events/expEvents4.json"
+
+        app = App(graph_path=graph_path, people_path=people_path, event_path=basic_event_path,
+                  nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
+        app.run_simulation()
+        dp = DataProcessor(nurse_log_path=self.test_nurse_output, event_log_path=self.test_event_output,
+                           people_path=people_path)
+        basic_time_at_patients = dp.nurse_time_at_all_patients(0)
+
+        app = App(graph_path=graph_path, people_path=people_path, event_path=other_event_path,
+                  nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
+        app.run_simulation()
+        dp = DataProcessor(nurse_log_path=self.test_nurse_output, event_log_path=self.test_event_output,
+                           people_path=people_path)
+        other_time_at_patients = dp.nurse_time_at_all_patients(0)
+
+        self.assertEqual(basic_time_at_patients, other_time_at_patients)
 if __name__ == '__main__':
     unittest.main()
