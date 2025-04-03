@@ -2,6 +2,7 @@ import pandas as pd
 from math import sqrt
 from itertools import chain
 import numpy as np
+import csv
 
 from src.importer.gen_importer import GenImporter
 
@@ -44,11 +45,13 @@ class DataProcessor:
             total_time += self.row_diff(row, self.nurse_df, "time")
         return total_time
 
-    def nurse_time_at_patient(self, nurse_id, patient_id):
+    def nurse_time_at_patient(self, nurse_id, patient_id, file=None):
+
         #assuming the df is sorted by nurse_id first and time second
         events = self.nurse_df[(self.nurse_df['nurse'] == nurse_id) & (self.nurse_df['patient'] == patient_id) & (self.nurse_df['action'] == "time at patient")].event.tolist()
         total_time = 0
         for event in events:
+            total_event_time = 0
             event_df = self.nurse_df[self.nurse_df['event'] == event].reset_index(drop=True)
             time_at_patient_idx = event_df[event_df['action'] == 'time at patient'].index[0]
             int_end_time = event_df.loc[time_at_patient_idx].time  # end of current calculated interval
@@ -58,21 +61,33 @@ class DataProcessor:
                 line = event_df.loc[idx]
                 action = line["action"]
                 if action == 'move to' or idx == 0: #so start of first interval. If idx is 0, the nurse never had to move
-                    total_time += int_end_time - line["time"]
+                    total_event_time += int_end_time - line["time"]
                     break
                 if action == 'assign event':
-                    total_time += int_end_time - line["time"]
+                    total_event_time += int_end_time - line["time"]
                 elif action == 'unassign event':
                     int_end_time = line["time"]
-                print(idx, action, total_time)
 
+            if event > 72:
+                event_write = event - 74
+            else:
+                event_write = event
+            file.writerow({'event': event_write, 'time': total_event_time})
+
+            total_time += total_event_time
             # total_time += self.row_diff(row, self.nurse_df, "time")
+
+        # file1.close()
+        # file2.close()
+
         return total_time
+
+
     
-    def nurse_time_at_patients(self, nurse_id, patient_ids):
+    def nurse_time_at_patients(self, nurse_id, patient_ids, file=None):
         total_time = 0
         for patient_id in patient_ids:
-            total_time += self.nurse_time_at_patient(nurse_id, patient_id)
+            total_time += self.nurse_time_at_patient(nurse_id, patient_id, file)
         return total_time
     
     def nurse_time_at_own_patients(self, nurse_id):
@@ -87,9 +102,9 @@ class DataProcessor:
         
         return self.nurse_time_at_patients(nurse_id, other_patients)
     
-    def nurse_time_at_all_patients(self, nurse_id):
+    def nurse_time_at_all_patients(self, nurse_id, file=None):
         flattened_patients_lst =  list(chain.from_iterable(self.nurse_patients))
-        return self.nurse_time_at_patients(nurse_id, flattened_patients_lst)
+        return self.nurse_time_at_patients(nurse_id, flattened_patients_lst, file)
     
     def nurse_time_resting(self, nurse_id):
         end_time = self.nurse_df["time"].max() #assuming it started at time 0

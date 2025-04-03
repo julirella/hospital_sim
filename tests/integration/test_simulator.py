@@ -1,5 +1,6 @@
 import unittest
 import pandas as pd
+import csv
 
 from src import Simulator
 from src.exporter.log_exporter import LogExporter
@@ -216,19 +217,29 @@ class TestSimulator(unittest.TestCase):
         basic_event_path = "input/events/expEvents3.json"
         other_event_path = "input/events/expEvents4.json"
 
+        fieldnames = ['event', 'time']
+        file1 = open('tmp/basic.csv', 'w', newline='')
+        file2 = open('tmp/other.csv', 'w', newline='')
+
+        writer1 = csv.DictWriter(file1, fieldnames=fieldnames)
+        writer1.writeheader()
+        # file2 = open('tmp/other.csv', 'w', newline='')
+        writer2 = csv.DictWriter(file2, fieldnames=fieldnames)
+        writer2.writeheader()
+
         app = App(graph_path=graph_path, people_path=people_path, event_path=basic_event_path,
                   nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
         app.run_simulation()
         dp = DataProcessor(nurse_log_path=self.test_nurse_output, event_log_path=self.test_event_output,
                            people_path=people_path)
-        basic_time_at_patients = dp.nurse_time_at_all_patients(0)
+        basic_time_at_patients = dp.nurse_time_at_all_patients(0, writer1)
 
         app = App(graph_path=graph_path, people_path=people_path, event_path=other_event_path,
                   nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
         app.run_simulation()
         dp = DataProcessor(nurse_log_path=self.test_nurse_output, event_log_path=self.test_event_output,
                            people_path=people_path)
-        other_time_at_patients = dp.nurse_time_at_all_patients(0)
+        other_time_at_patients = dp.nurse_time_at_all_patients(0, writer2)
 
         self.assertEqual(basic_time_at_patients, other_time_at_patients)
 if __name__ == '__main__':
