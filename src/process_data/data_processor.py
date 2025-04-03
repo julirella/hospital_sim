@@ -55,30 +55,32 @@ class DataProcessor:
             event_df = self.nurse_df[self.nurse_df['event'] == event].reset_index(drop=True)
             time_at_patient_idx = event_df[event_df['action'] == 'time at patient'].index[0]
             int_end_time = event_df.loc[time_at_patient_idx].time  # end of current calculated interval
+            int_calculated = False
 
             #go back through all pauses
-            for idx in range(time_at_patient_idx, -1, -1):
+            for idx in range(time_at_patient_idx - 1, -1, -1):
                 line = event_df.loc[idx]
                 action = line["action"]
-                if action == 'move to' or idx == 0: #so start of first interval. If idx is 0, the nurse never had to move
-                    total_event_time += int_end_time - line["time"]
+                if idx == 0: #so start of first interval. If idx is 0, the nurse never had to move
+                    if not int_calculated:
+                        total_event_time += int_end_time - line["time"]
                     break
-                if action == 'assign event':
-                    total_event_time += int_end_time - line["time"]
-                elif action == 'unassign event':
+                if action == 'unassign event':
                     int_end_time = line["time"]
+                    int_calculated = False
+                elif not int_calculated:
+                    total_event_time += int_end_time - line["time"]
+                    int_calculated = True
 
-            if event > 72:
-                event_write = event - 74
-            else:
-                event_write = event
-            file.writerow({'event': event_write, 'time': total_event_time})
+            if file is not None: #write to debugging file
+                if event > 72:
+                    event_write = event - 74
+                else:
+                    event_write = event
+                file.writerow({'event': event_write, 'time': total_event_time})
 
             total_time += total_event_time
             # total_time += self.row_diff(row, self.nurse_df, "time")
-
-        # file1.close()
-        # file2.close()
 
         return total_time
 
