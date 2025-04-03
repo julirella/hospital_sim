@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-import csv
+import json
 
 from src import Simulator
 from src.exporter.log_exporter import LogExporter
@@ -243,6 +243,40 @@ class TestSimulator(unittest.TestCase):
         other_time_at_patients = dp.nurse_time_at_all_patients(0)
 
         # self.assertEqual(basic_time_at_patients, other_time_at_patients)
-        self.assertTrue(basic_time_at_patients - other_time_at_patients < 0.00001)
+        self.assertTrue(abs(basic_time_at_patients - other_time_at_patients) < 0.00001)
+
+    def total_event_duration(self, event_path):
+        event_file = open(event_path)
+        events_json = json.load(event_file)
+        event_file.close()
+
+        reqs = events_json['requests']
+        plans = events_json['plans']
+
+        total_duration = 0
+        for event in plans + reqs:
+            total_duration += event['duration']
+
+        return total_duration
+
+    def test_sim_time_at_patients_equals_event_duration(self):
+        graph_path = "input/layouts/expLayout.json"
+        people_path = "input/people/expPeople1.json"
+        event_path = "input/events/expEvents2.json"
+
+        app = App(graph_path=graph_path, people_path=people_path, event_path=event_path,
+                  nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
+        app.run_simulation()
+
+        dp = DataProcessor(nurse_log_path=self.test_nurse_output, event_log_path=self.test_event_output,
+                           people_path=people_path)
+
+        nurse0_time = dp.nurse_time_at_all_patients(0)
+        nurse1_time = dp.nurse_time_at_all_patients(1)
+
+        total_duration = self.total_event_duration(event_path)
+
+        self.assertTrue(abs(nurse0_time + nurse1_time - total_duration) < 0.00001)
+
 if __name__ == '__main__':
     unittest.main()
