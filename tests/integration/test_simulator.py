@@ -259,11 +259,7 @@ class TestSimulator(unittest.TestCase):
 
         return total_duration
 
-    def test_sim_time_at_patients_equals_event_duration(self):
-        graph_path = "input/layouts/expLayout.json"
-        people_path = "input/people/expPeople1.json"
-        event_path = "input/events/expEvents2.json"
-
+    def compare_total_event_durations(self, graph_path, people_path, event_path, nurse_cnt):
         app = App(graph_path=graph_path, people_path=people_path, event_path=event_path,
                   nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
         app.run_simulation()
@@ -271,12 +267,28 @@ class TestSimulator(unittest.TestCase):
         dp = DataProcessor(nurse_log_path=self.test_nurse_output, event_log_path=self.test_event_output,
                            people_path=people_path)
 
-        nurse0_time = dp.nurse_time_at_all_patients(0)
-        nurse1_time = dp.nurse_time_at_all_patients(1)
+        actual_total_duration = 0
+        for nurse_id in range(nurse_cnt):
+            actual_total_duration += dp.nurse_time_at_all_patients(nurse_id)
 
-        total_duration = self.total_event_duration(event_path)
+        expected_total_duration = self.total_event_duration(event_path)
 
-        self.assertTrue(abs(nurse0_time + nurse1_time - total_duration) < 0.00001)
+        self.assertTrue(abs(expected_total_duration - actual_total_duration) < 0.00001)
+
+    def test_sim_time_at_patients_equals_event_duration_basic(self):
+        graph_path = "input/layouts/expLayout.json"
+        people_path = "input/people/expPeople1.json"
+        event_path = "input/events/expEvents1.json"
+
+        self.compare_total_event_durations(graph_path, people_path, event_path, 2)
+
+    def test_sim_time_at_patients_equals_event_duration_other(self):
+        graph_path = "input/layouts/expLayout.json"
+        people_path = "input/people/expPeople1.json"
+        event_path = "input/events/expEvents2.json"
+
+        self.compare_total_event_durations(graph_path, people_path, event_path, 2)
+
 
 if __name__ == '__main__':
     unittest.main()
