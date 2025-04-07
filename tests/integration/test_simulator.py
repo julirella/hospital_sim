@@ -32,13 +32,21 @@ class TestSimulator(unittest.TestCase):
         self.nurse_df = pd.read_csv("output/testNurseLog.csv")
         self.event_df = pd.read_csv("output/testEventLog.csv")
 
-    def check_conditions(self, conditions) -> bool:
+    def check_nurse_conditions(self, conditions) -> bool:
         result = True
         for condition in conditions:
             result &= (self.nurse_df[condition[0]] == condition[1])
 
         return result.any()
 
+    def check_event_conditions(self, conditions) -> bool:
+        result = True
+        for condition in conditions:
+            result &= (self.event_df[condition[0]] == condition[1])
+
+        return result.any()
+
+    # ---------- BASIC ASSIGNER TESTS ----------
     def test_sim_plans_only(self):
         event_path = "input/events/testEvents2.json"
         self.run_sim(event_path=event_path)
@@ -69,17 +77,17 @@ class TestSimulator(unittest.TestCase):
         self.export_logs(sim=sim)
 
         conditions = (('x', 9), ('y', 17), ('time', 5), ('action', 'assign event'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
         conditions = (('x', 6), ('y', 3), ('time', 22), ('action', 'move to'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
         conditions = (('x', 3), ('y', 3), ('time', 45), ('action', 'time at patient'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
         conditions = (('x', 3), ('y', 3), ('time', 45), ('action', 'finish event'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
 
         #return to office
         conditions = (('x', 9), ('y', 17), ('time', 65), ('action', 'move to'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
 
         #only nurse 0 did something
         active_nurses = self.nurse_df['nurse'].unique()
@@ -97,22 +105,22 @@ class TestSimulator(unittest.TestCase):
         #nurses both do work that overlaps timewise and don't interfere with each other
         #nurse 0 has time to return to office, nurse 1 doesn't
         conditions = (('nurse', 0), ('x', 9), ('y', 17), ('time', 5), ('action', 'assign event'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
         conditions = (('nurse', 0), ('x', 9), ('y', 17), ('time', 90), ('action', 'assign event'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
         conditions = (('nurse', 1), ('x', 9), ('y', 17), ('time', 10), ('action', 'assign event'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
         conditions = (('nurse', 1), ('x', 3), ('y', 8), ('time', 70), ('action', 'assign event'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
 
         conditions = (('nurse', 0), ('x', 3), ('y', 3), ('time', 45), ('action', 'finish event'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
         conditions = (('nurse', 0), ('x', 3), ('y', 3), ('time', 130), ('action', 'finish event'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
         conditions = (('nurse', 1), ('x', 3), ('y', 8), ('time', 45), ('action', 'finish event'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
         conditions = (('nurse', 1), ('x', 3), ('y', 8), ('time', 90), ('action', 'finish event'))
-        self.assertTrue(self.check_conditions(conditions))
+        self.assertTrue(self.check_nurse_conditions(conditions))
 
     # def test_sim_basic_patients_nurse_always_chosen(self):
     #     graph_path = "input/layouts/toScaleLayout.json"
@@ -137,7 +145,60 @@ class TestSimulator(unittest.TestCase):
 
         self.assertEqual([3,1,2,4,0,5], res_event_order)
 
+    # ---------- OTHER ASSIGNER TESTS ----------
+    def test_sim_other_all_queues(self):
+        graph_path = "input/layouts/toScaleLayout.json"
+        people_path = "input/people/twoPatients.json"
+        event_path = "input/events/allQueues.json"
 
+        app = App(graph_path=graph_path, people_path=people_path, event_path=event_path,
+                  nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
+
+        app.run_simulation()
+        self.nurse_df = pd.read_csv("output/testNurseLog.csv")
+        self.event_df = pd.read_csv("output/testEventLog.csv")
+
+        # nurse 0 only does her three plans
+        conditions = (('nurse', 0), ('x', 9), ('y', 17), ('time', 0), ('action', 'assign event'), ('event', 2))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('nurse', 0), ('x', 3), ('y', 3), ('time', 35), ('action', 'finish event'), ('event', 2))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('nurse', 0), ('time', 50), ('action', 'assign event'), ('event', 3))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('nurse', 0), ('time', 100), ('action', 'assign event'), ('event', 4))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('nurse', 0), ('x', 3), ('y', 3), ('time', 120), ('action', 'finish event'), ('event', 4))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+
+        # nurse 1 should do two requests when they have time
+        conditions = (('nurse', 1), ('x', 9), ('y', 17), ('time', 0), ('action', 'assign event'), ('event', 5))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('nurse', 1), ('time', 40), ('action', 'assign event'), ('event', 0))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('nurse', 1), ('time', 60), ('action', 'assign event'), ('event', 1))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('nurse', 1), ('time', 100), ('action', 'assign event'), ('event', 6))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+
+        # plans should go at planned times
+        conditions = (('time', 0), ('event', 2), ('action', 'actual start'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 50), ('event', 3), ('action', 'actual start'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 100), ('event', 4), ('action', 'actual start'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 0), ('event', 5), ('action', 'actual start'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 100), ('event', 6), ('action', 'actual start'))
+        self.assertTrue(self.check_event_conditions(conditions))
+
+        #requests are lvl 2 so should be kept in waiting queue until nurse 1 has time for them
+        conditions = (('time', 40), ('event', 0), ('action', 'actual start'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 60), ('event', 1), ('action', 'actual start'))
+        self.assertTrue(self.check_event_conditions(conditions))
+
+    # ---------- TESTING IT DOESN'T CRASH ON RANDOM DATA ----------
     def test_sim_other_assigner(self):
         #TODO: something weird is going on with displayed request numbers
         graph_path = "input/layouts/toScaleLayout.json"
@@ -166,6 +227,8 @@ class TestSimulator(unittest.TestCase):
 
         app.run_simulation()
 
+
+    # ---------- COMPARISON TESTS ----------
     def test_sim_assigner_comparison_one_nurse(self):
         #one nurse should spend the same amount of time at patients with both assigners
         graph_path = "input/layouts/toScaleLayout.json"
