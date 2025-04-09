@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, PropertyMock, patch
 
 from src import Request
-from src.simulation.timed_object import PatientEvent, EventStatus, Plan
+from src.simulation.timed_object import PatientEvent, EventStatus, Plan, ReturnToOffice
 from src.simulation.queue import NurseList
 
 
@@ -126,6 +126,29 @@ class TestNurseList(unittest.TestCase):
 
         self.event1.pause.assert_called_once()
 
+    def test_add_to_start_return_to_office_new_event_fits(self):
+        self.mock_sim_time.sim_time = 40.0  # gets set to start of return to office event
+        return_event = ReturnToOffice(assigned_nurse=self.mock_nurse, graph=self.mock_graph,
+                                      sim_time=self.mock_sim_time)
+        nurse_list = NurseList([return_event, self.event2, self.event3], self.mock_sim_time, self.mock_nurse, 20,
+                               self.mock_graph)
+        self.mock_sim_time.sim_time = 0.0
+
+        return_event.pause = Mock()
+        self.event2.pause = Mock()
+        new_event = PatientEvent(time=0, duration=5, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
+                                 graph=self.mock_graph, sim_time=self.mock_sim_time)
+        nurse_list.add_to_start(new_event)
+
+        # return event should be cancelled even if new event fits before it (although normally this won't even happen,
+        # cause return to office is never scheduled for the future
+        return_event.pause.assert_called_once()
+        self.event2.pause.assert_not_called()
+        self.assertEqual(new_event, nurse_list.pop_front())
+        self.assertEqual(self.event2, nurse_list.pop_front())
+        self.assertEqual(self.event3, nurse_list.pop_front())
+
+
     def test_add_to_empty_list(self):
         new_event = PatientEvent(time=0, duration=100, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
                                  graph=self.mock_graph, sim_time=self.mock_sim_time)
@@ -214,6 +237,7 @@ class TestNurseList(unittest.TestCase):
         self.assertEqual(self.event2, self.nurse_list.front())  # Next event should now be at front
         self.assertEqual(self.event1.log, self.nurse_list.event_logs)  # Log should be added
 
+    # -------------- RETURN TO OFFICE TESTS --------------
     def test_run_next_step_create_return_to_office(self):
         """Test return to office event creation when conditions are met"""
         self.event1.run_next_step = Mock()
@@ -241,6 +265,28 @@ class TestNurseList(unittest.TestCase):
 
         # Verify next event is event2, not a return to office event
         self.assertEqual(self.nurse_list.front(), self.event2)
+
+
+    def test_has_time_now_return_to_office(self):
+        self.mock_sim_time.sim_time = 40.0 #gets set to start of return to office event
+        return_event = ReturnToOffice(assigned_nurse=self.mock_nurse, graph=self.mock_graph, sim_time=self.mock_sim_time)
+        nurse_list = NurseList([return_event, self.event2, self.event3], self.mock_sim_time, self.mock_nurse, 20, self.mock_graph)
+        self.mock_sim_time.sim_time = 0.0
+
+
+        # event normally wouldn't fit, but will if return to office doesn't count
+        new_event = PatientEvent(time=0, duration=50, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
+                                 graph=self.mock_graph, sim_time=self.mock_sim_time)
+        self.assertEqual(nurse_list.has_time_now(new_event), True)
+
+        # if there's not enough time until the event after return to office, it still returns false
+        new_event = PatientEvent(time=0, duration=80, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
+                                 graph=self.mock_graph, sim_time=self.mock_sim_time)
+        self.assertEqual(nurse_list.has_time_now(new_event), False)
+
+
+
+
 
 
 if __name__ == "__main__":
