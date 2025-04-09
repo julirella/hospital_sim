@@ -1,5 +1,5 @@
 from src import Nurse, Graph, SimTime
-from src.simulation.timed_object import Event
+from src.simulation.timed_object import Event, EventStatus
 
 
 class ReturnToOffice(Event):
@@ -17,7 +17,8 @@ class ReturnToOffice(Event):
 
     def pause(self) -> None:
         #pause cancels the event, it will never be resumed
-        next_step = self.get_next_step()
-        next_step.pause(self._sim_time.sim_time)
+        if self.status == EventStatus.ACTIVE:
+            next_step = self.get_next_step()
+            next_step.pause(self._sim_time.sim_time)
+            self._assigned_nurse.unassign_event()
         self.__log_action_now__("stop")
-        self._assigned_nurse.unassign_event()

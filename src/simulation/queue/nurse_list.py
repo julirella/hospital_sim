@@ -150,11 +150,15 @@ class NurseList(EventList[Event]):
             return
 
         current_event: Event = self.front()
-        if current_event.status == EventStatus.ACTIVE:
+
+        if current_event.type == 'return_to_office':
+            current_event.pause() # return to office can be stopped even if it hasn't started yet
+            finished_log = self.pop_front().log
+            self._event_logs += finished_log
+
+        elif current_event.status == EventStatus.ACTIVE:
             current_event.pause() #pause current if necessary
-            if current_event.type == 'return_to_office':
-                finished_log = self.pop_front().log
-                self._event_logs += finished_log
+
 
         #insert new and push back rest
         self.__insert_after__(event, None)
