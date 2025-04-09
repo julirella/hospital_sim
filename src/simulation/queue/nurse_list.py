@@ -105,11 +105,10 @@ class NurseList(EventList[Event]):
 
         if (next_event.event.type == 'return_to_office' and
                 (next_event.next is None or next_event.next.event.time - prev_end_time > max_event_duration)):
-            #there is enough time before the next non return to office event, but there is a return to office in the way
-            # TODO: this path is not tested
+            # there is enough time before the next non return to office event, but there is a return to office in the way
+            # so the return to office event should be stopped
             done = True
             self.__replace_return_to_office__(event)
-            # self.add_to_gap(event)
         else:
             while next_event is not None:
                 next_start_time = next_event.event.time
@@ -131,12 +130,7 @@ class NurseList(EventList[Event]):
             return
 
         current_event: Event = self.front()
-        # max_event_duration = self.__max_event_duration__(event)
         if current_event.type == 'return_to_office':
-            # current_event.pause()
-            # finished_log = self.pop_front().log
-            # self._event_logs += finished_log
-            # self.__insert_after__(event)
             self.__replace_return_to_office__(event)
         elif current_event.status == EventStatus.NOT_STARTED:
             # it just goes straight away
