@@ -66,7 +66,19 @@ class NurseList(EventList[Event]):
         self.__insert_after__(event)
 
     def has_time_now(self, event: Event) -> bool:
-        return self.empty() or self.__max_event_duration__(event) <= self._front.event.time - self._sim_time.sim_time
+        #TODO: test this
+        if self.empty():
+            return True
+
+        front_event_time = self._front.event.time
+
+        if self.front().type == 'return_to_office':
+            if self._front.next is None:
+                return True
+            else:
+                front_event_time = self._front.next.event.time
+
+        return self.empty() or self.__max_event_duration__(event) <= front_event_time - self._sim_time.sim_time
 
     def current_event_level(self) -> int:
         if self.empty():
