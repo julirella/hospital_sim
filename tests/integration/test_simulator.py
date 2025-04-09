@@ -1,12 +1,14 @@
 import unittest
 import pandas as pd
 import json
+import itertools
 
 from src import Simulator
 from src.exporter.log_exporter import LogExporter
 from src.importer import SimImporter
 from src.main import App
 from src.process_data import DataProcessor
+from src.simulation.timed_object import Event
 
 
 class TestSimulator(unittest.TestCase):
@@ -15,6 +17,9 @@ class TestSimulator(unittest.TestCase):
         self.people_path = "input/people/testPeople2.json"
         self.test_event_output = "output/testEventLog.csv"
         self.test_nurse_output = "output/testNurseLog.csv"
+
+        # reset id generation between test so that event ids can be tested
+        Event._id_generator = itertools.count(0)
 
     def run_sim(self, event_path, graph_path=None, people_path=None):
         if graph_path is None:
@@ -207,7 +212,7 @@ class TestSimulator(unittest.TestCase):
         app = App(graph_path=graph_path, people_path=people_path, event_path=event_path,
                   nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
 
-        app.run_simulation(visualise=True)
+        app.run_simulation(visualise=False)
 
     def test_sim_other_assigner_exp2(self):
         graph_path = "input/layouts/expLayout.json"
