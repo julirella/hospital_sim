@@ -18,17 +18,13 @@ class Simulator:
         self.patients = patients
         self.sim_time = sim_time
         self.request_assigner = request_assigner
+
         self.request_queue = request_queue
         self.nurse_queues = nurse_queues
         self.global_queue = TimeQueue[TimedNurseId]()
         self.waiting_requests = SortedList(key=lambda request: (request.level, request.time))
 
         #put next step from each nurse queue into global queue
-        # for nurse_id, nurse_queue in enumerate(self.nurse_queues):
-        #     if not nurse_queue.empty():
-        #         next_nurse_id = nurse_queue.create_timed_nurse_id()
-        #         self.global_queue.add(next_nurse_id)
-
         for nurse_id in range(len(self.nurses)):
             self.add_to_global_queue(nurse_id)
 
@@ -48,7 +44,7 @@ class Simulator:
             nurse_queue.in_global_queue = False
 
     def pop_from_global_queue(self) -> int:
-        nurse_id: int = self.global_queue.pop().nurse_id #this should work anyway because python, but is it bad practice?
+        nurse_id: int = self.global_queue.pop().nurse_id
         nurse_queue = self.nurse_queues[nurse_id]
         nurse_queue.in_global_queue = False
         return nurse_id
@@ -56,7 +52,7 @@ class Simulator:
     def run_next_step(self):
         step_time = self.global_queue.next_time()
         self.sim_time.sim_time = step_time
-        # next_step_nurse_id: int = self.global_queue.pop().nurse_id #this should work anyway because python, but is it bad practice?
+
         next_step_nurse_id = self.pop_from_global_queue()
         nurse_queue = self.nurse_queues[next_step_nurse_id]
         finished = nurse_queue.run_next_step()
@@ -74,13 +70,9 @@ class Simulator:
         chosen_nurse_id = self.request_assigner.assign_request(request)
 
         if chosen_nurse_id is not None:
-            # nurse_queue = self.nurse_queues[chosen_nurse_id]
             #take next nurse step out of global queue
-            # if not nurse_queue.empty():
-            #     self.global_queue.remove(nurse_queue.current_timed_nurse_id())
             self.remove_from_global_queue(chosen_nurse_id)
             #put new next nurse step into global queue
-            # self.global_queue.add(nurse_queue.create_timed_nurse_id())
             self.add_to_global_queue(chosen_nurse_id)
             return True
         else:
