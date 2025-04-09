@@ -11,3 +11,5 @@ from .unit.list.test_event_list import TestEventList
 
 from .unit.assigner.test_basic_assigner import TestBasicAssigner
 from .unit.assigner.test_other_assigner import TestOtherAssigner
+
+from .integration.test_simulator import TestSimulator
