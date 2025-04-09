@@ -103,19 +103,60 @@ class TestNurseList(unittest.TestCase):
         self.assertEqual(190, self.nurse_list.pop_front().time)
         self.assertEqual(220, self.nurse_list.pop_front().time)
 
-    def test_add_after_current_return_to_office(self):
+    def test_add_after_current_return_to_office_new_event_fits(self):
         # add after current should be the same as add to start if current is return to office
         self.mock_sim_time.sim_time = 0.0  # gets set to start of return to office event
         return_event = ReturnToOffice(assigned_nurse=self.mock_nurse, graph=self.mock_graph,
                                       sim_time=self.mock_sim_time)
-        nurse_list = NurseList([return_event, self.event2, self.event3], self.mock_sim_time, self.mock_nurse, 20,
+        nurse_list = NurseList([return_event, self.event1, self.event2], self.mock_sim_time, self.mock_nurse, 20,
                                self.mock_graph)
 
         return_event.pause = Mock()
-        self.event2.pause = Mock()
+        self.event1.pause = Mock()
         new_event = PatientEvent(time=0, duration=5, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
                                  graph=self.mock_graph, sim_time=self.mock_sim_time)
         nurse_list.add_after_current(new_event)
+
+        return_event.pause.assert_called_once()
+        self.event1.pause.assert_not_called()
+        first_event = nurse_list.pop_front()
+        second_event = nurse_list.pop_front()
+        third_event = nurse_list.pop_front()
+
+        self.assertEqual(new_event, first_event)
+        self.assertEqual(0.0, first_event.time)
+        self.assertEqual(self.event1, second_event)
+        self.assertEqual(40, second_event.time)
+        self.assertEqual(self.event2, third_event)
+        self.assertEqual(90, third_event.time)
+
+    def test_add_after_current_return_to_office_event1_pushback(self):
+        # add after current should be the same as add to start if current is return to office
+        self.mock_sim_time.sim_time = 0.0  # gets set to start of return to office event
+        return_event = ReturnToOffice(assigned_nurse=self.mock_nurse, graph=self.mock_graph,
+                                      sim_time=self.mock_sim_time)
+        nurse_list = NurseList([return_event, self.event1, self.event2], self.mock_sim_time, self.mock_nurse, 20,
+                               self.mock_graph)
+
+        return_event.pause = Mock()
+        self.event1.pause = Mock()
+        new_event = PatientEvent(time=0, duration=30, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
+                                 graph=self.mock_graph, sim_time=self.mock_sim_time)
+        nurse_list.add_after_current(new_event)
+
+        return_event.pause.assert_called_once()
+        self.event1.pause.assert_not_called()
+        first_event = nurse_list.pop_front()
+        second_event = nurse_list.pop_front()
+        third_event = nurse_list.pop_front()
+
+        self.assertEqual(new_event, first_event)
+        self.assertEqual(0.0, first_event.time)
+        self.assertEqual(self.event1, second_event)
+        self.assertEqual(50, second_event.time)
+        self.assertEqual(self.event2, third_event)
+        self.assertEqual(90, third_event.time)
+
 
     def test_add_to_start_no_pause(self):
         new_event = PatientEvent(time=0, duration=35, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
