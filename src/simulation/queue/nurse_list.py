@@ -59,19 +59,19 @@ class NurseList(EventList[Event]):
         current_event = self._front.event
         if current_event.type != 'return_to_office':
             raise Exception("can't replace event that isn't return to office")
-        if current_event.status == EventStatus.ACTIVE:
-            current_event.pause()
+        # if current_event.status == EventStatus.ACTIVE:
+        current_event.pause()
         finished_log = self.pop_front().log
         self._event_logs += finished_log
         self.__insert_after__(event)
 
     def has_time_now(self, event: Event) -> bool:
-        #TODO: test this
         if self.empty():
             return True
 
         front_event_time = self._front.event.time
 
+        # if the first event is return to office, the event after that is considered as the first event
         if self.front().type == 'return_to_office':
             if self._front.next is None:
                 return True
@@ -132,15 +132,15 @@ class NurseList(EventList[Event]):
 
         current_event: Event = self.front()
         # max_event_duration = self.__max_event_duration__(event)
-        if current_event.status == EventStatus.NOT_STARTED:
-            #it just goes straight away
-            self.__insert_after__(event)
-        elif current_event.type == 'return_to_office':
+        if current_event.type == 'return_to_office':
             # current_event.pause()
             # finished_log = self.pop_front().log
             # self._event_logs += finished_log
             # self.__insert_after__(event)
             self.__replace_return_to_office__(event)
+        elif current_event.status == EventStatus.NOT_STARTED:
+            # it just goes straight away
+            self.__insert_after__(event)
         else:
             self.__insert_after__(event, self._front)
 
