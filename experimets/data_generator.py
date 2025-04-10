@@ -54,7 +54,7 @@ class DataGenerator:
             request_amount = np.random.randint(self.min_requests, self.max_requests)
             for _ in range(request_amount):
                 req_time = np.random.uniform(0, self.interval_len)
-                level = np.random.randint(1, 4)
+                level = np.random.randint(2, 4)
                 duration = np.random.uniform(self.min_req_len, self.max_req_len)
 
                 req = {}
