@@ -50,11 +50,14 @@ class DataGenerator:
 
     def generate_requests(self):
         patient_cnt = self.gen_importer.patient_cnt
+
+        req_levels = [2, 3]
+        level_probabilities = [0.75, 0.25]
         for patient_id in range(patient_cnt):
             request_amount = np.random.randint(self.min_requests, self.max_requests)
             for _ in range(request_amount):
                 req_time = np.random.uniform(0, self.interval_len)
-                level = np.random.randint(2, 4)
+                level = int(np.random.choice(req_levels, p=level_probabilities))
                 duration = np.random.uniform(self.min_req_len, self.max_req_len)
 
                 req = {}
