@@ -119,7 +119,7 @@ class Event(TimedObject):
 
     def __log_action__(self, action: str, time: float) -> None:
         action_dict = {"time": time, "event": self._event_id, "action": action, "type": self.type}
-        print(action_dict)
+        # print(action_dict)
         self._log.append({"time": time, "event": self._event_id, "action": action, "type": self.type})
 
     def __log_action_now__(self, action: str) -> None:

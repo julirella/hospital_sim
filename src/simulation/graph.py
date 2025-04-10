@@ -100,4 +100,5 @@ class Graph:
                         distances.append(dst)
             max_dst = max(distances)
             self._max_distance = max_dst
+            # print("------------------MAX DST", max_dst, "--------------------")
             return max_dst

@@ -58,6 +58,6 @@ class Nurse:
     def __log_action__(self, action: str) -> None:
         log_dict = {"time": self._sim_time.sim_time, "nurse": self._nurse_id, "x": self._pos.x, "y": self._pos.y,
                           "event": self._assigned_event_id, "action": action, "patient": self._current_patient_id}
-        print(log_dict)
+        # print(log_dict)
         self._log.append({"time": self._sim_time.sim_time, "nurse": self._nurse_id, "x": self._pos.x, "y": self._pos.y,
                           "event": self._assigned_event_id, "action": action, "patient": self._current_patient_id})
