@@ -203,6 +203,34 @@ class TestSimulator(unittest.TestCase):
         conditions = (('time', 60), ('event', 1), ('action', 'actual start'))
         self.assertTrue(self.check_event_conditions(conditions))
 
+    def test_sim_plans_finished_then_requests(self):
+        graph_path = "input/layouts/toScaleLayout.json"
+        people_path = "input/people/oneNurse.json"
+        event_path = "input/events/plansEndThenReqs.json"
+
+        app = App(graph_path=graph_path, people_path=people_path, event_path=event_path,
+                  nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
+
+        app.run_simulation()
+        self.nurse_df = pd.read_csv("output/testNurseLog.csv")
+        self.event_df = pd.read_csv("output/testEventLog.csv")
+
+        conditions = (('nurse', 0), ('time', 0), ('action', 'assign event'), ('event', 2))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('nurse', 0), ('time', 30), ('action', 'finish event'), ('event', 2))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('nurse', 0), ('time', 50), ('action', 'assign event'), ('event', 3))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+
+        conditions = (('time', 100), ('action', 'assign event'), ('event', 0))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('time', 130), ('action', 'finish event'), ('event', 0))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('time', 130), ('action', 'assign event'), ('event', 1))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+        conditions = (('time', 140), ('action', 'finish event'), ('event', 1))
+        self.assertTrue(self.check_nurse_conditions(conditions))
+
     # ---------- TESTING IT DOESN'T CRASH ON RANDOM DATA ----------
     def test_sim_other_assigner(self):
         #TODO: something weird is going on with displayed request numbers
