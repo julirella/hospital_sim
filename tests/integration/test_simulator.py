@@ -31,6 +31,14 @@ class TestSimulator(unittest.TestCase):
         sim.simulate()
         return sim
 
+    def run_sim_app(self, event_path, graph_path=None, people_path=None, visualise=False):
+        app = App(graph_path=graph_path, people_path=people_path, event_path=event_path,
+                  nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
+
+        app.run_simulation(visualise=visualise)
+        self.nurse_df = pd.read_csv("output/testNurseLog.csv")
+        self.event_df = pd.read_csv("output/testEventLog.csv")
+
     def export_logs(self, sim: Simulator):
         log_exporter = LogExporter(sim, self.test_nurse_output, self.test_event_output)
         log_exporter.export_data()
@@ -230,6 +238,28 @@ class TestSimulator(unittest.TestCase):
         self.assertTrue(self.check_nurse_conditions(conditions))
         conditions = (('time', 140), ('action', 'finish event'), ('event', 1))
         self.assertTrue(self.check_nurse_conditions(conditions))
+
+    def test_return_to_office_stop(self):
+        graph_path = "input/layouts/toScaleLayout.json"
+        people_path = "input/people/oneNurse.json"
+        event_path = "input/events/returnToOfficeStop.json"
+
+        self.run_sim_app(graph_path=graph_path, people_path=people_path, event_path=event_path)
+
+        conditions = (('time', 0), ('event', 1), ('action', 'actual start'), ('type', 'plan'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 30), ('event', 2), ('action', 'actual start'), ('type', 'return_to_office'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 40), ('event', 2), ('action', 'stop'), ('type', 'return_to_office'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 40), ('event', 0), ('action', 'actual start'), ('type', 'request'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 60), ('event', 0), ('action', 'end'), ('type', 'request'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 60), ('event', 3), ('action', 'actual start'), ('type', 'return_to_office'))
+        self.assertTrue(self.check_event_conditions(conditions))
+        conditions = (('time', 80), ('event', 3), ('action', 'end'), ('type', 'return_to_office'))
+        self.assertTrue(self.check_event_conditions(conditions))
 
     # ---------- TESTING IT DOESN'T CRASH ON RANDOM DATA ----------
     def test_sim_other_assigner(self):
