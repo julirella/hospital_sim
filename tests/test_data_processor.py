@@ -81,9 +81,7 @@ class TestDataProcessor(unittest.TestCase):
 
         self.assertEqual(40, self.processor.nurse_time_at_patient(nurse_id=0, patient_id=0))
 
-    @patch('src.process_data.data_processor.GenImporter')
-    @patch('src.process_data.data_processor.pd.read_csv')
-    def test_data_processor_patient_time_waiting_per_event(self, mock_read_csv, mock_gen_importer):
+    def test_data_processor_patient_time_waiting_per_event(self):
         data = []
 
         data.append({'patient': 0, 'type': 'request', 'request_level': 1, 'event': 1, 'action': 'planned start', 'time': 10})
