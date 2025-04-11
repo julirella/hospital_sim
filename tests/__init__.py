@@ -13,3 +13,5 @@ from .unit.assigner.test_basic_assigner import TestBasicAssigner
 from .unit.assigner.test_other_assigner import TestOtherAssigner
 
 from .integration.test_simulator import TestSimulator
+
+from .test_data_processor import TestDataProcessor

@@ -13,8 +13,8 @@ class TestDataProcessor(unittest.TestCase):
 
         mock_gen_instance = MagicMock()
         mock_gen_importer.return_value = mock_gen_instance
-        mock_gen_instance.nurse_patients = {}
-        mock_gen_instance.patient_cnt = 0
+        mock_gen_instance.nurse_patients = [[0, 1], [2], []]
+        mock_gen_instance.patient_cnt = 3
 
         self.processor = DataProcessor('a', 'b', 'c')
 
@@ -80,6 +80,23 @@ class TestDataProcessor(unittest.TestCase):
         ])
 
         self.assertEqual(40, self.processor.nurse_time_at_patient(nurse_id=0, patient_id=0))
+
+    def test_time_at_specific_patients(self):
+        self.processor.nurse_df = pd.DataFrame([
+            {'nurse': 0, 'patient': 0, 'event': 0, 'action': 'assign event', 'time': 0},
+            {'nurse': 0, 'patient': 0, 'event': 0, 'action': 'time at patient', 'time': 10},
+            {'nurse': 0, 'patient': 1, 'event': 1, 'action': 'assign event', 'time': 0},
+            {'nurse': 0, 'patient': 1, 'event': 1, 'action': 'time at patient', 'time': 9},
+            {'nurse': 0, 'patient': 2, 'event': 3, 'action': 'assign event', 'time': 0},
+            {'nurse': 0, 'patient': 2, 'event': 3, 'action': 'time at patient', 'time': 8},
+            {'nurse': 0, 'patient': 0, 'event': 2, 'action': 'assign event', 'time': 0},
+            {'nurse': 0, 'patient': 0, 'event': 2, 'action': 'time at patient', 'time': 7},
+        ])
+
+        self.assertEqual(26, self.processor.nurse_time_at_own_patients(0))
+        self.assertEqual(8, self.processor.nurse_time_at_other_patients(0))
+        self.assertEqual(34, self.processor.nurse_time_at_all_patients(0))
+
 
     def test_data_processor_patient_time_waiting_per_event(self):
         data = []
