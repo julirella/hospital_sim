@@ -114,8 +114,11 @@ class DataProcessor:
         return resting_time
     
     def patient_time_waiting_per_event(self, patient_id, request_level=None) -> list[float]:
-        if request_level is None:
-            request_events = self.event_df[(self.event_df['patient'] == patient_id) & (self.event_df['type'] == 'request')]
+        if request_level is None: # we want plans too but not return to office
+            request_events = self.event_df[(self.event_df['patient'] == patient_id) & ((self.event_df['type'] == 'request') | (self.event_df['type'] == 'plan'))]
+        elif request_level == 1:
+            request_events = self.event_df[(self.event_df['patient'] == patient_id) &
+                                           (((self.event_df['type'] == 'request') & (self.event_df['request_level'] == 1)) | (self.event_df['type'] == 'plan'))]
         else: 
             request_events = self.event_df[(self.event_df['patient'] == patient_id) & (self.event_df['type'] == 'request') & (self.event_df['request_level'] == request_level)]
         event_times = []
