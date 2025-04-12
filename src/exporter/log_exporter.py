@@ -17,6 +17,7 @@ class LogExporter:
         writer = csv.DictWriter(csvfile, fieldnames=fields)
         writer.writeheader()
         writer.writerows(to_export)
+        csvfile.close()
 
     def export_nurse_log(self, nurse_log: list[dict]):
         fields = ["time", "nurse", "x", "y", "event", "action", "patient"]
