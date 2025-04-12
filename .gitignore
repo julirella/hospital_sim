@@ -1,8 +1,9 @@
 .vscode
 .idea
 **/__pycache__
-/output
+#/output
 /process_data/tmp.ipynb
 #/process_data/.ipynb_checkpoints/
 **/.ipynb_checkpoints
 #/process_data
+/tmp
