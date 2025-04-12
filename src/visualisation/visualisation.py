@@ -100,7 +100,6 @@ class Visualiser:
         while True:
             self.process_input()
             self.update_and_display()
-            # self.display()
 
 
 def main():
