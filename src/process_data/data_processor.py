@@ -114,6 +114,7 @@ class DataProcessor:
         return resting_time
     
     def patient_time_waiting_per_event(self, patient_id, request_level=None) -> list[float]:
+        # for a given patient, returns list of times spent waiting for each event
         if request_level is None: # we want plans too but not return to office
             request_events = self.event_df[(self.event_df['patient'] == patient_id) & ((self.event_df['type'] == 'request') | (self.event_df['type'] == 'plan'))]
         elif request_level == 1:
@@ -130,7 +131,10 @@ class DataProcessor:
         return event_times
     
     def patient_total_time_waiting(self, patient_id, request_level=None) -> float:
+        # for a given patient, returns sum of all time spent waiting for events. If in a given time interval the patient
+        # has multiple events, that interval is counted multiple times
         return sum(self.patient_time_waiting_per_event(patient_id, request_level))
     
     def patient_avg_time_waiting(self, patient_id, request_level=None):
+        # for a given patient, returns average time spent waiting for an event
         return np.average(self.patient_time_waiting_per_event(patient_id, request_level))
