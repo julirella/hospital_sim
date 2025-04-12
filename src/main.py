@@ -1,4 +1,7 @@
-from src.exporter.log_exporter import LogExporter
+# from src.exporter.log_exporter import LogExporter
+import sys
+print(sys.path)
+from src.exporter import LogExporter
 from src.importer import SimImporter
 from src.importer.viz_importer import VizImporter
 
@@ -28,13 +31,15 @@ class App:
 
 
 def main():
-    # print(req)
-    #load input from file
-    #create graph
-    #create nurses with plan queues
-    #simulate
-    #output log to file
-    ...
+    graph_path = "input/layouts/toScaleLayout.json"
+    people_path = "input/people/manyPeople.json"
+    event_path = "input/events/testEventsRequests.json"
+    event_output = "output/eventLog.csv"
+    nurse_output = "output/nurseLog.csv"
+    app = App(graph_path=graph_path, people_path=people_path, event_path=event_path,
+              nurse_output_path=nurse_output, event_output_path=event_output)
+
+    app.run_simulation(visualise=True)
 
 
 if __name__ == "__main__":
