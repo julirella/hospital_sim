@@ -8,7 +8,6 @@ class LogExporter:
         self.simulator = simulator
         self.nurse_log_path = nurse_log_path
         self.event_log_path = event_log_path
-        print("---------------------------UPDATED EXPORTER-----------------------------")
 
 
     def export_dicts(self, to_export: list[dict], out_file_path: str, fields) -> None:

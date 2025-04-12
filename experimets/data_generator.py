@@ -65,7 +65,6 @@ class DataGenerator:
                 req["patient"] = patient_id
                 req["level"] = level
                 req["duration"] = duration
-                print(req)
                 self.requests.append(req)
 
     def to_json(self):
