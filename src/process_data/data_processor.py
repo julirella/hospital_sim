@@ -136,5 +136,9 @@ class DataProcessor:
         return sum(self.patient_time_waiting_per_event(patient_id, request_level))
     
     def patient_avg_time_waiting(self, patient_id, request_level=None):
-        # for a given patient, returns average time spent waiting for an event
-        return np.average(self.patient_time_waiting_per_event(patient_id, request_level))
+        # for a given patient, returns average time spent waiting for an
+        times_lst = self.patient_time_waiting_per_event(patient_id, request_level)
+        if times_lst == []:
+            return 0
+        else:
+            return np.average(times_lst)

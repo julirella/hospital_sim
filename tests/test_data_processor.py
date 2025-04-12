@@ -132,6 +132,26 @@ class TestDataProcessor(unittest.TestCase):
         result_none = self.processor.patient_time_waiting_per_event(0, request_level=None)
         result_none.sort()
         self.assertEqual([4, 5, 10, 10], list(map(lambda x: int(x), result_none)))
+        self.assertEqual(29, self.processor.patient_total_time_waiting(0, request_level=None))
+        self.assertEqual(29 / 4, self.processor.patient_avg_time_waiting(0, request_level=None))
+
+    def test_patient_wait_time_no_value_in_df(self):
+        data = []
+
+        data.append({'patient': 0, 'type': 'request', 'request_level': 1, 'event': 1, 'action': 'planned start', 'time': 10})
+        data.append({'patient': 0, 'type': 'request', 'request_level': 1, 'event': 1, 'action': 'end', 'time': 15})
+        data.append({'patient': 0, 'type': 'request', 'request_level': 1, 'event': 5, 'action': 'planned start', 'time': 10})
+        data.append({'patient': 0, 'type': 'request', 'request_level': 1, 'event': 5, 'action': 'end', 'time': 20})
+        data.append({'patient': 0, 'type': 'plan', 'request_level': None, 'event': 2, 'action': 'end', 'time': 12})
+        data.append({'patient': 0, 'type': 'plan', 'request_level': None, 'event': 2, 'action': 'planned start', 'time': 8})
+        mock_event_df = pd.DataFrame(data)
+
+        result_level3 = self.processor.patient_time_waiting_per_event(0, request_level=3)
+        self.assertEqual([], result_level3)
+        self.assertEqual(0, self.processor.patient_total_time_waiting(0, request_level=3))
+        self.assertEqual(0, self.processor.patient_avg_time_waiting(0, request_level=3))
+
+        # print(result_level3)
 
 if __name__ == '__main__':
     unittest.main()
