@@ -7,3 +7,4 @@
 **/.ipynb_checkpoints
 #/process_data
 /tmp
+/input/events/genTestEvents.json
