@@ -83,6 +83,8 @@ class DataGenerator:
         return self.gen_importer.max_graph_dst()
 
     def create_events(self):
+        self.plans = []
+        self.requests = []
         self.med_plans()
         self.generate_requests()
         self.to_json()
