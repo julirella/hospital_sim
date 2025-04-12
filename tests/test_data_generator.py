@@ -1,6 +1,6 @@
 import unittest
 
-from src.data_generator import DataGenerator
+from experimets import DataGenerator
 
 
 class TestDataGenerator(unittest.TestCase):
