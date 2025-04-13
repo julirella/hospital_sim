@@ -2,7 +2,7 @@ import math
 import unittest
 from unittest.mock import Mock
 from src import Graph, Node, NurseOffice, Junction, PatientRoom
-from src.node.temp_node import TempNode
+from src.simulation.node.temp_node import TempNode
 
 
 class TestGraph(unittest.TestCase):
@@ -79,6 +79,10 @@ class TestGraph(unittest.TestCase):
         path = self.graph.find_path(tmp_node, self.nodes[5])
         expected = [(self.nodes[8], math.sqrt(2) / 2 - 0.1), (self.nodes[5], 1.0)]
         self.assertEqual(expected, path)
+
+    def test_max_distance(self):
+        max_dst = self.graph.max_distance()
+        self.assertEqual(3 + math.sqrt(2), max_dst)
 
 
 if __name__ == "__main__":

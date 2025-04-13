@@ -56,6 +56,21 @@ class TestVisualiser(unittest.TestCase):
         self.run_test(graph_path=graph_path, people_path=people_path, event_path=event_path, sim=True)
 
 
+    def test_vis_exp(self):
+        graph_path = "input/layouts/expLayout.json"
+        people_path = "input/people/expPeople1.json"
+        # event_path = "input/events/expEvents1.json"
+        event_path = "input/events/genTestEvents.json"
+
+        self.run_test(graph_path=graph_path, people_path=people_path, event_path=event_path, sim=True)
+
+    def test_vis_plan_first(self):
+        graph_path = "input/layouts/toScaleLayout.json"
+        people_path = "input/people/testPeople2.json"
+        event_path = "input/events/reqReorder.json"
+
+        # self.run_test(graph_path, people_path)
+        self.run_test(graph_path, people_path, event_path=event_path, sim=True)
 
 
 

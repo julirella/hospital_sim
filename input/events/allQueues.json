@@ -1,0 +1,49 @@
+{
+  "request_assigner" : "other",
+  "requests": [
+    {
+      "time": 5.0,
+      "patient": 0,
+      "level": 2,
+      "duration": 20.0
+    },
+    {
+      "time": 10.0,
+      "patient": 1,
+      "level": 2,
+      "duration": 20.0
+    }
+  ],
+  "plans": [
+    {
+      "time": 0.0,
+      "patient": 0,
+      "nurse": 0,
+      "duration": 15.0
+    },
+    {
+      "time": 50.0,
+      "patient": 0,
+      "nurse": 0,
+      "duration": 20.0
+    },
+    {
+      "time": 100.0,
+      "patient": 0,
+      "nurse": 0,
+      "duration": 20.0
+    },
+    {
+      "time": 0.0,
+      "patient": 1,
+      "nurse": 1,
+      "duration": 20.0
+    },
+    {
+      "time": 100.0,
+      "patient": 1,
+      "nurse": 1,
+      "duration": 20.0
+    }
+  ]
+}

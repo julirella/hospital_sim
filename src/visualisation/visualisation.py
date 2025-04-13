@@ -14,13 +14,13 @@ class Visualiser:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.screen.fill('white')
         self.clock = pygame.time.Clock()
-        self.map_surf = pygame.surface.Surface((MAP_SURF_WIDTH, MAP_SURF_HEIGHT))
+        # self.map_surf = pygame.surface.Surface((MAP_SURF_WIDTH, MAP_SURF_HEIGHT))
         self.text_surf = pygame.surface.Surface((TEXT_SURF_WIDTH, TEXT_SURF_HEIGHT))
         pygame.font.init()
         self._font = pygame.font.Font(None, 50)
 
         #set default times
-        self.increment_rate_ms = 500 # how often to auto increment in milliseconds
+        self.auto_increment_rate = 500 # how often to auto increment in milliseconds
         self.sim_time = 0 # sim time in seconds
         self.increment = 1 # how much to increment sim time by in seconds
         self.prev_increment = pygame.time.get_ticks() # time of last auto increment
@@ -79,11 +79,11 @@ class Visualiser:
                 elif event.key == pygame.K_s:
                     self.increment -= 0.1
                 elif event.key == pygame.K_r:
-                    self.sim_time = 0
+                    self.update_sim_time(-self.sim_time)
 
     def update_and_display(self):
         current_time = pygame.time.get_ticks()
-        if current_time - self.prev_increment >= self.increment_rate_ms:
+        if current_time - self.prev_increment >= self.auto_increment_rate:
             if not self.paused:
                 self.update_sim_time(self.increment)
                 self.prev_increment = current_time
@@ -100,7 +100,6 @@ class Visualiser:
         while True:
             self.process_input()
             self.update_and_display()
-            # self.display()
 
 
 def main():

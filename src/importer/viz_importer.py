@@ -66,7 +66,7 @@ class VizImporter(Importer):
         return nurses, patients
 
     def import_nurse_log(self) -> None:
-        df = pd.read_csv(self.nurse_log_filename)
+        df = pd.read_csv(self.nurse_log_filename, dtype={'patient': 'Int32'})
         nurse_ids = df['nurse'].unique().tolist()
 
         # nurse_dfs = []
@@ -82,7 +82,8 @@ class VizImporter(Importer):
     def import_event_log(self) -> float:
         event_df = pd.read_csv(self.event_log_filename)
         req_df = event_df[event_df['type'] == "request"]
-        patient_ids = req_df['patient'].unique().tolist()
+        patient_ids_float = req_df['patient'].unique().tolist() #ids may be floats because of NaNs
+        patient_ids = list(map(lambda x: int(x), patient_ids_float))
         for patient_id in patient_ids:
             patient_reqs = req_df[req_df['patient'] == patient_ids[patient_id]]
             start_times = sorted(patient_reqs[patient_reqs['action'] == "planned start"]["time"].tolist())

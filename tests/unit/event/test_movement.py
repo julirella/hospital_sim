@@ -3,13 +3,19 @@ import unittest
 from unittest.mock import Mock
 
 from src import Nurse, Node
-from src.event import Movement
+from src.simulation.timed_object import Movement
 
 class TestMovement(unittest.TestCase):
     def setUp(self):
         self.nurse_pos = Node(0, 0, 0)
         self.sim_time = Mock()
         self.nurse = Nurse(0, self.nurse_pos, self.sim_time)
+
+    def test_run(self):
+        new_pos = Mock()
+        move = Movement(100, self.nurse, self.nurse_pos, new_pos)
+        move.run()
+        self.assertEqual(new_pos, self.nurse.pos)
 
     def test_pause_forward(self):
         start = Node(0, 0, 0)
