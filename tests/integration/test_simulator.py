@@ -263,7 +263,6 @@ class TestSimulator(unittest.TestCase):
 
     # ---------- TESTING IT DOESN'T CRASH ON RANDOM DATA ----------
     def test_sim_other_assigner(self):
-        #TODO: something weird is going on with displayed request numbers
         graph_path = "input/layouts/toScaleLayout.json"
         people_path = "input/people/manyPeople.json"
         event_path = "input/events/testEventsRequestsOther.json"

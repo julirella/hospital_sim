@@ -79,7 +79,7 @@ class Visualiser:
                 elif event.key == pygame.K_s:
                     self.increment -= 0.1
                 elif event.key == pygame.K_r:
-                    self.sim_time = 0
+                    self.update_sim_time(-self.sim_time)
 
     def update_and_display(self):
         current_time = pygame.time.get_ticks()
