@@ -1,6 +1,3 @@
-# from src.exporter.log_exporter import LogExporter
-import sys
-print(sys.path)
 from src.exporter import LogExporter
 from src.importer import SimImporter
 from src.importer.viz_importer import VizImporter
