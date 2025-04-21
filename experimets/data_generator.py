@@ -23,7 +23,9 @@ class DataGenerator:
         self.max_requests = max_requests
         self.min_req_len = min_req_len
         self.max_req_len = max_req_len
-        np.random.seed(rnd)
+        # np.random.seed(rnd)
+
+        self.rng = np.random.default_rng(rnd)
 
     def med_plan_group(self, start_time: int) -> list[dict]:
         #each nurse visits all of her patients and gives them meds
@@ -54,11 +56,11 @@ class DataGenerator:
         req_levels = [2, 3]
         level_probabilities = [0.75, 0.25]
         for patient_id in range(patient_cnt):
-            request_amount = np.random.randint(self.min_requests, self.max_requests)
+            request_amount = self.rng.integers(self.min_requests, self.max_requests)
             for _ in range(request_amount):
-                req_time = np.random.uniform(0, self.interval_len)
-                level = int(np.random.choice(req_levels, p=level_probabilities))
-                duration = np.random.uniform(self.min_req_len, self.max_req_len)
+                req_time = self.rng.uniform(0, self.interval_len)
+                level = int(self.rng.choice(req_levels, p=level_probabilities))
+                duration = self.rng.uniform(self.min_req_len, self.max_req_len)
 
                 req = {}
                 req["time"] = req_time
