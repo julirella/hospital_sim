@@ -2,7 +2,7 @@ import pygame
 
 from src.constants import *
 from .vis_nurse import VisNurse
-from .. import Room
+from .. import Room, NurseOffice
 from src.visualisation.vis_patient import VisPatient
 
 
@@ -10,6 +10,12 @@ class VisRoom:
     def __init__(self, orig_room: Room, pixels_per_meter: int, patients: list[VisPatient]):
         self._x = orig_room.x
         self._y = orig_room.y
+        print(type(orig_room))
+        if type(orig_room) is NurseOffice:
+            self._rim_colour = 'red'
+        else:
+            self._rim_colour = 'blue'
+
         self._pixels_per_meter = pixels_per_meter
         self._width_pixels = ROOM_SIDE_METERS * pixels_per_meter
         self._height_pixels = ROOM_SIDE_METERS * pixels_per_meter
@@ -40,7 +46,7 @@ class VisRoom:
 
     def surface(self, time: float):
         pygame.draw.rect(self._room_surf, 'white', self._rect) #background
-        pygame.draw.rect(self._room_surf, 'blue', self._rect, 1) #rim
+        pygame.draw.rect(self._room_surf, self._rim_colour, self._rect, 1) #rim
 
         #draw patients
         for i, patient in enumerate(self._patients):
