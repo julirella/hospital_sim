@@ -2,12 +2,12 @@ import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
 
-from experimets.data_processor import DataProcessor
+from experiments.data_processor import DataProcessor
 
 class TestDataProcessor(unittest.TestCase):
 
-    @patch('experimets.data_processor.GenImporter')
-    @patch('experimets.data_processor.pd.read_csv')
+    @patch('experiments.data_processor.GenImporter')
+    @patch('experiments.data_processor.pd.read_csv')
     def setUp(self, mock_read_csv, mock_gen_importer):
 
 
