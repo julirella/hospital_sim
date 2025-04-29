@@ -1,5 +1,5 @@
-from sortedcontainers import SortedDict
 from math import sqrt
+import heapdict as hd
 
 from src.simulation.node import NurseOffice, PatientRoom
 from src.simulation.node import Node
@@ -57,18 +57,15 @@ class Graph:
 
         open_nodes = set()
         prev: list[tuple[int, float]] = [(-1, -1)] * node_cnt #predecessors
-        dist = SortedDict() #distances to all nodes
-        open_dist = SortedDict() #distances to open nodes
-
-        for i in range(node_cnt):
-            dist[i] = float('inf')
+        dist = [float('inf')] * node_cnt #distances to all nodes
+        open_dist = hd.heapdict() # distances to open nodes
 
         dist[start_id] = 0
         open_dist[start_id] = 0
         open_nodes.add(start_id)
 
         while len(open_nodes) > 0:
-            current_id: int = open_dist.popitem(0)[0]
+            current_id: int = open_dist.popitem()[0] # get open node with smallest distance
             if current_id == -1: # -1 means it's a tmp node, which can only be start
                 neighbours = start.neighbours
             else:
@@ -79,6 +76,7 @@ class Graph:
                     dist[neighbour_id] = new_dist
                     prev[neighbour_id] = (current_id, weight)
                     open_dist[neighbour_id] = new_dist
+                    # heapq.heappush(open_dist, (new_dist, neighbour_id))
                     if neighbour_id not in open_nodes:
                         open_nodes.add(neighbour_id)
             open_nodes.remove(current_id)
