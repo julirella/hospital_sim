@@ -80,5 +80,11 @@ class TestVisualiser(unittest.TestCase):
         event_path = "input/experiments/events/expEvents1.json"
         self.run_test(graph_path, people_path, event_path=event_path, sim=True)
 
+    def test_vis_text_example(self):
+        graph_path = "input/layouts/textExample.json"
+        people_path = "input/people/textExample.json"
+        event_path = "input/events/textExample.json"
+        self.run_test(graph_path, people_path, event_path=event_path, sim=True)
+
 if __name__ == '__main__':
     unittest.main()
