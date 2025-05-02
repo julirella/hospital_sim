@@ -85,7 +85,7 @@ class VizImporter(Importer):
         patient_ids_float = req_df['patient'].unique().tolist() #ids may be floats because of NaNs
         patient_ids = list(map(lambda x: int(x), patient_ids_float))
         for patient_id in patient_ids:
-            patient_reqs = req_df[req_df['patient'] == patient_ids[patient_id]]
+            patient_reqs = req_df[req_df['patient'] == patient_id]
             start_times = sorted(patient_reqs[patient_reqs['action'] == "planned start"]["time"].tolist())
             end_times = sorted(patient_reqs[patient_reqs['action'] == "end"]["time"].tolist())
             self.req_times[patient_id] = start_times, end_times
