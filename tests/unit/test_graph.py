@@ -2,7 +2,7 @@ import math
 import unittest
 from unittest.mock import Mock
 from src import Graph, Node, NurseOffice, Junction, PatientRoom
-from src.simulation.node.temp_node import TempNode
+from src.simulation.graph.node.temp_node import TempNode
 
 
 class TestGraph(unittest.TestCase):

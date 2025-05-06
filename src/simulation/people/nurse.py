@@ -1,4 +1,4 @@
-from src.simulation.node import Node
+from src.simulation.graph.node import Node
 from src.simulation.sim_time import SimTime
 from src.constants import *
 

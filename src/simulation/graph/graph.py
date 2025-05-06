@@ -1,8 +1,8 @@
 from math import sqrt
 import heapdict as hd
 
-from src.simulation.node import NurseOffice, PatientRoom
-from src.simulation.node import Node
+from src.simulation.graph.node import NurseOffice, PatientRoom
+from src.simulation.graph.node import Node
 
 class Graph:
     def __init__(self, nodes: list[Node], nurse_office: NurseOffice, patient_rooms: list[PatientRoom]) -> None:

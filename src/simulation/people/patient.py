@@ -1,5 +1,5 @@
 from src.simulation.people.nurse import Nurse
-from src.simulation.node import PatientRoom
+from src.simulation.graph.node import PatientRoom
 from src.simulation.sim_time import SimTime
 
 
