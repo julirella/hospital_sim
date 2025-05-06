@@ -10,7 +10,6 @@ class VisRoom:
     def __init__(self, orig_room: Room, pixels_per_meter: int, patients: list[VisPatient]):
         self._x = orig_room.x
         self._y = orig_room.y
-        print(type(orig_room))
         if type(orig_room) is NurseOffice:
             self._rim_colour = 'red'
         else:
