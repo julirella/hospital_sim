@@ -1,0 +1,346 @@
+{
+  "edges": {
+    "cb9703f8-8206-4bc4-bb58-71b0371a4454": {
+      "id": "cb9703f8-8206-4bc4-bb58-71b0371a4454",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "45d82cf7-89ce-42ed-a067-9ab0b19f4325",
+          "to": "60e6678d-269f-4cfe-9b7b-836ff9ca8e3f"
+        },
+        "selected": false
+      }
+    },
+    "96225aaa-9215-4b08-84a0-0fec8991aae5": {
+      "id": "96225aaa-9215-4b08-84a0-0fec8991aae5",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "7d878e5d-2924-4951-a698-b8d9c0065c06",
+          "to": "2f1f8f57-a146-4fd5-aea4-b45f42a100c7"
+        },
+        "selected": false
+      }
+    },
+    "311a10bb-bec1-4fb6-abda-c64334449ed1": {
+      "id": "311a10bb-bec1-4fb6-abda-c64334449ed1",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "51577a6e-16c4-45df-9a2b-a5d73a9ad87b",
+          "to": "ab54554b-a3f2-47c0-b8c7-debe4568615f"
+        },
+        "selected": false
+      }
+    },
+    "9597b6f5-eda0-475d-8e65-fad1bdbc1931": {
+      "id": "9597b6f5-eda0-475d-8e65-fad1bdbc1931",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "4c7ee0b5-4eae-4d3d-9b58-a56c9850b0dd",
+          "to": "65a41e71-5aa9-4d12-92de-c2e058dba02d"
+        },
+        "selected": false
+      }
+    },
+    "e235caac-99b4-49dc-9bd3-bd7220cd0f93": {
+      "id": "e235caac-99b4-49dc-9bd3-bd7220cd0f93",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "4c7ee0b5-4eae-4d3d-9b58-a56c9850b0dd",
+          "to": "2b9cbd3b-11bc-4781-a88d-cea72c622b5a"
+        },
+        "selected": false
+      }
+    },
+    "661a6922-6d69-4722-b9c3-4532591ca298": {
+      "id": "661a6922-6d69-4722-b9c3-4532591ca298",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "7d878e5d-2924-4951-a698-b8d9c0065c06",
+          "to": "51577a6e-16c4-45df-9a2b-a5d73a9ad87b"
+        },
+        "selected": false
+      }
+    },
+    "12b3f3a7-8726-42cb-80fc-a58313ee174a": {
+      "id": "12b3f3a7-8726-42cb-80fc-a58313ee174a",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "51577a6e-16c4-45df-9a2b-a5d73a9ad87b",
+          "to": "4c7ee0b5-4eae-4d3d-9b58-a56c9850b0dd"
+        },
+        "selected": false
+      }
+    },
+    "ded36bb5-9ec6-4510-b199-77dfc64f3cfe": {
+      "id": "ded36bb5-9ec6-4510-b199-77dfc64f3cfe",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "45d82cf7-89ce-42ed-a067-9ab0b19f4325",
+          "to": "e80c7367-e6cf-42bc-864f-37c047d388da"
+        },
+        "selected": false
+      }
+    },
+    "731296ae-2705-478b-97f8-5d4fde673261": {
+      "id": "731296ae-2705-478b-97f8-5d4fde673261",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "e80c7367-e6cf-42bc-864f-37c047d388da",
+          "to": "7d878e5d-2924-4951-a698-b8d9c0065c06"
+        },
+        "selected": false
+      }
+    },
+    "ecf153e6-9e8c-43ff-8625-8f981c1da5b9": {
+      "id": "ecf153e6-9e8c-43ff-8625-8f981c1da5b9",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "51d46256-1086-470c-ae99-52539100f43d",
+          "to": "e80c7367-e6cf-42bc-864f-37c047d388da"
+        },
+        "selected": false
+      }
+    },
+    "f5542327-e2a5-460b-afe4-532741c716c0": {
+      "id": "f5542327-e2a5-460b-afe4-532741c716c0",
+      "properties": {
+        "input": "@",
+        "weight": 0
+      },
+      "ui": {
+        "connects": {
+          "from": "d56a17be-76fa-4811-a0bc-48cc983789db",
+          "to": "51577a6e-16c4-45df-9a2b-a5d73a9ad87b"
+        },
+        "selected": false
+      }
+    }
+  },
+  "metadata": {
+    "algorithm": "Dijkstra",
+    "createdAt": "2025-05-02T13:35:54.066Z",
+    "id": "",
+    "name": "moreRealisticLayout"
+  },
+  "nodes": {
+    "45d82cf7-89ce-42ed-a067-9ab0b19f4325": {
+      "id": "45d82cf7-89ce-42ed-a067-9ab0b19f4325",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "J"
+      },
+      "ui": {
+        "pos": {
+          "x": 105,
+          "y": 210
+        },
+        "selected": false
+      }
+    },
+    "60e6678d-269f-4cfe-9b7b-836ff9ca8e3f": {
+      "id": "60e6678d-269f-4cfe-9b7b-836ff9ca8e3f",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "A"
+      },
+      "ui": {
+        "pos": {
+          "x": 105,
+          "y": 105
+        },
+        "selected": false
+      }
+    },
+    "7d878e5d-2924-4951-a698-b8d9c0065c06": {
+      "id": "7d878e5d-2924-4951-a698-b8d9c0065c06",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "J"
+      },
+      "ui": {
+        "pos": {
+          "x": 280,
+          "y": 210
+        },
+        "selected": false
+      }
+    },
+    "2f1f8f57-a146-4fd5-aea4-b45f42a100c7": {
+      "id": "2f1f8f57-a146-4fd5-aea4-b45f42a100c7",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "B"
+      },
+      "ui": {
+        "pos": {
+          "x": 280,
+          "y": 105
+        },
+        "selected": false
+      }
+    },
+    "ab54554b-a3f2-47c0-b8c7-debe4568615f": {
+      "id": "ab54554b-a3f2-47c0-b8c7-debe4568615f",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "C"
+      },
+      "ui": {
+        "pos": {
+          "x": 420,
+          "y": 105
+        },
+        "selected": false
+      }
+    },
+    "51577a6e-16c4-45df-9a2b-a5d73a9ad87b": {
+      "id": "51577a6e-16c4-45df-9a2b-a5d73a9ad87b",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "J"
+      },
+      "ui": {
+        "pos": {
+          "x": 420,
+          "y": 210
+        },
+        "selected": false
+      }
+    },
+    "65a41e71-5aa9-4d12-92de-c2e058dba02d": {
+      "id": "65a41e71-5aa9-4d12-92de-c2e058dba02d",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "D"
+      },
+      "ui": {
+        "pos": {
+          "x": 560,
+          "y": 105
+        },
+        "selected": false
+      }
+    },
+    "4c7ee0b5-4eae-4d3d-9b58-a56c9850b0dd": {
+      "id": "4c7ee0b5-4eae-4d3d-9b58-a56c9850b0dd",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "J"
+      },
+      "ui": {
+        "pos": {
+          "x": 560,
+          "y": 210
+        },
+        "selected": false
+      }
+    },
+    "2b9cbd3b-11bc-4781-a88d-cea72c622b5a": {
+      "id": "2b9cbd3b-11bc-4781-a88d-cea72c622b5a",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "N"
+      },
+      "ui": {
+        "pos": {
+          "x": 560,
+          "y": 315
+        },
+        "selected": false
+      }
+    },
+    "51d46256-1086-470c-ae99-52539100f43d": {
+      "id": "51d46256-1086-470c-ae99-52539100f43d",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "E"
+      },
+      "ui": {
+        "pos": {
+          "x": 210,
+          "y": 315
+        },
+        "selected": false
+      }
+    },
+    "d56a17be-76fa-4811-a0bc-48cc983789db": {
+      "id": "d56a17be-76fa-4811-a0bc-48cc983789db",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "F"
+      },
+      "ui": {
+        "pos": {
+          "x": 420,
+          "y": 315
+        },
+        "selected": false
+      }
+    },
+    "e80c7367-e6cf-42bc-864f-37c047d388da": {
+      "id": "e80c7367-e6cf-42bc-864f-37c047d388da",
+      "properties": {
+        "final": false,
+        "initial": false,
+        "name": "J"
+      },
+      "ui": {
+        "pos": {
+          "x": 210,
+          "y": 210
+        },
+        "selected": false
+      }
+    }
+  }
+}

@@ -8,3 +8,4 @@
 #/process_data
 /tmp
 /input/events/genTestEvents.json
+tests/unit/test_sim.py

@@ -82,7 +82,7 @@ class SimImporter(Importer):
 
 
     def import_data(self) -> Simulator:
-        print("importing")
+        print("Importing...")
         graph = self._import_graph()
         sim_time = SimTime()
         nurses, patients = self.import_entities(graph, sim_time)

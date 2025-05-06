@@ -2,7 +2,7 @@ import math
 import unittest
 from unittest.mock import Mock
 from src import Graph, Node, NurseOffice, Junction, PatientRoom
-from src.simulation.node.temp_node import TempNode
+from src.simulation.graph.node.temp_node import TempNode
 
 
 class TestGraph(unittest.TestCase):
@@ -69,9 +69,9 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(expected, path)
 
     def test_find_path_temp_node(self):
-        tmp_node = TempNode(1.5, 1.5, (4, math.sqrt(2) / 2), (8, math.sqrt(2) / 2))
+        tmp_node = TempNode(1.5, 1.5, (4, math.sqrt(2) / 2 - 0.1), (8, math.sqrt(2) / 2 + 0.1))
         path = self.graph.find_path(tmp_node, self.nodes[5])
-        expected = [(self.nodes[4], math.sqrt(2) / 2), (self.nodes[5], 1.0)]
+        expected = [(self.nodes[4], math.sqrt(2) / 2 - 0.1), (self.nodes[5], 1.0)]
         self.assertEqual(expected, path)
 
     def test_find_path_temp_node2(self):

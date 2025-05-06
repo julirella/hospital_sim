@@ -4,6 +4,8 @@ from src.exporter.log_exporter import LogExporter
 from src.importer import SimImporter
 from src.importer.viz_importer import VizImporter
 
+# This class is purposefully not included in tests/__init__.py, because all the tests open the pygame window
+# which stops other tests from running. The tests here are meant to be checked visually.
 
 class TestVisualiser(unittest.TestCase):
     def setUp(self):
@@ -72,7 +74,17 @@ class TestVisualiser(unittest.TestCase):
         # self.run_test(graph_path, people_path)
         self.run_test(graph_path, people_path, event_path=event_path, sim=True)
 
+    def test_vis_exp_layout(self):
+        graph_path = "input/experiments/layouts/expLayout.json"
+        people_path = "input/experiments/people/expTwoNurses.json"
+        event_path = "input/experiments/events/expEvents1.json"
+        self.run_test(graph_path, people_path, event_path=event_path, sim=True)
 
+    def test_vis_text_example(self):
+        graph_path = "input/layouts/textExample.json"
+        people_path = "input/people/textExample.json"
+        event_path = "input/events/textExample.json"
+        self.run_test(graph_path, people_path, event_path=event_path, sim=True)
 
 if __name__ == '__main__':
     unittest.main()

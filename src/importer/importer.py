@@ -1,7 +1,7 @@
 from abc import abstractmethod
 import json
 from src import Graph
-from src.simulation.node import Node, Junction, NurseOffice, PatientRoom
+from src.simulation.graph.node import Node, Junction, NurseOffice, PatientRoom
 
 PIXELS_PER_METER = 35
 

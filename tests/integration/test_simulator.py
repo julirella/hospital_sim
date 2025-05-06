@@ -7,7 +7,7 @@ from src import Simulator
 from src.exporter.log_exporter import LogExporter
 from src.importer import SimImporter
 from src.main import App
-from src.process_data import DataProcessor
+from experiments.data_processor import DataProcessor
 from src.simulation.timed_object import Event
 
 
