@@ -30,7 +30,7 @@ class SimImporter(Importer):
         for i, patient_info in enumerate(patient_lst):
             nurse = nurses[patient_info["nurse_id"]]
             room = graph.patient_rooms[patient_info["room"]]
-            patient = Patient(i, nurse, room, sim_time)
+            patient = Patient(i, nurse, room)
             patients.append(patient)
 
         return nurses, patients
