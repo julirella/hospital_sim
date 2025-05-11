@@ -11,14 +11,23 @@ from src.simulation.sim_time import SimTime
 
 
 class SimImporter(Importer):
+    """
+    class for importing simulation input and constructing the Simulator object
+    """
     def __init__(self, graph_file_name: str, entity_file_name: str, event_file_name: str ) -> None:
+        """
+        :param graph_file_name: path to file with department layout graph
+        :param entity_file_name: path to file specifying people
+        :param event_file_name: path to file specifying events
+        """
         super().__init__(graph_file_name, entity_file_name)
-        self.entity_file_name = entity_file_name
         self.event_file_name = event_file_name
         self.request_assigner: RequestAssigner
 
-    def import_entities(self, graph: Graph, sim_time: SimTime) -> tuple[list[Nurse], list[Patient]]:
-        entities_json = self.load_json(self.entity_file_name)
+    def __import_entities__(self, graph: Graph, sim_time: SimTime) -> tuple[list[Nurse], list[Patient]]:
+        # import specified nurses and patients from files and construct corresponding objects
+
+        entities_json = self.__load_json__(self.entity_file_name)
 
         nurse_cnt = entities_json["nurses"]
         nurses: list[Nurse] = []
@@ -35,14 +44,15 @@ class SimImporter(Importer):
 
         return nurses, patients
 
-    def import_events(self, nurses: list[Nurse], patients: list[Patient], graph: Graph, sim_time: SimTime) -> tuple[EventList[Request], list[NurseList]]:
-        events_json = self.load_json(self.event_file_name)
+    def __import_events__(self, nurses: list[Nurse], patients: list[Patient], graph: Graph, sim_time: SimTime) -> tuple[EventList[Request], list[NurseList]]:
+        # import events from files and construct corresponding objects
+
+        events_json = self.__load_json__(self.event_file_name)
 
         request_assigner = events_json["request_assigner"]
         request_lst = events_json["requests"]
         plan_lst = events_json["plans"]
 
-        # request_queue = EventQueue()
         requests = []
         for request_dict in request_lst:
             time: float = request_dict["time"]
@@ -51,12 +61,9 @@ class SimImporter(Importer):
             duration: float = request_dict["duration"]
             request = Request(time, duration, patient, level, graph, sim_time)
             requests.append(request)
-            # request_queue.add(request)
         request_queue = EventList(requests)
 
         nurse_queues: [NurseList] = []
-        # for nurse in nurses:
-        #     nurse_queues.append(NurseQueue(nurse, sim_time))
 
         plans = [[] for _ in range(len(nurses))]
 
@@ -67,7 +74,6 @@ class SimImporter(Importer):
             nurse_id: int = plan_dict["nurse"]
             nurse: Nurse = nurses[nurse_id]
             plan = Plan(time, duration, patient, nurse, graph, sim_time)
-            # nurse_queues[nurse_id].add(plan)
             plans[nurse_id].append(plan)
 
         for nurse_id, plan_array in enumerate(plans):
@@ -82,10 +88,14 @@ class SimImporter(Importer):
 
 
     def import_data(self) -> Simulator:
+        """
+        import simulation data and construct Simulator
+        :return: the constructed Simulator
+        """
         print("Importing...")
-        graph = self._import_graph()
+        graph = self.__import_graph__()
         sim_time = SimTime()
-        nurses, patients = self.import_entities(graph, sim_time)
-        req_queue, nurse_queues = self.import_events(nurses, patients, graph, sim_time)
+        nurses, patients = self.__import_entities__(graph, sim_time)
+        req_queue, nurse_queues = self.__import_events__(nurses, patients, graph, sim_time)
         simulator = Simulator(graph, nurses, patients, req_queue, nurse_queues, sim_time, self.request_assigner)
         return simulator
