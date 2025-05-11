@@ -6,10 +6,18 @@ from .request_assigner import RequestAssigner
 
 
 class OtherAssigner(RequestAssigner):
+    """
+    other way of assigning requests to nurse (what a creative name right)
+    """
     def init(self, nurse_queues: list[NurseList]):
         super().__init__(nurse_queues)
 
     def assign_request(self, request: Request) -> int | None:
+        """
+        attempt to assign request to a nurse based on the other method, add to their queue on success
+        :param request: the request to assign
+        :return: ID of chosen nurse on success, None otherwise
+        """
         patient = request.patient
         patients_nurse = patient.nurse
         patients_nurse_queue = self.nurse_queues[patients_nurse.nurse_id]

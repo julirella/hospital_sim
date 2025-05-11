@@ -4,10 +4,21 @@ from .request_assigner import RequestAssigner
 
 
 class BasicAssigner(RequestAssigner):
+    """
+    basic way of assigning requests to nurse
+    """
     def init(self, nurse_queues: list[NurseList]):
+        """
+        :param nurse_queues: list of all nurse queues (ordered by nurse ID)
+        """
         super().__init__(nurse_queues)
 
     def assign_request(self, request: Request) -> int | None:
+        """
+        attempt to assign request to a nurse based on the basic method, add to their queue on success
+        :param request: the request to assign
+        :return: ID of chosen nurse on success, None otherwise
+        """
         patient = request.patient
         patients_nurse = patient.nurse
         chosen_nurse = patients_nurse
