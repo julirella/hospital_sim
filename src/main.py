@@ -6,14 +6,28 @@ from src.importer.viz_importer import VizImporter
 
 
 class App:
-    def __init__(self, graph_path, people_path, event_path, nurse_output_path, event_output_path):
+    """
+    Class for running the simulation and visualisation
+    """
+    def __init__(self, graph_path: str, people_path: str, event_path: str, nurse_output_path: str, event_output_path: str) -> None:
+        """
+        :param graph_path: Path to the file containing the layout graph
+        :param people_path: Path to the file containing people specification
+        :param event_path: Path to the file containing events
+        :param nurse_output_path: Path to the file where nurse output will be written
+        :param event_output_path: Path to the file where event output will be written
+        """
         self.graph_path = graph_path
         self.people_path = people_path
         self.event_path = event_path
         self.nurse_output_path = nurse_output_path
         self.event_output_path = event_output_path
 
-    def run_simulation(self, visualise=False):
+    def run_simulation(self, visualise: bool=False) -> None:
+        """
+        Runs the simulation and writes output into files specified in constructor
+        :param visualise: True for running visualisation after simulation
+        """
         importer = SimImporter(self.graph_path, self.people_path, self.event_path)
         sim = importer.import_data()
         sim.simulate()
@@ -23,7 +37,7 @@ class App:
         if visualise:
             self.run_visualisation()
 
-    def run_visualisation(self):
+    def run_visualisation(self) -> None:
         importer = VizImporter(self.graph_path, self.people_path, self.nurse_output_path, self.event_output_path)
         visualiser = importer.import_data()
         visualiser.run()

@@ -1,3 +1,4 @@
+"""Constants for simulation and visualisation"""
 
 NURSE_SPEED_MPS = 1
 
