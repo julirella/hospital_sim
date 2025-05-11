@@ -1,5 +1,8 @@
 
 class SimTime:
+    """
+    Class for keeping track of simulation time, used as a singleton
+    """
     def __init__(self):
         self._sim_time: float = 0.0
 
