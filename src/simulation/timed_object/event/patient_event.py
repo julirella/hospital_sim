@@ -8,8 +8,19 @@ from src.simulation.people.patient import Patient
 
 
 class PatientEvent(Event):
+    """
+    class representing an event that concerns a specific patient
+    """
     def __init__(self, time: float, duration: float, patient: Patient, assigned_nurse: Nurse | None,
                  graph: Graph, sim_time: SimTime) -> None:
+        """
+        :param time: event planned start time
+        :param duration: length of time to be spent caring for the patient during this event
+        :param patient: patient with whom the event is concerned
+        :param assigned_nurse: nurse dealing with event, can be None
+        :param graph: department graph
+        :param sim_time: SimTime object to track simulation time
+        """
         self._patient = patient
         super().__init__(time, duration, assigned_nurse, graph, sim_time)
 
@@ -19,11 +30,12 @@ class PatientEvent(Event):
         pass
 
     def __create_steps__(self) -> None:
-        #nurse has to be assigned at this point
-        #each step needs to happen at the end of it, but also it has to be obvious that the event is in progress
-        #so maybe some start event step??
+        # calculate event steps for getting to patient and caring for them and add steps to list
+        # nurse has to be assigned at this point
+
+        # getting there
         prev_step_time = self.__create_movement_steps__(self._assigned_nurse.pos, self._patient.room)
-        #time there
+        # time there
         self._steps.append(TimeAtPatient(prev_step_time + self._duration, self._assigned_nurse, self._duration))
 
     @property
@@ -31,13 +43,17 @@ class PatientEvent(Event):
         return self._patient
 
     def __start__(self) -> None:
+        # create event by calculating steps and assigning to nurse
         self.__create_steps__()
         self._assigned_nurse.assign_event(self._event_id, self.patient.patient_id)
         self._status = EventStatus.ACTIVE
 
     def pause(self) -> None:
+        """
+        pauses the event by pausing the current step
+        """
         next_step = self.get_next_step()
-        self._duration -= next_step.pause(self._sim_time.sim_time)
+        self._duration -= next_step.pause(self._sim_time.sim_time) # calculate how much of time at patiet is left
         self._status = EventStatus.PAUSED
         self.__log_action_now__("pause")
         self._assigned_nurse.unassign_event()
