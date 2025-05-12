@@ -353,12 +353,12 @@ class TestNurseList(unittest.TestCase):
         with patch.object(type(request), 'status', new_callable=PropertyMock, return_value=EventStatus.ACTIVE):
             self.assertEqual(2, self.nurse_list.current_event_level())
 
-        #plan has level -1
+        #plan has level 1
         plan = Plan(time=0, duration=5, patient=self.mock_patient, nurse=self.mock_nurse,
                           graph=self.mock_graph, sim_time=self.mock_sim_time)
         self.nurse_list.add_to_start(plan)
         with patch.object(type(plan), 'status', new_callable=PropertyMock, return_value=EventStatus.ACTIVE):
-            self.assertEqual(-1, self.nurse_list.current_event_level())
+            self.assertEqual(1, self.nurse_list.current_event_level())
 
     def test_run_next_step_empty_list(self):
         with self.assertRaises(Exception) as context:

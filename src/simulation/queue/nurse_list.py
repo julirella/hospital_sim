@@ -99,7 +99,7 @@ class NurseList(EventList[Event]):
 
     def current_event_level(self) -> int:
         """
-        :return: if current event is a request, then its level, else -1 (even if the queue is empty)
+        :return: if current event is a request, then its level, if it's a plan then 1, else -1 (even if the queue is empty)
         """
         if self.empty():
             return -1
@@ -107,6 +107,8 @@ class NurseList(EventList[Event]):
         current_event = self._front.event
         if current_event.status == EventStatus.ACTIVE and current_event.type == 'request':
             return current_event.level
+        elif current_event.status == EventStatus.ACTIVE and current_event.type == 'plan':
+            return 1
         else:
             return -1
 
