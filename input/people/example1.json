@@ -1,0 +1,61 @@
+{
+  "nurses": 5,
+  "patients": [
+    {
+      "nurse_id": 0,
+      "room": 0
+    },
+        {
+      "nurse_id": 0,
+      "room": 0
+    },
+        {
+      "nurse_id": 0,
+      "room": 0
+    },
+
+    {
+      "nurse_id": 1,
+      "room": 1
+    },
+    {
+      "nurse_id": 2,
+      "room": 1
+    },
+        {
+      "nurse_id": 3,
+      "room": 1
+    },
+    
+    {
+      "nurse_id": 2,
+      "room": 2
+    },
+        {
+      "nurse_id": 2,
+      "room": 2
+    },
+    
+    {
+      "nurse_id": 3,
+      "room": 3
+    },
+        {
+      "nurse_id": 3,
+      "room": 3
+    },
+
+    {
+      "nurse_id": 4,
+      "room": 4
+    },
+    {
+      "nurse_id": 4,
+      "room": 5
+    },
+    {
+      "nurse_id": 4,
+      "room": 5
+    }
+  ]
+}
