@@ -5,6 +5,7 @@ from experiments import DataGenerator
 
 class TestDataGenerator(unittest.TestCase):
     def test_data_generation(self):
+        # just testing that it doesn't crash
         graph_path = "input/layouts/expLayout.json"
         people_path = "input/people/expPeople1.json"
         event_path = "input/events/genTestEvents.json"
