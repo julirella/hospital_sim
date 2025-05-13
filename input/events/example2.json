@@ -1,0 +1,115 @@
+{
+    "request_assigner": "other",
+    "requests": [
+        {
+            "time": 15.418065090506644,
+            "patient": 3,
+            "level": 3,
+            "duration": 12.775340829201788
+        },
+        {
+            "time": 85.92895555242784,
+            "patient": 1,
+            "level": 3,
+            "duration": 13.603936491828847
+        },
+        {
+            "time": 110.18851548585148,
+            "patient": 1,
+            "level": 2,
+            "duration": 9.372480001295088
+        },
+        {
+            "time": 7.818503684412903,
+            "patient": 7,
+            "level": 2,
+            "duration": 13.30621436971257
+        },
+        {
+            "time": 117.99626931434106,
+            "patient": 2,
+            "level": 3,
+            "duration": 8.156034899782732
+        },
+        {
+            "time": 84.64004455073446,
+            "patient": 3,
+            "level": 2,
+            "duration": 12.407484828757486
+        },
+        {
+            "time": 93.91090983937578,
+            "patient": 4,
+            "level": 3,
+            "duration": 14.862385492802385
+        },
+        {
+            "time": 105.94350803960108,
+            "patient": 4,
+            "level": 3,
+            "duration": 12.082069141031724
+        },
+        {
+            "time": 110.78858496842646,
+            "patient": 6,
+            "level": 2,
+            "duration": 8.701315451400074
+        },
+        {
+            "time": 72.71267322111154,
+            "patient": 7,
+            "level": 2,
+            "duration": 12.928578804972283
+        }
+    ],
+    "plans": [
+        {
+            "time": 0,
+            "patient": 0,
+            "nurse": 0,
+            "duration": 10
+        },
+        {
+            "time": 25.0,
+            "patient": 1,
+            "nurse": 0,
+            "duration": 10
+        },
+        {
+            "time": 36.0,
+            "patient": 2,
+            "nurse": 0,
+            "duration": 10
+        },
+        {
+            "time": 60.0,
+            "patient": 3,
+            "nurse": 0,
+            "duration": 10
+        },
+        {
+            "time": 0,
+            "patient": 4,
+            "nurse": 1,
+            "duration": 10
+        },
+        {
+            "time": 27.0,
+            "patient": 5,
+            "nurse": 1,
+            "duration": 10
+        },
+        {
+            "time": 40.0,
+            "patient": 6,
+            "nurse": 1,
+            "duration": 10
+        },
+        {
+            "time": 65.0,
+            "patient": 7,
+            "nurse": 1,
+            "duration": 10
+        }
+    ]
+}

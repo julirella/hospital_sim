@@ -45,11 +45,11 @@ class App:
 
 def main():
     parser = argparse.ArgumentParser(description="Run the simulation app.")
-    parser.add_argument("--graph", type=str, default="input/layouts/toScaleLayout.json",
+    parser.add_argument("--graph", type=str, default="input/layouts/horizontal.json",
                         help="Path to the graph layout JSON file.")
-    parser.add_argument("--people", type=str, default="input/people/manyPeople.json",
+    parser.add_argument("--people", type=str, default="input/people/example1.json",
                         help="Path to the people JSON file.")
-    parser.add_argument("--events", type=str, default="input/events/testEventsRequests.json",
+    parser.add_argument("--events", type=str, default="input/events/random.json",
                         help="Path to the events JSON file.")
     parser.add_argument("--event_output", type=str, default="output/eventLog.csv",
                         help="Path to the event log output CSV file.")
