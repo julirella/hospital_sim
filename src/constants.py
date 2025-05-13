@@ -1,5 +1,7 @@
+"""Constants for simulation and visualisation"""
 
 NURSE_SPEED_MPS = 1
+GRAPHIT_PIXELS_PER_METER = 35
 
 # visualisation
 SCREEN_WIDTH = 800

@@ -8,7 +8,6 @@ from src.simulation.queue import NurseList
 
 class TestNurseList(unittest.TestCase):
     def setUp(self):
-        # print("setup called")
         self.mock_patient = Mock()
         self.mock_nurse = Mock()
         self.mock_nurse.speed = 1
@@ -217,7 +216,6 @@ class TestNurseList(unittest.TestCase):
     def test_add_to_start_no_pause(self):
         new_event = PatientEvent(time=0, duration=35, patient=self.mock_patient, assigned_nurse=self.mock_nurse,
                                  graph=self.mock_graph, sim_time=self.mock_sim_time)
-        # self.event1.get_status = Mock(return_value=EventStatus.ACTIVE)
         self.nurse_list.add_to_start(new_event)
 
         self.assertEqual(0, self.nurse_list.pop_front().time)
@@ -355,21 +353,19 @@ class TestNurseList(unittest.TestCase):
         with patch.object(type(request), 'status', new_callable=PropertyMock, return_value=EventStatus.ACTIVE):
             self.assertEqual(2, self.nurse_list.current_event_level())
 
-        #plan has level -1
+        #plan has level 1
         plan = Plan(time=0, duration=5, patient=self.mock_patient, nurse=self.mock_nurse,
                           graph=self.mock_graph, sim_time=self.mock_sim_time)
         self.nurse_list.add_to_start(plan)
         with patch.object(type(plan), 'status', new_callable=PropertyMock, return_value=EventStatus.ACTIVE):
-            self.assertEqual(-1, self.nurse_list.current_event_level())
+            self.assertEqual(1, self.nurse_list.current_event_level())
 
     def test_run_next_step_empty_list(self):
-        """Test running next step on empty list raises exception"""
         with self.assertRaises(Exception) as context:
             self.empty_list.run_next_step()
         self.assertTrue("can't run next step of emtpy list" in str(context.exception))
 
     def test_run_next_step_event_not_finished(self):
-        """Test running next step when event is not finished"""
         # Mock event1's run_next_step to return False (not finished)
         self.event1.run_next_step = Mock()
         self.event1.run_next_step.return_value = False
@@ -384,7 +380,6 @@ class TestNurseList(unittest.TestCase):
         self.assertEqual([], self.nurse_list.event_logs)  # No logs should be added
 
     def test_run_next_step_event_finished(self):
-        """Test running next step when event is finished"""
         # Mock event1's run_next_step to return True (finished)
         self.event1.run_next_step = Mock()
         self.event1.run_next_step.return_value = True
@@ -401,7 +396,6 @@ class TestNurseList(unittest.TestCase):
 
     # -------------- RETURN TO OFFICE TESTS --------------
     def test_run_next_step_create_return_to_office(self):
-        """Test return to office event creation when conditions are met"""
         self.event1.run_next_step = Mock()
         self.event1.run_next_step.return_value = True
 
@@ -414,7 +408,6 @@ class TestNurseList(unittest.TestCase):
         self.assertEqual(current_front.time, self.mock_sim_time.sim_time)
 
     def test_run_next_step_no_return_to_office_when_in_office(self):
-        """Test no return to office event is created when nurse is already in office"""
         # Setup conditions where nurse is already in office
         self.event1.run_next_step = Mock()
         self.event1.run_next_step.return_value = True

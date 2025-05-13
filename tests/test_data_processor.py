@@ -151,7 +151,5 @@ class TestDataProcessor(unittest.TestCase):
         self.assertEqual(0, self.processor.patient_total_time_waiting(0, request_level=3))
         self.assertEqual(0, self.processor.patient_avg_time_waiting(0, request_level=3))
 
-        # print(result_level3)
-
 if __name__ == '__main__':
     unittest.main()

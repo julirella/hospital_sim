@@ -9,9 +9,6 @@ from src.importer.viz_importer import VizImporter
 
 class TestVisualiser(unittest.TestCase):
     def setUp(self):
-    #     self.graph_path = "input/layouts/toScaleLayout.json"
-    #     # self.graph_path = "input/layouts/testLayout.json"
-    #     self.people_path = "input/people/testPeople2.json"
         self.nurse_log_path = "output/nurseLog.csv"
         self.event_log_path = "output/eventLog.csv"
 
@@ -43,11 +40,12 @@ class TestVisualiser(unittest.TestCase):
             self.run_vis(graph_path, people_path, nurse_log_path, event_log_path)
 
     def test_vis(self):
+        # basic test mostly to check that it doesn't crash and looks ok
+        # yes, one nurse teleports at one point, that's because the input files aren't properly compatible
         graph_path = "input/layouts/toScaleLayout.json"
         people_path = "input/people/testPeople2.json"
         event_path = "input/events/testEventsRequests.json"
 
-        # self.run_test(graph_path, people_path)
         self.run_test(graph_path, people_path, event_path=event_path, sim=True)
 
     def test_vis_many_people(self):
@@ -71,7 +69,6 @@ class TestVisualiser(unittest.TestCase):
         people_path = "input/people/testPeople2.json"
         event_path = "input/events/reqReorder.json"
 
-        # self.run_test(graph_path, people_path)
         self.run_test(graph_path, people_path, event_path=event_path, sim=True)
 
     def test_vis_exp_layout(self):

@@ -1,0 +1,181 @@
+{
+    "request_assigner": "other",
+    "requests": [
+        {
+            "time": 102.63630179184707,
+            "patient": 0,
+            "level": 3,
+            "duration": 7.614463614164766
+        },
+        {
+            "time": 9.263934926210569,
+            "patient": 0,
+            "level": 3,
+            "duration": 11.137916910471018
+        },
+        {
+            "time": 0.3156904351559664,
+            "patient": 1,
+            "level": 3,
+            "duration": 14.848034752375554
+        },
+        {
+            "time": 34.35559249994045,
+            "patient": 1,
+            "level": 3,
+            "duration": 5.824079438813082
+        },
+        {
+            "time": 98.1244529693769,
+            "patient": 2,
+            "level": 2,
+            "duration": 10.177497071869771
+        },
+        {
+            "time": 14.04478601700796,
+            "patient": 3,
+            "level": 3,
+            "duration": 9.97867408332512
+        },
+        {
+            "time": 117.50739470274752,
+            "patient": 7,
+            "level": 2,
+            "duration": 12.371502226207836
+        },
+        {
+            "time": 119.13128266180352,
+            "patient": 7,
+            "level": 2,
+            "duration": 10.989776523667713
+        },
+        {
+            "time": 14.080388861198024,
+            "patient": 8,
+            "level": 2,
+            "duration": 10.502283889833729
+        },
+        {
+            "time": 86.67927728637551,
+            "patient": 8,
+            "level": 2,
+            "duration": 10.477017956423662
+        },
+        {
+            "time": 6.18465953692338,
+            "patient": 9,
+            "level": 2,
+            "duration": 8.207015099228187
+        },
+        {
+            "time": 8.875424854968621,
+            "patient": 9,
+            "level": 3,
+            "duration": 11.596713208492915
+        },
+        {
+            "time": 87.9181760216612,
+            "patient": 10,
+            "level": 2,
+            "duration": 6.247213333059113
+        },
+        {
+            "time": 72.5495865644813,
+            "patient": 11,
+            "level": 2,
+            "duration": 12.441468288332693
+        },
+        {
+            "time": 111.41898238044251,
+            "patient": 12,
+            "level": 3,
+            "duration": 13.748696622696762
+        },
+        {
+            "time": 44.59723621909474,
+            "patient": 12,
+            "level": 2,
+            "duration": 10.298119827496723
+        }
+    ],
+    "plans": [
+        {
+            "time": 0,
+            "patient": 0,
+            "nurse": 0,
+            "duration": 10
+        },
+        {
+            "time": 29.0,
+            "patient": 1,
+            "nurse": 0,
+            "duration": 10
+        },
+        {
+            "time": 40.0,
+            "patient": 2,
+            "nurse": 0,
+            "duration": 10
+        },
+        {
+            "time": 1,
+            "patient": 3,
+            "nurse": 1,
+            "duration": 10
+        },
+        {
+            "time": 2,
+            "patient": 4,
+            "nurse": 2,
+            "duration": 10
+        },
+        {
+            "time": 29.0,
+            "patient": 6,
+            "nurse": 2,
+            "duration": 10
+        },
+        {
+            "time": 50.0,
+            "patient": 7,
+            "nurse": 2,
+            "duration": 10
+        },
+        {
+            "time": 0,
+            "patient": 5,
+            "nurse": 3,
+            "duration": 10
+        },
+        {
+            "time": 29.0,
+            "patient": 8,
+            "nurse": 3,
+            "duration": 10
+        },
+        {
+            "time": 40.0,
+            "patient": 9,
+            "nurse": 3,
+            "duration": 10
+        },
+        {
+            "time": 3,
+            "patient": 10,
+            "nurse": 4,
+            "duration": 10
+        },
+        {
+            "time": 29.0,
+            "patient": 11,
+            "nurse": 4,
+            "duration": 10
+        },
+        {
+            "time": 44.0,
+            "patient": 12,
+            "nurse": 4,
+            "duration": 10
+        }
+    ]
+}

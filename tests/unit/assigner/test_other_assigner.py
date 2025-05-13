@@ -81,5 +81,18 @@ class TestOtherAssigner(unittest.TestCase):
         chosen_nurse_id = self.assigner.assign_request(self.mock_request)
         self.assertIsNone(chosen_nurse_id)
 
+    def test_assign_request_level_3_nurse_among_min(self):
+        self.mock_request.level = 3
+        self.mock_nurse_queues[0].current_event_level.return_value = 3
+        self.mock_nurse_queues[1].current_event_level.return_value = 1
+        self.mock_nurse_queues[2].current_event_level.return_value = 1
+        self.mock_nurse_queues[3].current_event_level.return_value = 1
+        self.mock_nurse_queues[4].current_event_level.return_value = 2
+
+        chosen_nurse_id = self.assigner.assign_request(self.mock_request)
+        self.mock_nurse_queues[2].add_to_start.assert_called_once_with(self.mock_request)
+        self.assertEqual(chosen_nurse_id, 2)
+
+
 if __name__ == '__main__':
     unittest.main()

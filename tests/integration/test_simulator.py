@@ -63,16 +63,10 @@ class TestSimulator(unittest.TestCase):
     def test_sim_plans_only(self):
         event_path = "input/events/testEvents2.json"
         self.run_sim(event_path=event_path)
-        # importer = SimImporter(self.graph_path, self.people_path, event_path)
-        # sim = importer.import_data()
-        # sim.simulate()
 
     def test_sim_plans_and_requests(self):
         event_path = "input/events/testEventsRequests.json"
         self.run_sim(event_path=event_path)
-        # importer = SimImporter(self.graph_path, self.people_path, event_path)
-        # sim = importer.import_data()
-        # sim.simulate()
 
     def test_sim_many_people(self):
         graph_path = "input/layouts/toScaleLayout.json"
@@ -135,14 +129,6 @@ class TestSimulator(unittest.TestCase):
         conditions = (('nurse', 1), ('x', 3), ('y', 8), ('time', 90), ('action', 'finish event'))
         self.assertTrue(self.check_nurse_conditions(conditions))
 
-    # def test_sim_basic_patients_nurse_always_chosen(self):
-    #     graph_path = "input/layouts/toScaleLayout.json"
-    #     people_path = "input/people/manyPeople.json"
-    #     event_path = "input/events/testEventsRequests.json"
-    #
-    #     sim = self.run_sim(event_path=event_path, graph_path=graph_path, people_path=people_path)
-    #     self.export_logs(sim=sim)
-    #
     def test_sim_basic_event_ordering(self):
         # events should be run in correct order, requests should not reorder plans
         graph_path = "input/layouts/toScaleLayout.json"
@@ -342,21 +328,11 @@ class TestSimulator(unittest.TestCase):
         basic_event_path = "input/events/expEvents3.json"
         other_event_path = "input/events/expEvents4.json"
 
-        # fieldnames = ['event', 'time']
-        # file1 = open('tmp/basic.csv', 'w', newline='')
-        # file2 = open('tmp/other.csv', 'w', newline='')
-        #
-        # writer1 = csv.DictWriter(file1, fieldnames=fieldnames)
-        # writer1.writeheader()
-        # writer2 = csv.DictWriter(file2, fieldnames=fieldnames)
-        # writer2.writeheader()
-
         app = App(graph_path=graph_path, people_path=people_path, event_path=basic_event_path,
                   nurse_output_path=self.test_nurse_output, event_output_path=self.test_event_output)
         app.run_simulation()
         dp = DataProcessor(nurse_log_path=self.test_nurse_output, event_log_path=self.test_event_output,
                            people_path=people_path)
-        # basic_time_at_patients = dp.nurse_time_at_all_patients(0, writer1)
         basic_time_at_patients = dp.nurse_time_at_all_patients(0)
 
         app = App(graph_path=graph_path, people_path=people_path, event_path=other_event_path,
@@ -364,10 +340,8 @@ class TestSimulator(unittest.TestCase):
         app.run_simulation()
         dp = DataProcessor(nurse_log_path=self.test_nurse_output, event_log_path=self.test_event_output,
                            people_path=people_path)
-        # other_time_at_patients = dp.nurse_time_at_all_patients(0, writer2)
         other_time_at_patients = dp.nurse_time_at_all_patients(0)
 
-        # self.assertEqual(basic_time_at_patients, other_time_at_patients)
         self.assertTrue(abs(basic_time_at_patients - other_time_at_patients) < 0.00001)
 
     def total_event_duration(self, event_path):

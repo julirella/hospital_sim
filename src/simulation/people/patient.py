@@ -4,11 +4,18 @@ from src.simulation.sim_time import SimTime
 
 
 class Patient:
-    def __init__(self, patient_id: int, nurse: Nurse, room: PatientRoom, sim_time: SimTime) -> None:
+    """
+    class representing a patient
+    """
+    def __init__(self, patient_id: int, nurse: Nurse, room: PatientRoom) -> None:
+        """
+        :param patient_id: ID of the patient
+        :param nurse: the patient's assigned nurse
+        :param room: the room in which the patient is located
+        """
         self._patient_id = patient_id
         self._nurse = nurse
         self._room = room
-        self._sim_time = sim_time
 
     @property
     def patient_id(self) -> int:

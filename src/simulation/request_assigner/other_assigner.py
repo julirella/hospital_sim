@@ -6,10 +6,18 @@ from .request_assigner import RequestAssigner
 
 
 class OtherAssigner(RequestAssigner):
+    """
+    other way of assigning requests to nurse (what a creative name right)
+    """
     def init(self, nurse_queues: list[NurseList]):
         super().__init__(nurse_queues)
 
     def assign_request(self, request: Request) -> int | None:
+        """
+        attempt to assign request to a nurse based on the other method, add to their queue on success
+        :param request: the request to assign
+        :return: ID of chosen nurse on success, None otherwise
+        """
         patient = request.patient
         patients_nurse = patient.nurse
         patients_nurse_queue = self.nurse_queues[patients_nurse.nurse_id]
@@ -49,6 +57,10 @@ class OtherAssigner(RequestAssigner):
                 min_nurse_id = int(np.argmin(active_event_levels))
                 if min_level == 3:
                     chosen_nurse_id = None #all nurses dealing with emergency
+                elif active_event_levels[patients_nurse.nurse_id] == min_level:
+                    # if patient's nurse is among those with lowest request level, choose them
+                    self.nurse_queues[patients_nurse.nurse_id].add_to_start(request)
+                    chosen_nurse_id = patients_nurse.nurse_id
                 else:
                     self.nurse_queues[min_nurse_id].add_to_start(request)
                     chosen_nurse_id = min_nurse_id

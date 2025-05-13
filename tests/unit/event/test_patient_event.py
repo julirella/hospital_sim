@@ -25,7 +25,6 @@ class TestPatientEvent(unittest.TestCase):
 
     def test_run_next_step_creates_steps_of_type(self):
         self.event.run_next_step()
-        # print(type(Movement))
         self.assertEqual(type(self.mock_move), type(self.event.get_next_step()))
         self.event.run_next_step()
         self.assertEqual(type(self.mock_move), type(self.event.get_next_step()))
