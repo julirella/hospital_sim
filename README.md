@@ -8,6 +8,8 @@
 ### Create virtual environment (optional):
 * `python3 -m venv venv`
 * `source venv/bin/activate`
+### Navigate to hospital_sim directory
+* `cd [path/to/hospital_sim]`
 ### Install dependencies
 * `pip install -r requirements.txt`
 
